@@ -368,7 +368,7 @@
                                 <div class="h-px bg-slate-100 dark:bg-slate-700 my-1"></div>
                                 <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-media"><span class="material-symbols-outlined text-[18px] text-slate-400">perm_media</span> Media, Links & Docs</button>
                                 <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-select-msg"><span class="material-symbols-outlined text-[18px] text-slate-400">check_box</span> Select Messages</button>
-                                <div class="h-px bg-slate-100 dark:bg-slate-700 my-1"></div>
+                                <div class="h-px bg-slate-100 dark:bg-slate-700 my-1" id="menu-divider-2"></div>
                                 <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3" id="menu-report-user"><span class="material-symbols-outlined text-[18px]">flag</span> Report User</button>
                                 <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3" id="menu-unfriend"><span class="material-symbols-outlined text-[18px]">person_remove</span> Unfriend</button>
                                 <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3" id="menu-block"><span class="material-symbols-outlined text-[18px]">block</span> Block User</button>
@@ -391,7 +391,7 @@
                         </label>
                         
                         <div class="flex-1 relative flex items-center">
-                            <textarea id="chat-input" rows="1" class="w-full py-3.5 px-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-primary/50 text-[15px] outline-none resize-none max-h-32 placeholder-slate-400 shadow-inner" placeholder="Type your message..."></textarea>
+                            <textarea id="chat-input" rows="1" class="w-full py-3.5 px-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-primary/50 text-[15px] outline-none resize-none max-h-32 placeholder-slate-400 shadow-inner disabled:opacity-70 disabled:cursor-not-allowed" placeholder="Type your message..."></textarea>
                         </div>
                         
                         <button id="chat-action-button" class="w-12 h-12 rounded-xl bg-primary text-white hover:bg-primary-hover transition-all flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed shrink-0 mb-0.5 shadow-lg shadow-primary/20" disabled>
@@ -1696,15 +1696,61 @@
                 el('chat-messages').classList.remove('hidden');
                 
                 if (profile.isSystem) {
-                    el('chat-input-container').classList.add('hidden');
+                    el('chat-input-container').classList.remove('hidden');
+                    
+                    // Securely disable the input area for the system chat
+                    const inputField = el('chat-input');
+                    inputField.disabled = true;
+                    inputField.placeholder = "You cannot send messages to this official account.";
+                    inputField.value = "";
+                    
+                    el('chat-image-input').disabled = true;
+                    el('chat-action-button').disabled = true;
+                    
+                    const imgLabel = document.querySelector('label[for="chat-image-input"]');
+                    if (imgLabel) {
+                        imgLabel.style.opacity = '0.5';
+                        imgLabel.style.cursor = 'not-allowed';
+                        imgLabel.style.pointerEvents = 'none';
+                    }
+
+                    // Hide Call and Action Options that don't apply to SYSTEM
                     el('start-audio-call').classList.add('hidden');
                     el('start-video-call').classList.add('hidden');
                     el('chat-header-divider').classList.add('hidden');
+                    
+                    el('menu-report-user').classList.add('hidden');
+                    el('menu-unfriend').classList.add('hidden');
+                    el('menu-block').classList.add('hidden');
+                    el('menu-divider-2').classList.add('hidden');
+                    
                 } else {
                     el('chat-input-container').classList.remove('hidden');
+                    
+                    // Restore Input Functionality
+                    const inputField = el('chat-input');
+                    inputField.disabled = false;
+                    inputField.placeholder = "Type your message...";
+                    
+                    el('chat-image-input').disabled = false;
+                    el('chat-action-button').disabled = false; // Enabled/Disabled dynamically on input
+                    
+                    const imgLabel = document.querySelector('label[for="chat-image-input"]');
+                    if (imgLabel) {
+                        imgLabel.style.opacity = '1';
+                        imgLabel.style.cursor = 'pointer';
+                        imgLabel.style.pointerEvents = 'auto';
+                    }
+
+                    // Restore Call and Action Options
                     el('start-audio-call').classList.remove('hidden');
                     el('start-video-call').classList.remove('hidden');
                     el('chat-header-divider').classList.remove('hidden');
+                    
+                    el('menu-report-user').classList.remove('hidden');
+                    el('menu-unfriend').classList.remove('hidden');
+                    el('menu-block').classList.remove('hidden');
+                    el('menu-divider-2').classList.remove('hidden');
                 }
                 
                 el('main-chat-area').classList.add('active'); 
