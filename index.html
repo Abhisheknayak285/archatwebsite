@@ -341,7 +341,7 @@
                         <div id="chat-info-trigger" class="flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 p-2 -ml-2 rounded-xl transition-colors flex-1 min-w-0 group" title="View User Info">
                             <div id="chat-header-pfp" class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 shrink-0 overflow-hidden flex items-center justify-center bg-cover bg-center text-xl shadow-sm border border-slate-200 dark:border-slate-700 group-hover:border-primary transition-colors"></div>
                             <div class="min-w-0">
-                                <h3 id="chat-header-name" class="text-[16px] font-bold truncate text-slate-900 dark:text-white">Contact Name</h3>
+                                <h3 id="chat-header-name" class="text-[16px] font-bold truncate text-slate-900 dark:text-white flex items-center gap-1">Contact Name</h3>
                                 <p id="chat-header-status" class="text-[11px] text-slate-500 font-medium truncate mt-0.5">Offline</p>
                             </div>
                         </div>
@@ -354,7 +354,7 @@
                         <button id="start-video-call" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary transition-colors">
                             <span class="material-symbols-outlined text-[22px]">videocam</span>
                         </button>
-                        <div class="h-6 w-[1px] bg-slate-200 dark:bg-slate-700 mx-1 md:mx-2"></div>
+                        <div class="h-6 w-[1px] bg-slate-200 dark:bg-slate-700 mx-1 md:mx-2" id="chat-header-divider"></div>
                         
                         <!-- 3-Dots Menu inside Header -->
                         <div class="relative flex items-center">
@@ -369,6 +369,7 @@
                                 <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-media"><span class="material-symbols-outlined text-[18px] text-slate-400">perm_media</span> Media, Links & Docs</button>
                                 <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-select-msg"><span class="material-symbols-outlined text-[18px] text-slate-400">check_box</span> Select Messages</button>
                                 <div class="h-px bg-slate-100 dark:bg-slate-700 my-1"></div>
+                                <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3" id="menu-report-user"><span class="material-symbols-outlined text-[18px]">flag</span> Report User</button>
                                 <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3" id="menu-unfriend"><span class="material-symbols-outlined text-[18px]">person_remove</span> Unfriend</button>
                                 <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3" id="menu-block"><span class="material-symbols-outlined text-[18px]">block</span> Block User</button>
                             </div>
@@ -377,7 +378,6 @@
                 </header>
 
                 <!-- Messages -->
-                <!-- Added extra bottom padding (pb-8 md:pb-12) to prevent overlapping -->
                 <div id="chat-messages" class="flex-1 overflow-y-auto p-4 pb-8 md:p-8 md:pb-12 chat-bg hidden z-0">
                     <!-- Messages go here -->
                 </div>
@@ -400,7 +400,7 @@
                     </div>
                 </div>
 
-                <!-- Selection Action Container (Hidden by default) -->
+                <!-- Selection Action Container -->
                 <div id="selection-action-container" class="w-full p-4 md:p-6 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0 hidden z-20 flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
                     <span id="selection-count" class="text-sm font-bold text-slate-700 dark:text-slate-200">0 Selected</span>
                     <div class="flex gap-3">
@@ -414,7 +414,6 @@
             </section>
 
             <!-- Right Sidebar: Contact Info Drawer -->
-            <!-- Adjusted z-index and positioning so it perfectly slides over everything in the right chat area -->
             <section id="contact-info-drawer" class="w-80 lg:w-[360px] border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col absolute right-0 top-0 h-full shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 hidden">
                 <div class="h-[76px] flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900">
                     <h3 class="font-bold text-slate-900 dark:text-white text-lg">User Profile</h3>
@@ -426,7 +425,7 @@
                 <div class="flex-1 overflow-y-auto">
                     <div class="p-8 flex flex-col items-center border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/20">
                         <div id="drawer-pfp" class="w-32 h-32 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center mb-5 flex items-center justify-center text-5xl overflow-hidden shadow-lg border-4 border-white dark:border-slate-800"></div>
-                        <h2 id="drawer-name" class="text-2xl font-bold text-slate-900 dark:text-white text-center mb-2 tracking-tight">Name</h2>
+                        <h2 id="drawer-name" class="text-2xl font-bold text-slate-900 dark:text-white text-center mb-2 tracking-tight flex items-center gap-1 justify-center">Name</h2>
                         <span class="px-3 py-1 bg-primary/10 text-primary rounded-md text-[11px] font-mono font-bold tracking-widest uppercase border border-primary/20 mt-1" id="drawer-id">ID</span>
                     </div>
                     
@@ -515,6 +514,7 @@
                     <button id="tab-friends" class="settings-tab text-left px-4 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 font-medium text-sm text-slate-700 dark:text-slate-300 transition-colors shrink-0" data-target="set-friends">Friend List</button>
                     <button class="settings-tab text-left px-4 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 font-medium text-sm text-slate-700 dark:text-slate-300 transition-colors shrink-0" data-target="set-wallpaper">Chat Wallpaper</button>
                     <button class="settings-tab text-left px-4 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 font-medium text-sm text-slate-700 dark:text-slate-300 transition-colors shrink-0" data-target="set-blocked">Blocked Users</button>
+                    <button class="settings-tab text-left px-4 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 font-medium text-sm text-slate-700 dark:text-slate-300 transition-colors shrink-0" data-target="set-report">Report Issue</button>
                     <button class="settings-tab text-left px-4 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 font-medium text-sm text-slate-700 dark:text-slate-300 transition-colors shrink-0" data-target="set-help">Help & Support</button>
                     <button class="settings-tab text-left px-4 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 font-medium text-sm text-slate-700 dark:text-slate-300 transition-colors shrink-0" data-target="set-about">About</button>
                 </div>
@@ -616,6 +616,15 @@
                     </div>
                 </div>
 
+                <!-- Report App Issue View -->
+                <div id="set-report" class="settings-view hidden max-w-md fade-in">
+                    <h3 class="text-2xl font-bold mb-4 tracking-tight">Report an Issue</h3>
+                    <p class="text-sm text-slate-500 mb-6 font-medium">Help us keep AR CHATS safe. Describe the issue or bug you encountered.</p>
+                    <textarea id="settings-report-input" class="ar-input resize-none mb-4" rows="5" placeholder="Please provide details..."></textarea>
+                    <button id="submit-settings-report-btn" class="btn-primary w-full py-3.5 shadow-md shadow-primary/20">Submit Report</button>
+                    <p id="settings-report-status" class="text-green-500 text-xs mt-4 min-h-[16px] font-bold text-center"></p>
+                </div>
+
                 <!-- Help View -->
                 <div id="set-help" class="settings-view hidden max-w-lg fade-in">
                     <h3 class="text-2xl font-bold mb-8 tracking-tight">Support Center</h3>
@@ -673,7 +682,21 @@
             <div class="flex flex-col gap-3">
                 <button id="clear-chat-me-btn" class="btn-secondary py-3.5 border-none bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Clear for Me</button>
                 <button id="clear-chat-everyone-btn" class="py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold shadow-lg shadow-red-500/20 transition-all">Clear for Everyone</button>
-                <button id="clear-chat-cancel-btn" class="text-slate-500 text-sm font-bold mt-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">Cancel</button>
+                <button id="clear-chat-cancel-btn" class="text-slate-500 text-sm font-bold mt-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors" onclick="closeModal('clear-chat-modal')">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Report User Modal (From 3-Dot Menu) -->
+        <div id="report-user-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 hidden fade-in text-center">
+            <div class="w-16 h-16 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+                <span class="material-symbols-outlined text-[32px]">flag</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3 tracking-tight">Report User</h3>
+            <p class="text-sm text-slate-500 mb-6">Let us know why you are reporting this contact.</p>
+            <textarea id="report-user-input" class="ar-input resize-none mb-6 text-left" rows="4" placeholder="Describe the behavior..."></textarea>
+            <div class="flex gap-3">
+                <button class="btn-secondary flex-1 py-3" onclick="closeModal('report-user-modal')">Cancel</button>
+                <button id="submit-user-report-btn" class="flex-1 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold shadow-lg shadow-red-500/30 transition-all">Submit</button>
             </div>
         </div>
 
@@ -878,7 +901,7 @@
                 updateThemeIcon();
             });
 
-            // Firebase Init (Hybrid Architecture)
+            // Firebase Init
             const firebaseConfig = {
               apiKey: "AIzaSyBiycL4x7tZ1WglTCAqErP4sQ4pYB_49bs",
               authDomain: "intership-database-e7687.firebaseapp.com",
@@ -891,8 +914,8 @@
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
             
             const auth = firebase.auth(); 
-            const rtdb = firebase.database();       // Used for Presence & Signaling ONLY
-            const firestore = firebase.firestore(); // Used for Persistent Storage ONLY
+            const rtdb = firebase.database(); 
+            const firestore = firebase.firestore();
             
             // Fast Image Compressor
             function compressImage(file, maxWidth = 1280, maxHeight = 1280, quality = 0.7) {
@@ -937,10 +960,10 @@
             // State
             let currentUser = null, currentUserProfile = null, currentChatPartner = null, currentChatId = null;
             let messageListeners = {}, statusListeners = {}, typingListeners = {}, unreadListeners = {};
-            let firestoreUnsubs = []; // Store unsubs for cleanup
-            let sharedMessages = []; // For rendering messages
-            let pendingUploads = []; // Optimistic UI uploads
-            let currentChatMetadata = {}; // Local clearing settings
+            let firestoreUnsubs = []; 
+            let sharedMessages = []; 
+            let pendingUploads = []; 
+            let currentChatMetadata = {}; 
             let chatMetaUnsub = null;
 
             let peerConnection, localStream, remoteStream, incomingCallData = null, callStartTime = null, callTimerInterval = null, currentCallInfo = null, pendingCandidates = [];
@@ -950,12 +973,7 @@
             let isSelectionMode = false;
             let selectedMessages = new Set();
 
-            // OTP State
-            let pendingRegEmail = "";
-            let pendingRegPassword = "";
-            let generatedOTP = "";
-
-            // Authentication Setup
+            // Auth Setup
             auth.onAuthStateChanged(user => {
                 setTimeout(() => { if(el('loader')) el('loader').classList.add('hidden'); }, 800);
                 if (user) {
@@ -971,19 +989,8 @@
                 }
             });
 
-            // Failsafe hiding loader
-            setTimeout(() => {
-                if(el('loader') && !el('loader').classList.contains('hidden')) {
-                    el('loader').classList.add('hidden');
-                    if(el('auth-screen').classList.contains('hidden') && el('main-app').classList.contains('hidden')) {
-                        el('auth-screen').classList.remove('hidden');
-                    }
-                }
-            }, 3000);
-
             auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(e => console.warn('Persistence Error:', e));
 
-            // Auth Interactions
             on('login-form', 'submit', e => {
                 e.preventDefault();
                 const btn = e.target.querySelector('button[type="submit"]');
@@ -1006,83 +1013,51 @@
                 const pwd = el('signup-password').value;
                 const confirmPwd = el('signup-confirm-password').value;
 
-                if (pwd !== confirmPwd) {
-                    el('signup-error').textContent = 'Passwords do not match.';
-                    return;
-                }
+                if (pwd !== confirmPwd) { el('signup-error').textContent = 'Passwords do not match.'; return; }
 
                 const origHTML = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = '<div class="btn-spinner"></div> Sending OTP...';
+                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Sending OTP...';
                 
-                generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-                pendingRegEmail = email;
-                pendingRegPassword = pwd;
+                window.generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+                window.pendingRegEmail = email;
+                window.pendingRegPassword = pwd;
 
-                emailjs.send("service_8bs891x", "template_porc85p", {
-                    to_email: email,
-                    otp: generatedOTP,
-                    message: generatedOTP
-                }).then(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = origHTML;
-                    el('signup-form').classList.add('hidden');
-                    el('otp-form').classList.remove('hidden');
-                    el('otp-error').textContent = '';
-                    el('otp-input').value = '';
+                emailjs.send("service_8bs891x", "template_porc85p", { to_email: email, otp: window.generatedOTP, message: window.generatedOTP })
+                .then(() => {
+                    btn.disabled = false; btn.innerHTML = origHTML;
+                    el('signup-form').classList.add('hidden'); el('otp-form').classList.remove('hidden');
+                    el('otp-error').textContent = ''; el('otp-input').value = '';
                 }).catch(err => {
-                    console.error("EmailJS Error:", err);
                     el('signup-error').textContent = 'Failed to send OTP. Check email connection.';
-                    btn.disabled = false;
-                    btn.innerHTML = origHTML;
+                    btn.disabled = false; btn.innerHTML = origHTML;
                 });
             });
 
             on('otp-form', 'submit', e => {
                 e.preventDefault();
                 const btn = e.target.querySelector('button[type="submit"]');
-                const enteredOTP = el('otp-input').value.trim();
-
-                if (enteredOTP !== generatedOTP) {
-                    el('otp-error').textContent = 'Invalid OTP.';
-                    return;
-                }
+                if (el('otp-input').value.trim() !== window.generatedOTP) { el('otp-error').textContent = 'Invalid OTP.'; return; }
 
                 const origHTML = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = '<div class="btn-spinner"></div> Creating Account...';
+                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Creating Account...';
                 
-                auth.createUserWithEmailAndPassword(pendingRegEmail, pendingRegPassword)
+                auth.createUserWithEmailAndPassword(window.pendingRegEmail, window.pendingRegPassword)
                     .catch(err => { 
                         el('otp-error').textContent = err.code === 'auth/weak-password' ? 'Password too weak.' : 'Email in use.';
-                        btn.disabled = false;
-                        btn.innerHTML = origHTML;
+                        btn.disabled = false; btn.innerHTML = origHTML;
                     });
             });
 
-            on('show-signup', 'click', () => { 
-                el('login-form').classList.add('hidden'); 
-                el('otp-form').classList.add('hidden'); 
-                el('signup-form').classList.remove('hidden'); 
-            });
-            on('show-login', 'click', () => { 
-                el('signup-form').classList.add('hidden'); 
-                el('otp-form').classList.add('hidden'); 
-                el('login-form').classList.remove('hidden'); 
-            });
-            on('back-to-signup-from-otp', 'click', () => {
-                el('otp-form').classList.add('hidden');
-                el('signup-form').classList.remove('hidden');
-            });
+            on('show-signup', 'click', () => { el('login-form').classList.add('hidden'); el('otp-form').classList.add('hidden'); el('signup-form').classList.remove('hidden'); });
+            on('show-login', 'click', () => { el('signup-form').classList.add('hidden'); el('otp-form').classList.add('hidden'); el('login-form').classList.remove('hidden'); });
+            on('back-to-signup-from-otp', 'click', () => { el('otp-form').classList.add('hidden'); el('signup-form').classList.remove('hidden'); });
             
             on('show-forgot-password', 'click', () => openModal('forgot-password-modal'));
             on('cancel-forgot-password', 'click', () => closeModal('forgot-password-modal'));
             on('send-reset-link-button', 'click', () => {
                 const email = el('forgot-password-email').value.trim();
                 if (!email) { el('forgot-password-status').textContent = 'Please enter email.'; return; }
-                auth.sendPasswordResetEmail(email).then(() => {
-                    closeModal('forgot-password-modal'); showInfoModal('Success', 'Recovery link dispatched.');
-                }).catch(e => { el('forgot-password-status').textContent = e.message; });
+                auth.sendPasswordResetEmail(email).then(() => { closeModal('forgot-password-modal'); showInfoModal('Success', 'Recovery link dispatched.'); }).catch(e => { el('forgot-password-status').textContent = e.message; });
             });
 
             function togglePwd(inputId, btnId) {
@@ -1094,37 +1069,25 @@
             on('toggle-signup-password', 'click', () => togglePwd('signup-password', 'toggle-signup-password'));
             on('toggle-signup-confirm-password', 'click', () => togglePwd('signup-confirm-password', 'toggle-signup-confirm-password'));
 
-            // Logout Flow
             document.querySelectorAll('.logout-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     closeModal('settings-modal');
-                    const overlay = el('logout-overlay');
-                    if(overlay) overlay.classList.remove('hidden');
-                    
+                    if(el('logout-overlay')) el('logout-overlay').classList.remove('hidden');
                     setTimeout(() => {
                         firebase.auth().signOut().then(() => {
-                            if(overlay) overlay.classList.add('hidden');
-                            
-                            const loginBtn = el('login-form').querySelector('button[type="submit"]');
-                            if(loginBtn) { loginBtn.disabled = false; loginBtn.innerHTML = 'Sign In'; el('login-email').value = ''; el('login-password').value = ''; }
-                            const signupBtn = el('signup-form').querySelector('button[type="submit"]');
-                            if(signupBtn) { signupBtn.disabled = false; signupBtn.innerHTML = 'Create Account'; el('signup-email').value = ''; el('signup-password').value = ''; el('signup-confirm-password').value = ''; }
-                            
-                            el('otp-form').classList.add('hidden');
-                            el('signup-form').classList.add('hidden');
-                            el('login-form').classList.remove('hidden');
+                            if(el('logout-overlay')) el('logout-overlay').classList.add('hidden');
+                            if(el('login-form')) el('login-form').querySelector('button[type="submit"]').disabled = false;
+                            el('login-email').value = ''; el('login-password').value = '';
+                            el('otp-form').classList.add('hidden'); el('signup-form').classList.add('hidden'); el('login-form').classList.remove('hidden');
                         });
                     }, 4000);
                 });
             });
 
-            // Profile Setup & Logic (Firestore)
             async function isUsernameUnique(name, uidToExclude = null) {
                 const snap = await firestore.collection('users').get();
                 let isUnique = true;
-                snap.forEach(doc => {
-                    if (doc.data().name === name && doc.id !== uidToExclude) isUnique = false;
-                });
+                snap.forEach(doc => { if (doc.data().name === name && doc.id !== uidToExclude) isUnique = false; });
                 return isUnique;
             }
 
@@ -1141,9 +1104,7 @@
                     msgArea.style.backgroundSize = 'cover';
                     msgArea.style.backgroundPosition = 'center';
                 } else {
-                    msgArea.style.backgroundImage = ''; 
-                    msgArea.style.backgroundSize = '';
-                    msgArea.style.backgroundPosition = '';
+                    msgArea.style.backgroundImage = ''; msgArea.style.backgroundSize = ''; msgArea.style.backgroundPosition = '';
                 }
             }
 
@@ -1155,9 +1116,7 @@
                         currentUserProfile = { uid: currentUser.uid, ...doc.data() };
                         el('my-profile-pic').innerHTML = createProfileDisplay(currentUserProfile);
                         el('my-profile-name').textContent = currentUserProfile.name;
-                        
                         applyWallpaper(currentUserProfile.wallpaper || null);
-                        
                         if (!el('main-app').dataset.initialized) { initializeApp(); el('main-app').dataset.initialized = "true"; }
                     }
                 });
@@ -1188,17 +1147,14 @@
                         userId: `ar-${Math.random().toString(36).substr(2, 4)}`, email: currentUser.email, photoURL: null, emoji: el('setup-emoji-input').value.trim() || '👤'
                     };
                     if (newProfilePicFile) { 
-                        const compressed = await compressImage(newProfilePicFile, 400, 400, 0.6); // Super aggressive for DP
+                        const compressed = await compressImage(newProfilePicFile, 400, 400, 0.6); 
                         profileData.photoURL = await uploadImageToImgBB(compressed); 
                         profileData.emoji = null; 
                     }
                     await firestore.collection('users').doc(currentUser.uid).set(profileData, {merge: true});
                     closeModal('profile-setup-modal'); newProfilePicFile = null; 
-                } catch (error) { 
-                    err.textContent = error.message; 
-                } finally { 
-                    btn.disabled = false; btn.textContent = 'Complete Profile'; 
-                }
+                } catch (error) { err.textContent = error.message; } 
+                finally { btn.disabled = false; btn.textContent = 'Complete Profile'; }
             });
 
             // Chat Wallpaper Settings
@@ -1211,59 +1167,42 @@
                 }
             });
             on('remove-wallpaper-btn', 'click', async () => {
-                 el('wallpaper-preview').src = '';
-                 el('wallpaper-preview').classList.add('hidden');
+                 el('wallpaper-preview').src = ''; el('wallpaper-preview').classList.add('hidden');
                  newWallpaperFile = null;
                  await firestore.collection('users').doc(currentUser.uid).update({ wallpaper: null });
-                 currentUserProfile.wallpaper = null;
-                 applyWallpaper(null);
+                 currentUserProfile.wallpaper = null; applyWallpaper(null);
             });
             on('save-wallpaper-btn', 'click', async () => {
                 if(!newWallpaperFile) return;
                 const btn = el('save-wallpaper-btn');
-                btn.innerHTML = '<div class="btn-spinner"></div> Saving...';
-                btn.disabled = true;
+                btn.innerHTML = '<div class="btn-spinner"></div> Saving...'; btn.disabled = true;
                 try {
-                    const compressed = await compressImage(newWallpaperFile, 1280, 1280, 0.7);
+                    const compressed = await compressImage(newWallpaperFile, 1920, 1920, 0.8);
                     const url = await uploadImageToImgBB(compressed);
                     await firestore.collection('users').doc(currentUser.uid).update({ wallpaper: url });
-                    currentUserProfile.wallpaper = url;
-                    applyWallpaper(url);
+                    currentUserProfile.wallpaper = url; applyWallpaper(url);
                     showInfoModal('Success', 'Wallpaper updated!');
-                } catch(e) {
-                    el('wallpaper-error').textContent = 'Failed to upload wallpaper.';
-                }
-                btn.innerHTML = 'Apply Wallpaper';
-                btn.disabled = false;
+                } catch(e) { el('wallpaper-error').textContent = 'Failed to upload wallpaper.'; }
+                btn.innerHTML = 'Apply Wallpaper'; btn.disabled = false;
             });
 
             // App Initialization
-            function initializeApp() {
-                setupPresenceSystem(); showSidebarTab('home'); listenForContacts(); listenForFriendRequests(); listenForCalls();
-            }
+            function initializeApp() { setupPresenceSystem(); showSidebarTab('home'); listenForContacts(); listenForFriendRequests(); listenForCalls(); }
             
             function cleanupListeners() {
                 if (!currentUser) return;
-                
-                // Unsubscribe Firestore listeners
-                firestoreUnsubs.forEach(unsub => unsub());
-                firestoreUnsubs = [];
+                firestoreUnsubs.forEach(unsub => unsub()); firestoreUnsubs = [];
                 Object.values(messageListeners).forEach(unsub => { if(typeof unsub === 'function') unsub(); });
                 Object.values(unreadListeners).forEach(unsub => { if(typeof unsub === 'function') unsub(); });
-                if(blockedUnsub) blockedUnsub();
-                if(logsUnsub) logsUnsub();
+                if(window.blockedUnsub) window.blockedUnsub();
+                if(window.logsUnsub) window.logsUnsub();
                 if(chatMetaUnsub) chatMetaUnsub();
-                if(friendsUnsub) friendsUnsub();
-
-                // Unsubscribe RTDB listeners
-                Object.values(statusListeners).forEach(ref => ref.off());
-                Object.values(typingListeners).forEach(ref => ref.off());
+                if(window.friendsUnsub) window.friendsUnsub();
+                Object.values(statusListeners).forEach(ref => ref.off()); Object.values(typingListeners).forEach(ref => ref.off());
                 rtdb.ref(`calls`).orderByChild('callee').equalTo(currentUser.uid).off();
-                
                 messageListeners = {}; statusListeners = {}; typingListeners = {}; unreadListeners = {};
             }
 
-            // Presence & Typing (RTDB - Kept for fast ephemeral signaling)
             function setupPresenceSystem() {
                 const ref = rtdb.ref(`/status/${currentUser.uid}`);
                 const offline = { state: 'offline', last_changed: firebase.database.ServerValue.TIMESTAMP };
@@ -1315,11 +1254,8 @@
                 sRef.on('value', (snap) => { tRef.once('value', tSnap => { if(tSnap.val() !== true) update(snap); }); });
             }
 
-            // Navigation Tabs
             function showSidebarTab(tabName) {
-                ['home', 'notifications', 'calls', 'blocked-users'].forEach(v => {
-                    const c = el(`${v}-content`); if(c) c.classList.add('hidden');
-                });
+                ['home', 'notifications', 'calls', 'blocked-users'].forEach(v => { const c = el(`${v}-content`); if(c) c.classList.add('hidden'); });
                 const target = el(`${tabName === 'blocked' ? 'blocked-users' : tabName}-content`);
                 if(target) target.classList.remove('hidden');
                 
@@ -1327,49 +1263,34 @@
                     const btn = el(id);
                     if(btn) {
                         const isMatch = id.includes(tabName === 'home' ? 'chats' : (tabName === 'notifications' ? 'requests' : tabName));
-                        if(isMatch) {
-                            btn.classList.add('bg-white', 'dark:bg-slate-700', 'text-primary', 'shadow-sm', 'font-bold');
-                            btn.classList.remove('text-slate-500', 'hover:bg-slate-100', 'dark:hover:bg-slate-800', 'font-medium', 'bg-transparent');
-                        } else {
-                            btn.classList.remove('bg-white', 'dark:bg-slate-700', 'text-primary', 'shadow-sm', 'font-bold');
-                            btn.classList.add('text-slate-500', 'hover:bg-slate-100', 'dark:hover:bg-slate-800', 'font-medium', 'bg-transparent');
-                        }
+                        if(isMatch) { btn.classList.add('bg-white', 'dark:bg-slate-700', 'text-primary', 'shadow-sm', 'font-bold'); btn.classList.remove('text-slate-500', 'hover:bg-slate-100', 'dark:hover:bg-slate-800', 'font-medium', 'bg-transparent'); } 
+                        else { btn.classList.remove('bg-white', 'dark:bg-slate-700', 'text-primary', 'shadow-sm', 'font-bold'); btn.classList.add('text-slate-500', 'hover:bg-slate-100', 'dark:hover:bg-slate-800', 'font-medium', 'bg-transparent'); }
                     }
                 });
             }
             on('nav-chats', 'click', () => showSidebarTab('home'));
             on('nav-requests', 'click', () => showSidebarTab('notifications'));
-            on('nav-calls', 'click', () => { showSidebarTab('calls'); listenAndDisplayCallLogs(); });
+            on('nav-calls', 'click', () => { showSidebarTab('calls'); window.listenAndDisplayCallLogs(); });
             
-            // Search
             on('contact-search-input', 'input', e => {
                 const term = e.target.value.toLowerCase();
                 document.querySelectorAll('#home-content .contact-item').forEach(item => {
                     const name = item.querySelector('.contact-name').textContent.toLowerCase();
-                    if(term === '') {
-                        item.style.display = item.classList.contains('hidden-chat') ? 'none' : 'flex';
-                    } else {
-                        item.style.display = name.includes(term) ? 'flex' : 'none';
-                    }
+                    if(term === '') { item.style.display = item.classList.contains('hidden-chat') ? 'none' : 'flex'; } 
+                    else { item.style.display = name.includes(term) ? 'flex' : 'none'; }
                 });
             });
 
-            // Mobile Back Button
             on('back-to-home-btn', 'click', () => {
-                currentChatId = null; 
-                el('main-chat-area').classList.remove('active'); 
-                document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active-chat'));
+                currentChatId = null; el('main-chat-area').classList.remove('active'); 
+                document.querySelectorAll('.contact-item').forEach(e => e.classList.remove('active-chat'));
                 setTimeout(()=> {
-                    el('active-chat-header').classList.add('hidden'); 
-                    el('chat-messages').classList.add('hidden');
-                    el('chat-input-container').classList.add('hidden');
-                    el('selection-action-container').classList.add('hidden');
-                    el('welcome-screen').classList.remove('hidden');
-                    cancelSelectionMode();
+                    el('active-chat-header').classList.add('hidden'); el('chat-messages').classList.add('hidden');
+                    el('chat-input-container').classList.add('hidden'); el('selection-action-container').classList.add('hidden');
+                    el('welcome-screen').classList.remove('hidden'); cancelSelectionMode();
                 },300);
             });
 
-            // Settings & Profile Edit Menu Tabs
             const setupSettingsTabs = () => {
                 document.querySelectorAll('.settings-tab').forEach(tab => {
                     tab.addEventListener('click', (e) => {
@@ -1394,17 +1315,10 @@
                 
                 el('profile-ar-id-display').textContent = currentUserProfile.userId; 
                 
-                // Show current wallpaper in settings if exists
-                if(currentUserProfile.wallpaper) {
-                    el('wallpaper-preview').src = currentUserProfile.wallpaper;
-                    el('wallpaper-preview').classList.remove('hidden');
-                } else {
-                    el('wallpaper-preview').src = '';
-                    el('wallpaper-preview').classList.add('hidden');
-                }
+                if(currentUserProfile.wallpaper) { el('wallpaper-preview').src = currentUserProfile.wallpaper; el('wallpaper-preview').classList.remove('hidden'); } 
+                else { el('wallpaper-preview').src = ''; el('wallpaper-preview').classList.add('hidden'); }
 
-                openModal('settings-modal');
-                el('tab-profile').click();
+                openModal('settings-modal'); el('tab-profile').click();
             });
 
             on('save-profile-changes-btn', 'click', async () => {
@@ -1417,21 +1331,35 @@
                     if (newName !== currentUserProfile.name && !(await isUsernameUnique(newName, currentUser.uid))) throw new Error('Name taken.');
                     const updates = { name: newName, bio: el('edit-bio-input').value.trim() || "Available for secure connection", gender: el('edit-gender-input').value, showGender: el('edit-show-gender').checked };
                     if (editProfilePicFile) { 
-                        const compressed = await compressImage(editProfilePicFile, 400, 400, 0.6); // Super aggressive DP compression
+                        const compressed = await compressImage(editProfilePicFile, 400, 400, 0.6); 
                         updates.photoURL = await uploadImageToImgBB(compressed); 
                         updates.emoji = null; 
                     } 
                     else if (el('edit-pfp-preview').classList.contains('hidden')) { updates.emoji = el('edit-emoji-input').value.trim() || '👤'; updates.photoURL = null; }
                     await firestore.collection('users').doc(currentUser.uid).set(updates, {merge: true});
                     showInfoModal('Success', 'Preferences updated.'); closeModal('settings-modal'); editProfilePicFile = null; 
-                } catch (error) { 
-                    errEl.textContent = error.message; 
-                } finally { 
-                    btn.disabled = false; btn.textContent = 'Save Configuration'; 
+                } catch (error) { errEl.textContent = error.message; } 
+                finally { btn.disabled = false; btn.textContent = 'Save Configuration'; }
+            });
+
+            // Report logic from Settings
+            on('submit-settings-report-btn', 'click', async () => {
+                const txt = el('settings-report-input').value.trim();
+                if(!txt) return;
+                const btn = el('submit-settings-report-btn');
+                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div>';
+                try {
+                    await firestore.collection('reports').add({ reportedBy: currentUser.uid, targetId: 'General App Issue', reason: txt, timestamp: Date.now() });
+                    el('settings-report-input').value = '';
+                    el('settings-report-status').textContent = 'Report submitted successfully.';
+                    setTimeout(() => el('settings-report-status').textContent='', 3000);
+                } catch (e) {
+                    el('settings-report-status').textContent = 'Error: ' + e.message;
+                    el('settings-report-status').classList.replace('text-green-500', 'text-red-500');
                 }
+                btn.disabled = false; btn.textContent = 'Submit Report';
             });
             
-            // Add Friend Flow (Firestore)
             on('add-friend-button', 'click', () => { el('add-friend-id-input').value=''; el('add-friend-status').textContent=''; el('friend-search-result').classList.add('hidden'); openModal('add-friend-modal'); });
             on('search-friend-btn', 'click', () => {
                 const idInput = el('add-friend-id-input').value.trim();
@@ -1516,13 +1444,15 @@
                 }
             });
 
-            // Selection Mode Control
             const cancelSelectionMode = () => {
-                isSelectionMode = false;
-                selectedMessages.clear();
+                isSelectionMode = false; selectedMessages.clear();
                 el('chat-messages').classList.remove('selection-mode');
                 el('selection-action-container').classList.add('hidden');
-                el('chat-input-container').classList.remove('hidden');
+                
+                if (currentChatId && !currentChatId.startsWith('SYSTEM_')) {
+                    el('chat-input-container').classList.remove('hidden');
+                }
+                
                 document.querySelectorAll('.msg-select-cb').forEach(cb => cb.checked = false);
             };
 
@@ -1533,13 +1463,8 @@
                     el('selection-count').textContent = `${selectedMessages.size} Selected`;
                     
                     const delBtn = el('delete-selection-btn');
-                    if(selectedMessages.size > 0) {
-                        delBtn.disabled = false;
-                        delBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    } else {
-                        delBtn.disabled = true;
-                        delBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    }
+                    if(selectedMessages.size > 0) { delBtn.disabled = false; delBtn.classList.remove('opacity-50', 'cursor-not-allowed'); } 
+                    else { delBtn.disabled = true; delBtn.classList.add('opacity-50', 'cursor-not-allowed'); }
                 }
             });
 
@@ -1558,7 +1483,6 @@
                 });
             });
 
-            // Contact Actions & Info Drawer Toggles
             on('close-info-drawer', 'click', () => {
                 const drawer = el('contact-info-drawer');
                 drawer.classList.remove('active');
@@ -1569,21 +1493,13 @@
             on('chat-info-trigger', 'click', () => {
                 const drawer = el('contact-info-drawer');
                 drawer.classList.remove('hidden');
-                setTimeout(() => {
-                    drawer.classList.remove('translate-x-full');
-                    drawer.classList.add('active');
-                }, 10);
+                setTimeout(() => { drawer.classList.remove('translate-x-full'); drawer.classList.add('active'); }, 10);
             });
 
-            // 3-Dots Menu Logic
             const chatOptionsBtn = el('chat-options-btn');
             const chatOptionsMenu = el('chat-options-menu');
-
             if(chatOptionsBtn) {
-                chatOptionsBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    chatOptionsMenu.classList.toggle('hidden');
-                });
+                chatOptionsBtn.addEventListener('click', (e) => { e.stopPropagation(); chatOptionsMenu.classList.toggle('hidden'); });
             }
 
             document.addEventListener('click', (e) => {
@@ -1592,20 +1508,12 @@
                 }
             });
 
-            on('menu-close-chat', 'click', () => {
-                chatOptionsMenu.classList.add('hidden');
-                el('back-to-home-btn').click();
-            });
-
-            on('menu-clear-chat', 'click', () => {
-                chatOptionsMenu.classList.add('hidden');
-                openModal('clear-chat-modal');
-            });
+            on('menu-close-chat', 'click', () => { chatOptionsMenu.classList.add('hidden'); el('back-to-home-btn').click(); });
+            on('menu-clear-chat', 'click', () => { chatOptionsMenu.classList.add('hidden'); openModal('clear-chat-modal'); });
 
             on('clear-chat-me-btn', 'click', async () => {
                 await firestore.collection('userChats').doc(currentUser.uid).collection('chats').doc(currentChatId).set({ clearedAt: Date.now() }, { merge: true });
-                closeModal('clear-chat-modal');
-                el('close-info-drawer').click();
+                closeModal('clear-chat-modal'); el('close-info-drawer').click();
             });
 
             on('clear-chat-everyone-btn', 'click', async () => {
@@ -1613,8 +1521,7 @@
                 const batch = firestore.batch();
                 snap.forEach(doc => batch.delete(doc.ref));
                 await batch.commit();
-                closeModal('clear-chat-modal');
-                el('close-info-drawer').click();
+                closeModal('clear-chat-modal'); el('close-info-drawer').click();
             });
 
             on('clear-chat-cancel-btn', 'click', () => closeModal('clear-chat-modal'));
@@ -1622,37 +1529,27 @@
             on('menu-delete-chat', 'click', () => {
                 chatOptionsMenu.classList.add('hidden');
                 showConfirmModal('Delete Chat?', 'This will remove the chat from your list and clear the history for everyone.', async () => { 
-                    // 1. Delete all history docs
                     const snap = await firestore.collection('messages').doc(currentChatId).collection('history').get();
                     const batch = firestore.batch();
                     snap.forEach(doc => batch.delete(doc.ref));
                     await batch.commit();
-
-                    // 2. Hide chat from chat list
                     await firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).set({ chatVisible: false }, { merge: true });
-                    
-                    el('close-info-drawer').click();
-                    el('back-to-home-btn').click();
+                    el('close-info-drawer').click(); el('back-to-home-btn').click();
                 });
             });
 
-            on('menu-media', 'click', () => {
-                chatOptionsMenu.classList.add('hidden');
-                showInfoModal('Media, Links & Docs', 'No media shared in this chat yet.');
-            });
+            on('menu-media', 'click', () => { chatOptionsMenu.classList.add('hidden'); showInfoModal('Media, Links & Docs', 'No media shared in this chat yet.'); });
 
             on('menu-select-msg', 'click', () => {
                 chatOptionsMenu.classList.add('hidden');
-                isSelectionMode = true;
-                selectedMessages.clear();
+                isSelectionMode = true; selectedMessages.clear();
                 el('selection-count').textContent = '0 Selected';
                 el('chat-messages').classList.add('selection-mode');
                 el('selection-action-container').classList.remove('hidden');
                 el('chat-input-container').classList.add('hidden');
                 
                 const delBtn = el('delete-selection-btn');
-                delBtn.disabled = true;
-                delBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                delBtn.disabled = true; delBtn.classList.add('opacity-50', 'cursor-not-allowed');
             });
 
             on('menu-unfriend', 'click', () => {
@@ -1660,8 +1557,7 @@
                 showConfirmModal('Unfriend?', 'Remove this user from your contacts?', () => { 
                     firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).delete(); 
                     firestore.collection('contacts').doc(currentChatPartner.uid).collection('list').doc(currentUser.uid).delete(); 
-                    el('close-info-drawer').click();
-                    el('back-to-home-btn').click();
+                    el('close-info-drawer').click(); el('back-to-home-btn').click();
                 });
             });
 
@@ -1671,19 +1567,37 @@
                     firestore.collection('blocked').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).set(currentChatPartner); 
                     firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).delete(); 
                     firestore.collection('contacts').doc(currentChatPartner.uid).collection('list').doc(currentUser.uid).delete(); 
-                    el('close-info-drawer').click();
-                    el('back-to-home-btn').click();
+                    el('close-info-drawer').click(); el('back-to-home-btn').click();
                 });
+            });
+
+            on('menu-report-user', 'click', () => {
+                el('chat-options-menu').classList.add('hidden');
+                el('report-user-input').value = '';
+                openModal('report-user-modal');
+            });
+
+            on('submit-user-report-btn', 'click', async () => {
+                const txt = el('report-user-input').value.trim();
+                if(!txt) return;
+                const btn = el('submit-user-report-btn'); const origText = btn.textContent;
+                btn.disabled = true; btn.textContent = 'Submitting...';
+                try {
+                    await firestore.collection('reports').add({ reportedBy: currentUser.uid, targetId: currentChatPartner.uid, reason: txt, timestamp: Date.now() });
+                    closeModal('report-user-modal');
+                    showInfoModal('Reported', 'Thank you for keeping the community safe. Our admin team will review this report.');
+                } catch (e) { alert('Failed to send report.'); }
+                btn.disabled = false; btn.textContent = origText;
             });
 
             function populateInfoDrawer(profile) {
                 el('drawer-pfp').innerHTML = createProfileDisplay(profile);
-                el('drawer-name').textContent = profile.name;
+                el('drawer-name').innerHTML = `${profile.name} ${profile.verified ? '<span class="material-symbols-outlined text-blue-500 text-[18px]" title="Verified">verified</span>' : ''}`;
                 el('drawer-id').textContent = profile.userId;
                 el('drawer-bio').textContent = profile.bio || "Available for secure connection";
                 
                 const genBox = el('drawer-gender-box');
-                if(profile.showGender !== false && profile.gender && profile.gender !== "Prefer not to say") {
+                if(profile.showGender !== false && profile.gender && profile.gender !== "Prefer not to say" && !profile.isSystem) {
                     el('drawer-gender').textContent = profile.gender; genBox.classList.remove('hidden');
                 } else { genBox.classList.add('hidden'); }
             }
@@ -1691,11 +1605,8 @@
             function listenForContacts() {
                 const unsub = firestore.collection('contacts').doc(currentUser.uid).collection('list').onSnapshot(snap => {
                     const list = el('contact-list-container');
-                    
                     snap.docChanges().forEach(change => {
-                        const uid = change.doc.id;
-                        const profile = change.doc.data();
-                        
+                        const uid = change.doc.id; const profile = change.doc.data();
                         if (change.type === 'added' || change.type === 'modified') {
                             if (!list.querySelector(`#contact-${uid}`)) {
                                 const a = document.createElement('div'); a.className = 'contact-item flex items-center gap-3 px-3 py-3 cursor-pointer rounded-xl transition-colors relative';
@@ -1703,62 +1614,51 @@
                                 a.innerHTML = `
                                     <div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0 text-xl shadow-sm z-10">${createProfileDisplay(profile)}</div>
                                     <div class="flex-1 min-w-0 z-10">
-                                        <div class="flex justify-between items-baseline mb-1"><h2 class="contact-name text-[15px] font-bold truncate text-slate-900 dark:text-slate-100">${profile.name}</h2><span class="contact-time text-[10px] font-bold text-slate-400 uppercase tracking-widest" id="time-${uid}"></span></div>
+                                        <div class="flex justify-between items-baseline mb-1">
+                                            <h2 class="contact-name text-[15px] font-bold truncate text-slate-900 dark:text-slate-100 flex items-center gap-1">
+                                                ${profile.name} ${profile.verified ? '<span class="material-symbols-outlined text-blue-500 text-[14px]" title="Verified">verified</span>' : ''}
+                                            </h2>
+                                            <span class="contact-time text-[10px] font-bold text-slate-400 uppercase tracking-widest" id="time-${uid}"></span>
+                                        </div>
                                         <div class="flex justify-between items-center"><p class="contact-status text-xs text-slate-500 truncate font-medium" id="status-${uid}">Offline</p><div class="unread-badge hidden w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-sm" id="unread-${uid}"></div></div>
                                     </div>`;
-                                
                                 list.appendChild(a);
-                                listenForUserStatus(uid, a.querySelector(`#status-${uid}`), false);
+                                if(!profile.isSystem) listenForUserStatus(uid, a.querySelector(`#status-${uid}`), false);
+                                else { a.querySelector(`#status-${uid}`).textContent = 'Official Account'; a.querySelector(`#status-${uid}`).classList.replace('text-slate-500', 'text-blue-500'); }
 
-                                const chatId = getChatId(currentUser.uid, uid);
+                                const chatId = profile.isSystem ? `SYSTEM_${currentUser.uid}` : getChatId(currentUser.uid, uid);
                                 const uRef = firestore.collection('userChats').doc(currentUser.uid).collection('chats').doc(chatId);
                                 
-                                if (unreadListeners[chatId]) unreadListeners[chatId](); // unsub old
+                                if (unreadListeners[chatId]) unreadListeners[chatId]();
                                 unreadListeners[chatId] = uRef.onSnapshot(doc => {
-                                    const data = doc.data() || {};
-                                    const count = data.unread || 0;
+                                    const data = doc.data() || {}; const count = data.unread || 0;
                                     if (currentChatId === chatId && document.visibilityState === 'visible') {
                                         if (count > 0) uRef.set({unread: 0}, {merge: true}); 
                                         a.querySelector('.unread-badge').classList.add('hidden');
                                     } else if (count > 0) { 
                                         a.querySelector('.unread-badge').textContent = count > 99 ? '99+' : count; 
                                         a.querySelector('.unread-badge').classList.remove('hidden');
-                                    } else { 
-                                        a.querySelector('.unread-badge').classList.add('hidden'); 
-                                    }
+                                    } else { a.querySelector('.unread-badge').classList.add('hidden'); }
                                 });
-                                
-                                // Re-apply active class if it's the current chat partner
-                                if(currentChatId === chatId) {
-                                    a.classList.add('active-chat');
-                                }
+                                if(currentChatId === chatId) a.classList.add('active-chat');
                             } else if (change.type === 'modified') {
                                 const a = list.querySelector(`#contact-${uid}`);
-                                if (a) a.querySelector('.contact-name').textContent = profile.name;
+                                if (a) a.querySelector('.contact-name').innerHTML = `${profile.name} ${profile.verified ? '<span class="material-symbols-outlined text-blue-500 text-[14px]" title="Verified">verified</span>' : ''}`;
                             }
                             
-                            // Check chat visibility
                             const a = list.querySelector(`#contact-${uid}`);
                             if(a) {
-                                if (profile.chatVisible === false) {
-                                    a.classList.add('hidden-chat');
-                                    a.style.display = 'none';
-                                } else {
+                                if (profile.chatVisible === false) { a.classList.add('hidden-chat'); a.style.display = 'none'; } 
+                                else {
                                     a.classList.remove('hidden-chat');
-                                    // Check if there is an active search to prevent overriding search view
                                     const term = el('contact-search-input').value.toLowerCase();
-                                    if(term && !profile.name.toLowerCase().includes(term)) {
-                                        a.style.display = 'none';
-                                    } else {
-                                        a.style.display = 'flex';
-                                    }
+                                    if(term && !profile.name.toLowerCase().includes(term)) { a.style.display = 'none'; } else { a.style.display = 'flex'; }
                                 }
                             }
                         }
-                        
                         if (change.type === 'removed') {
                             const item = el(`contact-${uid}`); if (item) item.remove();
-                            const chatId = getChatId(currentUser.uid, uid);
+                            const chatId = profile.isSystem ? `SYSTEM_${currentUser.uid}` : getChatId(currentUser.uid, uid);
                             if (unreadListeners[chatId]) { unreadListeners[chatId](); delete unreadListeners[chatId]; }
                             if (typingListeners[uid]) { typingListeners[uid].off(); delete typingListeners[uid]; }
                         }
@@ -1772,8 +1672,15 @@
                 if (item) {
                     document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active-chat')); 
                     item.classList.add('active-chat');
-                    const doc = await firestore.collection('users').doc(item.dataset.uid).get(); 
-                    if(doc.exists) await openChat(doc.data(), item.dataset.uid);
+                    const uid = item.dataset.uid;
+                    
+                    if (uid === 'SYSTEM') {
+                        const sysProfile = { name: 'AR CHATS', photoURL: 'https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png', userId: 'SYSTEM-OFFICIAL', bio: 'Official Announcements', isSystem: true, verified: true };
+                        await openChat(sysProfile, uid);
+                    } else {
+                        const doc = await firestore.collection('users').doc(uid).get(); 
+                        if(doc.exists) await openChat(doc.data(), uid);
+                    }
                 }
             });
 
@@ -1781,28 +1688,40 @@
 
             async function openChat(profile, uid) {
                 cancelSelectionMode();
-                currentChatPartner = { ...profile, uid }; currentChatId = getChatId(currentUser.uid, uid);
+                currentChatPartner = { ...profile, uid }; 
+                currentChatId = profile.isSystem ? `SYSTEM_${currentUser.uid}` : getChatId(currentUser.uid, uid);
                 
                 el('welcome-screen').classList.add('hidden'); 
-                
                 el('active-chat-header').classList.remove('hidden');
                 el('chat-messages').classList.remove('hidden');
-                el('chat-input-container').classList.remove('hidden');
+                
+                if (profile.isSystem) {
+                    el('chat-input-container').classList.add('hidden');
+                    el('start-audio-call').classList.add('hidden');
+                    el('start-video-call').classList.add('hidden');
+                    el('chat-header-divider').classList.add('hidden');
+                } else {
+                    el('chat-input-container').classList.remove('hidden');
+                    el('start-audio-call').classList.remove('hidden');
+                    el('start-video-call').classList.remove('hidden');
+                    el('chat-header-divider').classList.remove('hidden');
+                }
                 
                 el('main-chat-area').classList.add('active'); 
 
                 el('chat-header-pfp').innerHTML = createProfileDisplay(profile); 
-                el('chat-header-name').textContent = profile.name;
+                el('chat-header-name').innerHTML = `${profile.name} ${profile.verified ? '<span class="material-symbols-outlined text-blue-500 text-[16px] align-middle" title="Verified">verified</span>' : ''}`;
                 
-                // Fetch the absolute latest bio for this user just in case and populate the info drawer
-                const liveProfile = await firestore.collection('users').doc(uid).get();
-                if(liveProfile.exists) {
-                    populateInfoDrawer(liveProfile.data());
-                } else {
+                if (profile.isSystem) {
                     populateInfoDrawer(profile);
+                    el('chat-header-status').textContent = 'Official Account';
+                    el('chat-header-status').classList.replace('text-slate-500', 'text-blue-500');
+                } else {
+                    const liveProfile = await firestore.collection('users').doc(uid).get();
+                    if(liveProfile.exists) populateInfoDrawer(liveProfile.data()); else populateInfoDrawer(profile);
+                    listenForUserStatus(uid, el('chat-header-status'), true);
                 }
 
-                listenForUserStatus(uid, el('chat-header-status'), true);
                 await listenForMessages();
             }
 
@@ -1822,7 +1741,10 @@
                     const wrapper = document.createElement('div'); 
                     wrapper.className = `flex items-center w-full mb-5 msg-wrapper ${isMe ? 'justify-end' : 'justify-start'}`;
                     
-                    const pfpStr = isMe ? createProfileDisplay(currentUserProfile) : createProfileDisplay(currentChatPartner);
+                    let pfpStr = '';
+                    if (msg.sender === 'SYSTEM') { pfpStr = `<img src="https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png" class="w-full h-full object-cover">`; }
+                    else { pfpStr = isMe ? createProfileDisplay(currentUserProfile) : createProfileDisplay(currentChatPartner); }
+                    
                     const isChecked = selectedMessages.has(msg.id) ? 'checked' : '';
                     
                     let inner = `
@@ -1835,13 +1757,8 @@
                     `;
                     
                     if (msg.isDeleted || msg.type === 'deleted') {
-                        inner += `
-                            <div class="${isMe ? 'bg-primary/40 text-white/80 shadow-md rounded-br-sm' : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700 rounded-bl-sm'} p-3.5 rounded-2xl text-[14.5px] italic flex items-center gap-2 w-fit max-w-full">
-                                <span class="material-symbols-outlined text-[16px]">block</span> This message was deleted
-                            </div>
-                        `;
+                        inner += `<div class="${isMe ? 'bg-primary/40 text-white/80 shadow-md rounded-br-sm' : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700 rounded-bl-sm'} p-3.5 rounded-2xl text-[14.5px] italic flex items-center gap-2 w-fit max-w-full"><span class="material-symbols-outlined text-[16px]">block</span> This message was deleted</div>`;
                     } else if (msg.type === 'image') {
-                        // Scrolling to bottom after Image loads prevents layout shifts!
                         inner += `
                             <div class="relative rounded-2xl overflow-hidden shadow-sm border ${isMe?'border-primary/30':'border-slate-200 dark:border-slate-700'} bg-white dark:bg-slate-800 group w-fit inline-block ${isPending ? 'opacity-50 grayscale-[20%]' : ''}">
                                 <img src="${msg.content}" onload="document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;" class="max-h-72 object-cover cursor-pointer" onclick="window.open('${msg.content}','_blank')">
@@ -1851,12 +1768,12 @@
                         `;
                     } else {
                         inner += `
-                            <div class="${isMe ? 'bg-primary text-white rounded-br-sm shadow-primary/20 shadow-md' : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-bl-sm shadow-sm'} p-3.5 rounded-2xl text-[14.5px] leading-relaxed break-words w-fit max-w-full">
+                            <div class="${msg.sender === 'SYSTEM' ? 'bg-blue-600 text-white border-blue-500 rounded-bl-sm shadow-md' : (isMe ? 'bg-primary text-white rounded-br-sm shadow-primary/20 shadow-md' : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-bl-sm shadow-sm')} p-3.5 rounded-2xl text-[14.5px] leading-relaxed break-words w-fit max-w-full">
                                 ${msg.text}
                             </div>
                             <div class="flex items-center gap-1 ${isMe?'':'ml-1'} mt-0.5">
                                 <span class="text-[10px] text-slate-400 font-medium">${time}</span>
-                                ${isMe ? '<span class="material-symbols-outlined text-[14px] text-primary">done_all</span>' : ''}
+                                ${msg.sender === 'SYSTEM' ? '<span class="material-symbols-outlined text-[14px] text-blue-500">verified</span>' : (isMe ? '<span class="material-symbols-outlined text-[14px] text-primary">done_all</span>' : '')}
                             </div>
                         `;
                     }
@@ -1869,15 +1786,11 @@
 
             async function listenForMessages() {
                 el('chat-messages').innerHTML = '';
-                
                 const chatRef = firestore.collection('userChats').doc(currentUser.uid).collection('chats').doc(currentChatId);
                 await chatRef.set({unread: 0}, {merge:true});
                 
                 if (chatMetaUnsub) chatMetaUnsub();
-                chatMetaUnsub = chatRef.onSnapshot(doc => {
-                    if (doc.exists) currentChatMetadata = doc.data() || {};
-                    renderCurrentMessages(); 
-                });
+                chatMetaUnsub = chatRef.onSnapshot(doc => { if (doc.exists) currentChatMetadata = doc.data() || {}; renderCurrentMessages(); });
 
                 if (messageListeners[currentChatId]) messageListeners[currentChatId](); 
                 messageListeners[currentChatId] = firestore.collection('messages').doc(currentChatId).collection('history').onSnapshot(snap => {
@@ -1890,10 +1803,7 @@
 
             el('chat-messages').addEventListener('click', (e) => {
                 const icon = e.target.closest('.download-icon');
-                if (icon) {
-                    const a = document.createElement('a'); a.href = icon.dataset.src; a.download = `ar-media-${Date.now()}.png`;
-                    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-                }
+                if (icon) { const a = document.createElement('a'); a.href = icon.dataset.src; a.download = `ar-media-${Date.now()}.png`; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
             });
 
             // Send Msg
@@ -1907,23 +1817,12 @@
                 const txt = chatInput.value.trim(); 
                 if (!txt && !imageUrl) return;
                 
-                const msgData = { 
-                    sender: currentUser.uid, 
-                    timestamp: Date.now(), 
-                    type: imageUrl ? 'image' : 'text', 
-                    [imageUrl ? 'content' : 'text']: imageUrl || txt 
-                };
-                
+                const msgData = { sender: currentUser.uid, timestamp: Date.now(), type: imageUrl ? 'image' : 'text', [imageUrl ? 'content' : 'text']: imageUrl || txt };
                 firestore.collection('messages').doc(currentChatId).collection('history').add(msgData);
                 
                 const pChatRef = firestore.collection('userChats').doc(currentChatPartner.uid).collection('chats').doc(currentChatId);
-                pChatRef.get().then(doc => {
-                    let unread = 1;
-                    if(doc.exists && doc.data().unread) unread = doc.data().unread + 1;
-                    pChatRef.set({unread}, {merge:true});
-                });
+                pChatRef.get().then(doc => { let unread = 1; if(doc.exists && doc.data().unread) unread = doc.data().unread + 1; pChatRef.set({unread}, {merge:true}); });
 
-                // Unhide chat for both users locally
                 firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).set({ chatVisible: true }, { merge: true });
                 firestore.collection('contacts').doc(currentChatPartner.uid).collection('list').doc(currentUser.uid).set({ chatVisible: true }, { merge: true });
                 
@@ -1932,52 +1831,28 @@
                 sendBtn.disabled = true;
             }
 
-            // OPTIMISTIC IMAGE UPLOAD: Fast UX without blocking the input!
             el('chat-image-input').addEventListener('change', async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                const localUrl = URL.createObjectURL(file);
-                const tempId = 'temp_' + Date.now();
-
-                // 1. Optimistically append image to the UI immediately
-                pendingUploads.push({
-                    id: tempId,
-                    type: 'image',
-                    content: localUrl,
-                    sender: currentUser.uid,
-                    timestamp: Date.now(),
-                    isPending: true
-                });
-                renderCurrentMessages();
-                
-                // Clear the input to allow sending more
-                e.target.value = '';
+                const file = e.target.files[0]; if (!file) return;
+                const localUrl = URL.createObjectURL(file); const tempId = 'temp_' + Date.now();
+                pendingUploads.push({ id: tempId, type: 'image', content: localUrl, sender: currentUser.uid, timestamp: Date.now(), isPending: true });
+                renderCurrentMessages(); e.target.value = '';
 
                 try { 
-                    // 2. Process and Upload in background (Aggressive Compression for speed)
                     const compressedFile = await compressImage(file, 800, 800, 0.6);
                     const url = await uploadImageToImgBB(compressedFile);
-                    
-                    // 3. Cleanup local pending and dispatch actual message to Firestore
                     pendingUploads = pendingUploads.filter(p => p.id !== tempId);
                     sendMsg(url); 
-                } 
-                catch(err) { 
+                } catch(err) { 
                     pendingUploads = pendingUploads.filter(p => p.id !== tempId);
-                    renderCurrentMessages();
-                    showInfoModal('Upload Failed', 'Transfer interrupted.'); 
+                    renderCurrentMessages(); showInfoModal('Upload Failed', 'Transfer interrupted.'); 
                 }
             });
 
-            // Settings views logic
-            let blockedUnsub = null;
+            window.blockedUnsub = null;
             function listenAndDisplayBlockedUsers() {
-                if(blockedUnsub) blockedUnsub();
-                blockedUnsub = firestore.collection('blocked').doc(currentUser.uid).collection('list').onSnapshot(snap => {
-                    const list = el('settings-blocked-list');
-                    if(!list) return;
-                    list.innerHTML = '';
+                if(window.blockedUnsub) window.blockedUnsub();
+                window.blockedUnsub = firestore.collection('blocked').doc(currentUser.uid).collection('list').onSnapshot(snap => {
+                    const list = el('settings-blocked-list'); if(!list) return; list.innerHTML = '';
                     if (!snap.empty) {
                         snap.forEach(s => {
                             const div = document.createElement('div'); div.className = 'flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 mb-2 shadow-sm';
@@ -1992,19 +1867,16 @@
             }
             on('tab-blocked', 'click', () => listenAndDisplayBlockedUsers());
 
-            let friendsUnsub = null;
+            window.friendsUnsub = null;
             function listenAndDisplayFriendList() {
-                if(friendsUnsub) friendsUnsub();
-                friendsUnsub = firestore.collection('contacts').doc(currentUser.uid).collection('list').onSnapshot(snap => {
-                    const list = el('settings-friends-list');
-                    if(!list) return;
-                    list.innerHTML = '';
+                if(window.friendsUnsub) window.friendsUnsub();
+                window.friendsUnsub = firestore.collection('contacts').doc(currentUser.uid).collection('list').onSnapshot(snap => {
+                    const list = el('settings-friends-list'); if(!list) return; list.innerHTML = '';
                     if (!snap.empty) {
                         snap.forEach(s => {
-                            const fUid = s.id;
-                            const p = s.data();
-                            const div = document.createElement('div'); 
-                            div.className = 'flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 mb-2 shadow-sm';
+                            const fUid = s.id; const p = s.data();
+                            if(p.isSystem) return; // Skip system broadcast from friends list
+                            const div = document.createElement('div'); div.className = 'flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 mb-2 shadow-sm';
                             div.innerHTML = `
                                 <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center shrink-0 bg-slate-200 dark:bg-slate-700 text-2xl border border-slate-200 dark:border-slate-600">${createProfileDisplay(p)}</div>
                                 <div class="flex-1 min-w-0"><h4 class="text-[15px] font-bold truncate text-slate-900 dark:text-white">${p.name}</h4></div>
@@ -2019,10 +1891,8 @@
             
             el('settings-modal').addEventListener('click', async e => {
                 if(e.target.classList.contains('btn-msg-friend')) {
-                    const uid = e.target.dataset.uid;
-                    closeModal('settings-modal');
-                    const doc = await firestore.collection('users').doc(uid).get(); 
-                    if(doc.exists) await openChat(doc.data(), uid);
+                    const uid = e.target.dataset.uid; closeModal('settings-modal');
+                    const doc = await firestore.collection('users').doc(uid).get(); if(doc.exists) await openChat(doc.data(), uid);
                 }
                 if(e.target.classList.contains('btn-unfriend')) {
                     const uid = e.target.dataset.uid;
@@ -2033,27 +1903,19 @@
                 }
             });
 
-            let logsUnsub = null;
-            function listenAndDisplayCallLogs() {
-                if(logsUnsub) logsUnsub();
-                logsUnsub = firestore.collection('callLogs').doc(currentUser.uid).collection('logs').onSnapshot(snap => {
+            window.logsUnsub = null;
+            window.listenAndDisplayCallLogs = function() {
+                if(window.logsUnsub) window.logsUnsub();
+                window.logsUnsub = firestore.collection('callLogs').doc(currentUser.uid).collection('logs').onSnapshot(snap => {
                     const list = el('calls-list-container'); list.innerHTML = '';
                     if (!snap.empty) {
                         const logs = []; snap.forEach(s => logs.push(s.data()));
                         logs.sort((a,b) => b.timestamp - a.timestamp).forEach(log => {
-                            const isMissed = log.type === 'missed';
-                            const isIncoming = log.type === 'incoming';
-                            
+                            const isMissed = log.type === 'missed'; const isIncoming = log.type === 'incoming';
                             const iconStr = isMissed ? 'call_missed' : (isIncoming ? 'call_received' : 'call_made');
                             const colorClass = isMissed ? 'bg-red-50 dark:bg-red-500/10 text-red-500' : (isIncoming ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-500' : 'bg-green-50 dark:bg-green-500/10 text-green-500');
-                            
                             const div = document.createElement('div'); div.className = 'flex items-center gap-3 p-3 bg-white dark:bg-slate-800/50 rounded-xl mb-2 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700';
-                            div.innerHTML = `
-                                <div class="w-10 h-10 rounded-full ${colorClass} flex items-center justify-center shrink-0">
-                                    <span class="material-symbols-outlined text-[20px]">${iconStr}</span>
-                                </div>
-                                <div class="flex-1 min-w-0"><h4 class="text-sm font-bold truncate text-slate-900 dark:text-white">${log.partnerName}</h4><p class="text-[10px] text-slate-500 font-medium uppercase">${new Date(log.timestamp).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}</p></div>
-                            `;
+                            div.innerHTML = `<div class="w-10 h-10 rounded-full ${colorClass} flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">${iconStr}</span></div><div class="flex-1 min-w-0"><h4 class="text-sm font-bold truncate text-slate-900 dark:text-white">${log.partnerName}</h4><p class="text-[10px] text-slate-500 font-medium uppercase">${new Date(log.timestamp).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}</p></div>`;
                             list.appendChild(div);
                         });
                     } else { list.innerHTML = '<div class="empty-state flex flex-col justify-center items-center mt-10 opacity-50"><span class="material-symbols-outlined text-[40px] mb-2">call</span><p class="text-sm font-semibold">No call records.</p></div>'; }
@@ -2061,75 +1923,46 @@
             }
 
             // --- WEBRTC CALLING ---
-            const inCallScreen = el('incoming-call-screen');
-            const actCallScreen = el('active-call-screen');
-            const locVid = el('localVideo');
-            const remVid = el('remoteVideo');
-            const cTimer = el('call-timer');
+            const inCallScreen = el('incoming-call-screen'); const actCallScreen = el('active-call-screen');
+            const locVid = el('localVideo'); const remVid = el('remoteVideo'); const cTimer = el('call-timer');
             const iceServers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] };
 
             function logCall(partnerUid, partnerName, type) {
                 if(!currentUser) return;
-                firestore.collection('callLogs').doc(currentUser.uid).collection('logs').add({
-                    partnerId: partnerUid,
-                    partnerName: partnerName || 'Unknown Contact',
-                    type: type, // 'outgoing', 'incoming', 'missed'
-                    timestamp: Date.now()
-                });
+                firestore.collection('callLogs').doc(currentUser.uid).collection('logs').add({ partnerId: partnerUid, partnerName: partnerName || 'Unknown Contact', type: type, timestamp: Date.now() });
             }
 
-            on('start-audio-call', 'click', () => { if(currentChatPartner) startCall(currentChatPartner.uid, false); });
-            on('start-video-call', 'click', () => { if(currentChatPartner) startCall(currentChatPartner.uid, true); });
+            on('start-audio-call', 'click', () => { if(currentChatPartner && !currentChatPartner.isSystem) startCall(currentChatPartner.uid, false); });
+            on('start-video-call', 'click', () => { if(currentChatPartner && !currentChatPartner.isSystem) startCall(currentChatPartner.uid, true); });
 
             async function startCall(fUid, isVideo) {
-                // Safely check if mediaDevices is supported in this environment
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    showInfoModal('Calling Unavailable 🚫', 'Audio and video calls require a secure connection or browser support. Try using a standard browser.');
-                    return;
-                }
-
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { showInfoModal('Calling Unavailable 🚫', 'Audio and video calls require a secure connection or browser support. Try using a standard browser.'); return; }
                 try {
                     const fProfDoc = await firestore.collection('users').doc(fUid).get();
-                    const fProf = fProfDoc.data();
-                    currentCallInfo = { partner: { ...fProf, uid: fUid }, isVideo, isCaller: true };
-
+                    const fProf = fProfDoc.data(); currentCallInfo = { partner: { ...fProf, uid: fUid }, isVideo, isCaller: true };
                     locVid.srcObject = localStream = await navigator.mediaDevices.getUserMedia({ video: isVideo, audio: true });
-                } 
-                catch(e) { 
-                    console.error("Media permission error:", e);
-                    showInfoModal('Camera & Mic Needed 📸', 'Please allow camera and microphone access in your browser settings to make or receive calls.'); 
-                    if (currentCallInfo) endCall(false); 
-                    return; 
-                }
+                } catch(e) { showInfoModal('Camera & Mic Needed 📸', 'Please allow camera and microphone access in your browser settings to make or receive calls.'); if (currentCallInfo) endCall(false); return; }
                 
                 actCallScreen.classList.remove('hidden'); 
-                el('call-ui-pfp-wrapper').innerHTML = createProfileDisplay(currentCallInfo.partner);
-                el('call-ui-name').textContent = currentCallInfo.partner.name;
-                el('call-ui-status').textContent = 'DIALING...';
+                el('call-ui-pfp-wrapper').innerHTML = createProfileDisplay(currentCallInfo.partner); el('call-ui-name').textContent = currentCallInfo.partner.name; el('call-ui-status').textContent = 'DIALING...';
                 if(isVideo) { locVid.classList.remove('hidden'); remVid.classList.remove('hidden'); el('voice-call-ui').classList.add('hidden'); }
                 else { locVid.classList.add('hidden'); remVid.classList.add('hidden'); el('voice-call-ui').classList.remove('hidden'); }
 
-                // Log outgoing call to caller's history
                 logCall(fUid, currentCallInfo.partner.name, 'outgoing');
 
                 peerConnection = new RTCPeerConnection(iceServers);
                 localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
                 peerConnection.ontrack = e => { remVid.srcObject = e.streams[0]; };
                 
-                const cId = rtdb.ref('calls').push().key; currentCallInfo.id = cId;
-                const cRef = rtdb.ref(`calls/${cId}`);
+                const cId = rtdb.ref('calls').push().key; currentCallInfo.id = cId; const cRef = rtdb.ref(`calls/${cId}`);
                 peerConnection.onicecandidate = e => { if (e.candidate) cRef.child('offerCandidates').push(e.candidate.toJSON()); };
 
                 peerConnection.onconnectionstatechange = () => {
                     if (peerConnection.connectionState === 'connected') {
-                        el('call-ui-status').textContent = 'SECURE LINK ACTIVE';
-                        el('call-ui-status').style.color = "#4ade80";
+                        el('call-ui-status').textContent = 'SECURE LINK ACTIVE'; el('call-ui-status').style.color = "#4ade80";
                         if(!callStartTime) {
                             callStartTime = Date.now(); cTimer.classList.remove('hidden');
-                            callTimerInterval = setInterval(() => {
-                                const e = Math.floor((Date.now() - callStartTime) / 1000);
-                                cTimer.textContent = `${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`;
-                            }, 1000);
+                            callTimerInterval = setInterval(() => { const e = Math.floor((Date.now() - callStartTime) / 1000); cTimer.textContent = `${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`; }, 1000);
                         }
                     } else if (['disconnected', 'failed', 'closed'].includes(peerConnection.connectionState)) { endCall(false); }
                 };
@@ -2141,15 +1974,9 @@
                     const d = snap.val();
                     if (d && d.status === 'rejected') { showInfoModal('Call Missed', 'Your friend is unavailable right now.'); endCall(true); return; }
                     if (!d && currentCallInfo) { endCall(false); return; }
-                    if (d && !peerConnection.currentRemoteDescription && d.answer) {
-                        await peerConnection.setRemoteDescription(new RTCSessionDescription(d.answer));
-                        pendingCandidates.forEach(c => peerConnection.addIceCandidate(c).catch(()=>{})); pendingCandidates = [];
-                    }
+                    if (d && !peerConnection.currentRemoteDescription && d.answer) { await peerConnection.setRemoteDescription(new RTCSessionDescription(d.answer)); pendingCandidates.forEach(c => peerConnection.addIceCandidate(c).catch(()=>{})); pendingCandidates = []; }
                 });
-                cRef.child('answerCandidates').on('child_added', snap => {
-                    const c = new RTCIceCandidate(snap.val());
-                    if (peerConnection.currentRemoteDescription) peerConnection.addIceCandidate(c).catch(()=>{}); else pendingCandidates.push(c);
-                });
+                cRef.child('answerCandidates').on('child_added', snap => { const c = new RTCIceCandidate(snap.val()); if (peerConnection.currentRemoteDescription) peerConnection.addIceCandidate(c).catch(()=>{}); else pendingCandidates.push(c); });
             }
             
             function listenForCalls() {
@@ -2158,10 +1985,8 @@
                     if (incomingCallData.answer) return;
 
                     firestore.collection('users').doc(incomingCallData.caller).get().then(cSnap => {
-                        if(!cSnap.exists) return;
-                        const cProf = cSnap.data();
-                        el('incoming-caller-pfp').innerHTML = createProfileDisplay(cProf);
-                        el('incoming-caller-name').textContent = cProf.name;
+                        if(!cSnap.exists) return; const cProf = cSnap.data();
+                        el('incoming-caller-pfp').innerHTML = createProfileDisplay(cProf); el('incoming-caller-name').textContent = cProf.name;
                         el('call-bg-blur').style.backgroundImage = cProf.photoURL ? `url(${cProf.photoURL})` : 'none';
                         if(!cProf.photoURL) el('call-bg-blur').style.background = 'rgba(43,75,238,0.5)';
                         inCallScreen.classList.remove('hidden'); el('quick-msg-menu').classList.add('hidden');
@@ -2171,49 +1996,29 @@
 
             on('accept-call-btn', 'click', async () => {
                 inCallScreen.classList.add('hidden');
-                
-                // Safely check if mediaDevices is supported in this environment
                 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    rtdb.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' });
-                    showInfoModal('Calling Unavailable 🚫', 'Audio and video calls require a secure connection or browser support. Try using a standard browser.');
-                    logCall(incomingCallData.caller, el('incoming-caller-name').textContent, 'missed');
-                    endCall(false);
-                    return;
+                    rtdb.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' }); showInfoModal('Calling Unavailable 🚫', 'Audio and video calls require a secure connection or browser support.'); logCall(incomingCallData.caller, el('incoming-caller-name').textContent, 'missed'); endCall(false); return;
                 }
 
-                const cProfDoc = await firestore.collection('users').doc(incomingCallData.caller).get();
-                const cProf = cProfDoc.data();
+                const cProfDoc = await firestore.collection('users').doc(incomingCallData.caller).get(); const cProf = cProfDoc.data();
                 currentCallInfo = { partner: { ...cProf, uid: incomingCallData.caller }, isVideo: incomingCallData.isVideo, isCaller: false, id: incomingCallData.id };
 
                 try { locVid.srcObject = localStream = await navigator.mediaDevices.getUserMedia({ video: incomingCallData.isVideo, audio: true }); } 
                 catch (e) { rtdb.ref(`calls/${currentCallInfo.id}`).update({ status: 'rejected' }); endCall(false); return; }
                 
                 actCallScreen.classList.remove('hidden');
-                el('call-ui-pfp-wrapper').innerHTML = createProfileDisplay(cProf);
-                el('call-ui-name').textContent = cProf.name;
-                el('call-ui-status').textContent = 'AUTHENTICATING...';
-                if(incomingCallData.isVideo) { locVid.classList.remove('hidden'); remVid.classList.remove('hidden'); el('voice-call-ui').classList.add('hidden'); }
-                else { locVid.classList.add('hidden'); remVid.classList.add('hidden'); el('voice-call-ui').classList.remove('hidden'); }
+                el('call-ui-pfp-wrapper').innerHTML = createProfileDisplay(cProf); el('call-ui-name').textContent = cProf.name; el('call-ui-status').textContent = 'AUTHENTICATING...';
+                if(incomingCallData.isVideo) { locVid.classList.remove('hidden'); remVid.classList.remove('hidden'); el('voice-call-ui').classList.add('hidden'); } else { locVid.classList.add('hidden'); remVid.classList.add('hidden'); el('voice-call-ui').classList.remove('hidden'); }
 
-                // Log incoming call to receiver's history
                 logCall(incomingCallData.caller, cProf.name, 'incoming');
 
-                const cRef = rtdb.ref(`calls/${incomingCallData.id}`);
-                peerConnection = new RTCPeerConnection(iceServers);
-                localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
-                peerConnection.ontrack = e => { remVid.srcObject = e.streams[0]; };
+                const cRef = rtdb.ref(`calls/${incomingCallData.id}`); peerConnection = new RTCPeerConnection(iceServers);
+                localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream)); peerConnection.ontrack = e => { remVid.srcObject = e.streams[0]; };
 
                 peerConnection.onconnectionstatechange = () => {
                     if (peerConnection.connectionState === 'connected') {
-                        el('call-ui-status').textContent = 'SECURE LINK ACTIVE';
-                        el('call-ui-status').style.color = "#4ade80";
-                        if (!callStartTime) {
-                             callStartTime = Date.now(); cTimer.classList.remove('hidden');
-                             callTimerInterval = setInterval(() => {
-                                 const e = Math.floor((Date.now() - callStartTime) / 1000);
-                                 cTimer.textContent = `${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`;
-                             }, 1000);
-                        }
+                        el('call-ui-status').textContent = 'SECURE LINK ACTIVE'; el('call-ui-status').style.color = "#4ade80";
+                        if (!callStartTime) { callStartTime = Date.now(); cTimer.classList.remove('hidden'); callTimerInterval = setInterval(() => { const e = Math.floor((Date.now() - callStartTime) / 1000); cTimer.textContent = `${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`; }, 1000); }
                     } else if (['disconnected', 'failed', 'closed'].includes(peerConnection.connectionState)) { endCall(false); }
                 };
 
@@ -2222,64 +2027,35 @@
                 const answer = await peerConnection.createAnswer(); await peerConnection.setLocalDescription(answer);
                 await cRef.update({ answer: { type: answer.type, sdp: answer.sdp } });
                 
-                cRef.child('offerCandidates').on('child_added', snap => { peerConnection.addIceCandidate(new RTCIceCandidate(snap.val())).catch(()=>{}); });
-                cRef.on('value', snap => { if (!snap.val() && currentCallInfo) endCall(false); });
+                cRef.child('offerCandidates').on('child_added', snap => { peerConnection.addIceCandidate(new RTCIceCandidate(snap.val())).catch(()=>{}); }); cRef.on('value', snap => { if (!snap.val() && currentCallInfo) endCall(false); });
             });
             
-            on('reject-call-btn', 'click', () => {
-                if (incomingCallData) {
-                    rtdb.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' });
-                    // Log missed call
-                    logCall(incomingCallData.caller, el('incoming-caller-name').textContent, 'missed');
-                }
-                inCallScreen.classList.add('hidden'); incomingCallData = null;
-            });
+            on('reject-call-btn', 'click', () => { if (incomingCallData) { rtdb.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' }); logCall(incomingCallData.caller, el('incoming-caller-name').textContent, 'missed'); } inCallScreen.classList.add('hidden'); incomingCallData = null; });
 
             on('quick-msg-trigger', 'click', () => el('quick-msg-menu').classList.toggle('hidden'));
             el('quick-msg-menu').addEventListener('click', (e) => {
                 if (e.target.classList.contains('quick-msg-btn') && incomingCallData) {
                     const cId = getChatId(currentUser.uid, incomingCallData.caller);
                     firestore.collection('messages').doc(cId).collection('history').add({ text: e.target.textContent, type: 'text', sender: currentUser.uid, timestamp: Date.now() });
-                    
-                    const pChatRef = firestore.collection('userChats').doc(incomingCallData.caller).collection('chats').doc(cId);
-                    pChatRef.get().then(doc => {
-                        let unread = 1;
-                        if(doc.exists && doc.data().unread) unread = doc.data().unread + 1;
-                        pChatRef.set({unread}, {merge:true});
-                    });
-
-                    rtdb.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' }); // Tell other end it's over
-                    
-                    logCall(incomingCallData.caller, el('incoming-caller-name').textContent, 'missed');
-
-                    rtdb.ref(`calls/${incomingCallData.id}`).remove();
-                    inCallScreen.classList.add('hidden'); incomingCallData = null;
+                    const pChatRef = firestore.collection('userChats').doc(incomingCallData.caller).collection('chats').doc(cId); pChatRef.get().then(doc => { let unread = 1; if(doc.exists && doc.data().unread) unread = doc.data().unread + 1; pChatRef.set({unread}, {merge:true}); });
+                    rtdb.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' }); logCall(incomingCallData.caller, el('incoming-caller-name').textContent, 'missed');
+                    rtdb.ref(`calls/${incomingCallData.id}`).remove(); inCallScreen.classList.add('hidden'); incomingCallData = null;
                 }
             });
             
             on('end-call-button', 'click', () => endCall(true));
             on('mute-button', 'click', (e) => {
                 if (!localStream) return;
-                localStream.getAudioTracks().forEach(t => t.enabled = !t.enabled);
-                e.currentTarget.classList.toggle('bg-white');
-                e.currentTarget.classList.toggle('text-black');
-                e.currentTarget.classList.toggle('text-white');
-                e.currentTarget.innerHTML = e.currentTarget.classList.contains('bg-white') ? `<span class="material-symbols-outlined text-[28px]">mic_off</span>` : `<span class="material-symbols-outlined text-[28px]">mic</span>`;
+                localStream.getAudioTracks().forEach(t => t.enabled = !t.enabled); e.currentTarget.classList.toggle('bg-white'); e.currentTarget.classList.toggle('text-black'); e.currentTarget.classList.toggle('text-white'); e.currentTarget.innerHTML = e.currentTarget.classList.contains('bg-white') ? `<span class="material-symbols-outlined text-[28px]">mic_off</span>` : `<span class="material-symbols-outlined text-[28px]">mic</span>`;
             });
 
             function endCall(isInitiator = true) {
                 if (isInitiator && currentCallInfo && currentCallInfo.id) rtdb.ref(`calls/${currentCallInfo.id}`).remove();
                 if (localStream) localStream.getTracks().forEach(t => t.stop());
                 if (peerConnection) { peerConnection.onconnectionstatechange = null; peerConnection.onicecandidate = null; peerConnection.close(); }
-
                 clearInterval(callTimerInterval); cTimer.classList.add('hidden'); cTimer.textContent = '00:00';
-                
-                const muteBtn = el('mute-button');
-                muteBtn.classList.remove('bg-white', 'text-black'); muteBtn.classList.add('text-white'); 
-                muteBtn.innerHTML = `<span class="material-symbols-outlined text-[28px]">mic</span>`;
-                
-                pendingCandidates = []; actCallScreen.classList.add('hidden'); locVid.srcObject = null; remVid.srcObject = null;
-                peerConnection = null; localStream = null; callStartTime = null; currentCallInfo = null; incomingCallData = null;
+                const muteBtn = el('mute-button'); muteBtn.classList.remove('bg-white', 'text-black'); muteBtn.classList.add('text-white'); muteBtn.innerHTML = `<span class="material-symbols-outlined text-[28px]">mic</span>`;
+                pendingCandidates = []; actCallScreen.classList.add('hidden'); locVid.srcObject = null; remVid.srcObject = null; peerConnection = null; localStream = null; callStartTime = null; currentCallInfo = null; incomingCallData = null;
             }
 
         });
