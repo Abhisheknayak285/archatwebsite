@@ -32,10 +32,11 @@
         }
     </script>
 
-    <!-- Firebase v8 SDKs -->
+    <!-- Firebase v8 SDKs (Included Firestore) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
@@ -49,6 +50,17 @@
         }
         .active-link h2 { color: #2b4bee; }
         .dark .active-link h2 { color: #5c7cfa; }
+        
+        .active-chat {
+            background-color: rgba(43, 75, 238, 0.08) !important;
+        }
+        .dark .active-chat {
+            background-color: rgba(43, 75, 238, 0.15) !important;
+        }
+        
+        .selection-mode .message-checkbox {
+            display: block !important;
+        }
         
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -69,7 +81,21 @@
         /* Chat Pattern */
         .chat-bg {
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-color: transparent; /* Allow underlying colors/wallpapers to show */
         }
+
+        /* Toggles */
+        .toggle-checkbox {
+            appearance: none; width: 44px; height: 24px; background: #cbd5e1; border-radius: 12px;
+            position: relative; cursor: pointer; outline: none; transition: 0.3s;
+        }
+        .dark .toggle-checkbox { background: #475569; }
+        .toggle-checkbox::after {
+            content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
+            background: white; border-radius: 50%; transition: 0.3s;
+        }
+        .toggle-checkbox:checked { background: #2b4bee; }
+        .toggle-checkbox:checked::after { transform: translateX(20px); }
 
         /* Call Rings */
         .call-ring {
@@ -115,12 +141,11 @@
         @media (max-width: 768px) {
             #main-chat-area { position: absolute; inset: 0; z-index: 30; transform: translateX(100%); transition: transform 0.3s ease; }
             #main-chat-area.active { transform: translateX(0); }
-            #contact-info-drawer { position: absolute; inset: 0; z-index: 40; transform: translateX(100%); transition: transform 0.3s ease; width: 100% !important; }
-            #contact-info-drawer.active { transform: translateX(0); display: flex !important; }
+            #contact-info-drawer { width: 100% !important; }
         }
     </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300">
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300 min-h-[100dvh]">
 
     <!-- Global Modal Exposer Script -->
     <script>
@@ -151,7 +176,7 @@
     </div>
 
     <!-- Loader -->
-    <div id="loader" class="loader bg-background-light dark:bg-background-dark transition-opacity duration-300">
+    <div id="loader" class="loader bg-background-light dark:bg-background-dark transition-opacity duration-300 z-[9999]">
         <div class="spinner"></div>
     </div>
 
@@ -223,7 +248,7 @@
     </div>
 
     <!-- Main App Layout -->
-    <div id="main-app" class="flex h-screen w-full overflow-hidden hidden relative">
+    <div id="main-app" class="flex h-[100dvh] w-full overflow-hidden hidden relative">
         
         <!-- Left Sidebar -->
         <aside class="w-full md:w-80 lg:w-[360px] flex flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 z-20" id="sidebar">
@@ -236,8 +261,8 @@
                         <button id="theme-toggle-btn" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors">
                             <span class="material-symbols-outlined text-[22px]">light_mode</span>
                         </button>
-                        <button id="add-friend-button" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors" title="New Contact">
-                            <span class="material-symbols-outlined text-[22px]">edit_square</span>
+                        <button id="add-friend-button" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors" title="Add Contact">
+                            <span class="material-symbols-outlined text-[22px]">person_add</span>
                         </button>
                     </div>
                 </div>
@@ -254,7 +279,7 @@
 
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
-                    <input id="contact-search-input" class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary/50 text-[13px] outline-none placeholder-slate-400 font-medium" placeholder="Search recent chats..." autocomplete="off"/>
+                    <input id="contact-search-input" class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary/50 text-[13px] outline-none placeholder-slate-400 font-medium" placeholder="Search recent chats or friends..." autocomplete="off"/>
                 </div>
             </div>
 
@@ -291,10 +316,10 @@
         </aside>
 
         <!-- Main Chat Area -->
-        <main class="flex-1 flex bg-background-light dark:bg-background-dark relative" id="main-chat-area">
+        <main class="flex-1 flex flex-col bg-background-light dark:bg-background-dark relative" id="main-chat-area">
             
             <!-- Chat Container -->
-            <section class="flex-1 flex flex-col h-full overflow-hidden relative">
+            <section class="flex-1 flex flex-col h-full overflow-hidden relative w-full">
                 
                 <!-- Welcome Screen -->
                 <div id="welcome-screen" class="absolute inset-0 flex flex-col items-center justify-center bg-white dark:bg-slate-900 z-20">
@@ -302,18 +327,18 @@
                         <span class="material-symbols-outlined text-[56px]">forum</span>
                     </div>
                     <h2 class="text-3xl font-bold mb-3 text-slate-900 dark:text-white tracking-tight">Your Workspace</h2>
-                    <p class="text-slate-500 text-sm max-w-sm text-center leading-relaxed">Select a conversation from the sidebar or add a new contact to begin connecting securely.</p>
+                    <p class="text-slate-500 text-sm max-w-sm text-center leading-relaxed">Select a conversation from the sidebar or add a new friend to begin connecting securely.</p>
                 </div>
 
                 <!-- Active Chat Header -->
-                <header id="active-chat-header" class="h-[76px] px-4 md:px-8 flex items-center justify-between bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shrink-0 hidden z-10 absolute top-0 w-full">
+                <header id="active-chat-header" class="h-[76px] px-4 md:px-8 flex items-center justify-between bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shrink-0 hidden z-50 w-full relative">
                     <div class="flex items-center gap-3 min-w-0">
                         <button id="back-to-home-btn" class="md:hidden p-2 -ml-2 text-slate-500 hover:text-primary rounded-xl bg-slate-50 dark:bg-slate-800">
                             <span class="material-symbols-outlined">arrow_back</span>
                         </button>
                         
                         <!-- Clickable Header for Contact Info -->
-                        <div id="chat-info-trigger" class="flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 p-2 -ml-2 rounded-xl transition-colors flex-1 min-w-0 group">
+                        <div id="chat-info-trigger" class="flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 p-2 -ml-2 rounded-xl transition-colors flex-1 min-w-0 group" title="View User Info">
                             <div id="chat-header-pfp" class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 shrink-0 overflow-hidden flex items-center justify-center bg-cover bg-center text-xl shadow-sm border border-slate-200 dark:border-slate-700 group-hover:border-primary transition-colors"></div>
                             <div class="min-w-0">
                                 <h3 id="chat-header-name" class="text-[16px] font-bold truncate text-slate-900 dark:text-white">Contact Name</h3>
@@ -330,19 +355,35 @@
                             <span class="material-symbols-outlined text-[22px]">videocam</span>
                         </button>
                         <div class="h-6 w-[1px] bg-slate-200 dark:bg-slate-700 mx-1 md:mx-2"></div>
-                        <button id="toggle-info-drawer-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                            <span class="material-symbols-outlined text-[22px]">info</span>
-                        </button>
+                        
+                        <!-- 3-Dots Menu inside Header -->
+                        <div class="relative flex items-center">
+                            <button id="chat-options-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                <span class="material-symbols-outlined text-[22px]">more_vert</span>
+                            </button>
+                            <div id="chat-options-menu" class="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 hidden flex-col py-2 z-[60]">
+                                <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-close-chat"><span class="material-symbols-outlined text-[18px] text-slate-400">close</span> Close Chat</button>
+                                <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-clear-chat"><span class="material-symbols-outlined text-[18px] text-slate-400">cleaning_services</span> Clear Chat</button>
+                                <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-delete-chat"><span class="material-symbols-outlined text-[18px] text-slate-400">delete</span> Delete Chat</button>
+                                <div class="h-px bg-slate-100 dark:bg-slate-700 my-1"></div>
+                                <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-media"><span class="material-symbols-outlined text-[18px] text-slate-400">perm_media</span> Media, Links & Docs</button>
+                                <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-select-msg"><span class="material-symbols-outlined text-[18px] text-slate-400">check_box</span> Select Messages</button>
+                                <div class="h-px bg-slate-100 dark:bg-slate-700 my-1"></div>
+                                <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3" id="menu-unfriend"><span class="material-symbols-outlined text-[18px]">person_remove</span> Unfriend</button>
+                                <button class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-3" id="menu-block"><span class="material-symbols-outlined text-[18px]">block</span> Block User</button>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
                 <!-- Messages -->
-                <div id="chat-messages" class="flex-1 overflow-y-auto p-4 pt-[90px] md:p-8 md:pt-[100px] space-y-5 chat-bg hidden relative z-0">
+                <!-- Added extra bottom padding (pb-8 md:pb-12) to prevent overlapping -->
+                <div id="chat-messages" class="flex-1 overflow-y-auto p-4 pb-8 md:p-8 md:pb-12 chat-bg hidden z-0">
                     <!-- Messages go here -->
                 </div>
 
-                <!-- Chat Input -->
-                <div id="chat-input-container" class="p-4 md:p-6 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0 hidden z-10">
+                <!-- Chat Input Container -->
+                <div id="chat-input-container" class="w-full p-4 md:p-6 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0 hidden z-10">
                     <div class="max-w-4xl mx-auto flex items-end gap-3 md:gap-4">
                         <input type="file" id="chat-image-input" class="hidden" accept="image/*">
                         <label for="chat-image-input" class="w-12 h-12 rounded-xl text-slate-500 hover:text-primary bg-slate-50 dark:bg-slate-800 flex items-center justify-center cursor-pointer transition-colors shrink-0 mb-0.5 shadow-sm border border-slate-100 dark:border-slate-700">
@@ -350,10 +391,6 @@
                         </label>
                         
                         <div class="flex-1 relative flex items-center">
-                            <div id="upload-overlay" class="absolute inset-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm z-10 flex items-center justify-center rounded-xl hidden border border-slate-200 dark:border-slate-700">
-                                <div class="spinner w-5 h-5 border-[2px]"></div>
-                                <span class="text-xs font-bold text-primary ml-3 uppercase tracking-wider">Sending Securely...</span>
-                            </div>
                             <textarea id="chat-input" rows="1" class="w-full py-3.5 px-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-primary/50 text-[15px] outline-none resize-none max-h-32 placeholder-slate-400 shadow-inner" placeholder="Type your message..."></textarea>
                         </div>
                         
@@ -362,45 +399,46 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- Selection Action Container (Hidden by default) -->
+                <div id="selection-action-container" class="w-full p-4 md:p-6 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0 hidden z-20 flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+                    <span id="selection-count" class="text-sm font-bold text-slate-700 dark:text-slate-200">0 Selected</span>
+                    <div class="flex gap-3">
+                        <button id="cancel-selection-btn" class="btn-secondary py-2 border-slate-300 dark:border-slate-600">Cancel</button>
+                        <button id="delete-selection-btn" class="bg-red-500 hover:bg-red-600 text-white rounded-xl px-5 py-2 font-bold shadow-md shadow-red-500/20 text-sm transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span class="material-symbols-outlined text-[18px]">delete</span> Delete
+                        </button>
+                    </div>
+                </div>
+
             </section>
 
             <!-- Right Sidebar: Contact Info Drawer -->
-            <section id="contact-info-drawer" class="w-80 lg:w-[360px] border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col hidden transform translate-x-full md:translate-x-0 transition-transform duration-300 z-30 shrink-0">
+            <!-- Adjusted z-index and positioning so it perfectly slides over everything in the right chat area -->
+            <section id="contact-info-drawer" class="w-80 lg:w-[360px] border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col absolute right-0 top-0 h-full shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 hidden">
                 <div class="h-[76px] flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900">
-                    <h3 class="font-bold text-slate-900 dark:text-white text-lg">Contact Profile</h3>
-                    <button id="close-info-drawer" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors">
+                    <h3 class="font-bold text-slate-900 dark:text-white text-lg">User Profile</h3>
+                    <button id="close-info-drawer" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors cursor-pointer">
                         <span class="material-symbols-outlined">close</span>
                     </button>
                 </div>
                 
                 <div class="flex-1 overflow-y-auto">
-                    <div class="p-8 flex flex-col items-center border-b border-slate-200 dark:border-slate-800">
-                        <div id="drawer-pfp" class="w-32 h-32 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center mb-5 flex items-center justify-center text-5xl overflow-hidden shadow-lg border-4 border-slate-50 dark:border-slate-800"></div>
+                    <div class="p-8 flex flex-col items-center border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/20">
+                        <div id="drawer-pfp" class="w-32 h-32 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center mb-5 flex items-center justify-center text-5xl overflow-hidden shadow-lg border-4 border-white dark:border-slate-800"></div>
                         <h2 id="drawer-name" class="text-2xl font-bold text-slate-900 dark:text-white text-center mb-2 tracking-tight">Name</h2>
-                        <span class="px-3 py-1 bg-primary/10 text-primary rounded-md text-[11px] font-mono font-bold tracking-widest uppercase border border-primary/20" id="drawer-id">ID</span>
+                        <span class="px-3 py-1 bg-primary/10 text-primary rounded-md text-[11px] font-mono font-bold tracking-widest uppercase border border-primary/20 mt-1" id="drawer-id">ID</span>
                     </div>
                     
-                    <div class="p-6 space-y-6 border-b border-slate-200 dark:border-slate-800">
+                    <div class="p-6 space-y-6">
                         <div>
-                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-2">About Status</p>
-                            <p id="drawer-bio" class="text-sm text-slate-800 dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700"></p>
+                            <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-2">About</p>
+                            <p id="drawer-bio" class="text-sm text-slate-800 dark:text-slate-200 leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 font-medium"></p>
                         </div>
                         <div id="drawer-gender-box" class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700 flex justify-between items-center">
                             <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Gender</p>
                             <p id="drawer-gender" class="text-sm font-semibold text-slate-800 dark:text-slate-200"></p>
                         </div>
-                    </div>
-                    
-                    <div class="p-6 flex flex-col gap-3">
-                        <button id="drawer-clear-chat" class="flex items-center gap-3 px-4 py-3 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl text-sm text-slate-700 dark:text-slate-300 font-semibold transition-colors border border-slate-200 dark:border-slate-700">
-                            <span class="material-symbols-outlined text-[20px] text-slate-500">delete_sweep</span> Wipe Chat History
-                        </button>
-                        <button id="drawer-remove-contact" class="flex items-center gap-3 px-4 py-3 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 rounded-xl text-sm text-red-600 dark:text-red-400 font-semibold transition-colors border border-red-100 dark:border-red-500/20">
-                            <span class="material-symbols-outlined text-[20px]">person_remove</span> Remove Connection
-                        </button>
-                        <button id="drawer-block-contact" class="flex items-center gap-3 px-4 py-3 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 rounded-xl text-sm text-red-600 dark:text-red-400 font-semibold transition-colors border border-red-100 dark:border-red-500/20">
-                            <span class="material-symbols-outlined text-[20px]">block</span> Block Contact
-                        </button>
                     </div>
                 </div>
             </section>
@@ -417,8 +455,8 @@
                 <div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-xl"></div>
                 <div class="absolute -left-4 -bottom-4 w-20 h-20 bg-sky-400/10 rounded-full blur-xl"></div>
                 <div class="relative z-10">
-                    <h3 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-2">Create Identity</h3>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Define your node parameters for the AR network.</p>
+                    <h3 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-2">Complete Profile</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">Set up your profile to connect with friends.</p>
                 </div>
             </div>
             <div class="p-8 space-y-5 relative">
@@ -437,11 +475,11 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Full Name *</label>
-                        <input id="setup-name-input" type="text" class="ar-input py-3.5" placeholder="" maxlength="25">
+                        <input id="setup-name-input" type="text" class="ar-input py-3.5" placeholder="Enter full name" maxlength="25">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Bio</label>
-                        <input id="setup-bio-input" type="text" class="ar-input py-3.5" placeholder="Available for secure connection" maxlength="60">
+                        <input id="setup-bio-input" type="text" class="ar-input py-3.5" placeholder="Hey there! I am using AR Chats." maxlength="60">
                     </div>
                     <div class="flex gap-4">
                         <div class="flex-1">
@@ -458,7 +496,7 @@
                     </div>
                 </div>
                 <p id="setup-error" class="text-red-500 text-xs text-center min-h-[16px] font-medium mt-2"></p>
-                <button id="setup-save-btn" class="btn-primary w-full py-4 text-[15px] mt-2 shadow-lg shadow-primary/30">Initialize Node</button>
+                <button id="setup-save-btn" class="btn-primary w-full py-4 text-[15px] mt-2 shadow-lg shadow-primary/30">Complete Profile</button>
             </div>
         </div>
 
@@ -474,6 +512,8 @@
                 
                 <div class="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
                     <button id="tab-profile" class="settings-tab active-link text-left px-4 py-3 rounded-xl font-semibold text-sm transition-colors shrink-0" data-target="set-profile">Profile & Privacy</button>
+                    <button id="tab-friends" class="settings-tab text-left px-4 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 font-medium text-sm text-slate-700 dark:text-slate-300 transition-colors shrink-0" data-target="set-friends">Friend List</button>
+                    <button class="settings-tab text-left px-4 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 font-medium text-sm text-slate-700 dark:text-slate-300 transition-colors shrink-0" data-target="set-wallpaper">Chat Wallpaper</button>
                     <button class="settings-tab text-left px-4 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 font-medium text-sm text-slate-700 dark:text-slate-300 transition-colors shrink-0" data-target="set-blocked">Blocked Users</button>
                     <button class="settings-tab text-left px-4 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 font-medium text-sm text-slate-700 dark:text-slate-300 transition-colors shrink-0" data-target="set-help">Help & Support</button>
                     <button class="settings-tab text-left px-4 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 font-medium text-sm text-slate-700 dark:text-slate-300 transition-colors shrink-0" data-target="set-about">About</button>
@@ -481,7 +521,7 @@
                 
                 <div class="mt-auto hidden md:block pt-4">
                     <button class="w-full text-left px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 font-bold text-sm flex items-center gap-3 transition-colors border border-transparent hover:border-red-100 dark:hover:border-red-500/20 logout-btn">
-                        <span class="material-symbols-outlined text-[22px]">logout</span> Disconnect
+                        <span class="material-symbols-outlined text-[22px]">logout</span> Log Out
                     </button>
                 </div>
             </div>
@@ -536,7 +576,35 @@
                     <p id="profile-edit-error" class="text-red-500 text-xs mt-4 min-h-[16px] font-bold text-center"></p>
                     <button id="save-profile-changes-btn" class="btn-primary w-full py-4 mt-4 shadow-lg shadow-primary/20 text-[15px]">Save Configuration</button>
                     
-                    <button class="w-full mt-6 md:hidden py-4 bg-red-50 dark:bg-red-500/10 text-red-600 rounded-xl font-bold text-[15px] transition-colors border border-red-100 dark:border-red-500/20 logout-btn">Sign Out</button>
+                    <button class="w-full mt-6 md:hidden py-4 bg-red-50 dark:bg-red-500/10 text-red-600 rounded-xl font-bold text-[15px] transition-colors border border-red-100 dark:border-red-500/20 logout-btn">Log Out</button>
+                </div>
+
+                <!-- Friend List View -->
+                <div id="set-friends" class="settings-view hidden max-w-lg fade-in">
+                    <h3 class="text-2xl font-bold mb-3 tracking-tight">Friend List</h3>
+                    <p class="text-sm text-slate-500 mb-8 font-medium">Manage your connected friends.</p>
+                    <div id="settings-friends-list" class="space-y-3">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Chat Wallpaper View -->
+                <div id="set-wallpaper" class="settings-view hidden max-w-md fade-in">
+                    <h3 class="text-2xl font-bold mb-8 tracking-tight">Chat Wallpaper</h3>
+                    <p class="text-sm text-slate-500 mb-6 font-medium">Customize the background image for all your chat conversations.</p>
+                    
+                    <div class="w-full h-56 rounded-2xl border-4 border-dashed border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 flex flex-col items-center justify-center relative overflow-hidden mb-6 group cursor-pointer transition-colors hover:border-primary/50 hover:bg-primary/5">
+                        <img id="wallpaper-preview" class="w-full h-full object-cover hidden absolute inset-0 z-10">
+                        <span class="material-symbols-outlined text-[48px] text-slate-400 group-hover:text-primary transition-colors relative z-20 mb-2">image</span>
+                        <span class="text-sm font-bold text-slate-500 group-hover:text-primary relative z-20">Click to upload background</span>
+                        <input type="file" id="wallpaper-input" class="absolute inset-0 opacity-0 cursor-pointer z-30" accept="image/*">
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <button id="remove-wallpaper-btn" class="btn-secondary flex-1 py-3.5">Reset Default</button>
+                        <button id="save-wallpaper-btn" class="btn-primary flex-1 py-3.5 shadow-md shadow-primary/20">Apply Wallpaper</button>
+                    </div>
+                    <p id="wallpaper-error" class="text-red-500 text-xs mt-4 min-h-[16px] font-bold text-center"></p>
                 </div>
 
                 <!-- Blocked View -->
@@ -554,18 +622,18 @@
                     <div class="bg-primary/10 border border-primary/20 p-6 rounded-2xl mb-8 flex items-start gap-4">
                         <span class="material-symbols-outlined text-[32px] text-primary">support_agent</span>
                         <div>
-                            <h4 class="font-bold text-slate-900 dark:text-white text-lg mb-1">Direct Engineering Support</h4>
+                            <h4 class="font-bold text-slate-900 dark:text-white text-lg mb-1">Direct Support</h4>
                             <p class="text-sm text-slate-600 dark:text-slate-300">Need urgent technical assistance? Contact us at <a href="mailto:support@arinfotech.com" class="font-bold text-primary hover:underline">support@arinfotech.com</a>.</p>
                         </div>
                     </div>
                     <div class="space-y-4">
                         <div class="p-6 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50 dark:bg-slate-800/50">
-                            <h4 class="font-bold text-[15px] mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-[20px] text-slate-400">person_add</span> Connecting to Nodes</h4>
-                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Click the "New Contact" icon in the sidebar header. You must input the exact AR-ID of your target. A secure connection is established once they accept.</p>
+                            <h4 class="font-bold text-[15px] mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-[20px] text-slate-400">person_add</span> Adding Friends</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Click the "Add Contact" icon in the sidebar header. You must input the exact AR-ID of your friend to send them a request.</p>
                         </div>
                         <div class="p-6 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50 dark:bg-slate-800/50">
-                            <h4 class="font-bold text-[15px] mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-[20px] text-slate-400">videocam</span> A/V Tunnels</h4>
-                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Voice and Video calls utilize peer-to-peer WebRTC tunnels for minimum latency and maximum privacy. Ensure you grant the browser hardware permissions to initiate.</p>
+                            <h4 class="font-bold text-[15px] mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-[20px] text-slate-400">videocam</span> Secure Calling</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">Voice and Video calls are secure and peer-to-peer. Ensure you grant the browser permissions to access your camera and microphone to initiate.</p>
                         </div>
                     </div>
                 </div>
@@ -595,14 +663,28 @@
             </div>
         </div>
 
+        <!-- Clear Chat Modal (Me or Everyone) -->
+        <div id="clear-chat-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 text-center hidden fade-in relative">
+            <div class="w-16 h-16 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+                <span class="material-symbols-outlined text-[32px]">cleaning_services</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3 tracking-tight">Clear Chat</h3>
+            <p class="text-[15px] text-slate-500 font-medium mb-8 leading-relaxed">Do you want to clear messages for yourself or for everyone?</p>
+            <div class="flex flex-col gap-3">
+                <button id="clear-chat-me-btn" class="btn-secondary py-3.5 border-none bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Clear for Me</button>
+                <button id="clear-chat-everyone-btn" class="py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold shadow-lg shadow-red-500/20 transition-all">Clear for Everyone</button>
+                <button id="clear-chat-cancel-btn" class="text-slate-500 text-sm font-bold mt-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">Cancel</button>
+            </div>
+        </div>
+
         <!-- Add Friend Modal -->
         <div id="add-friend-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in">
             <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
-                <h3 class="text-xl font-bold tracking-tight">New Connection</h3>
+                <h3 class="text-xl font-bold tracking-tight">Add Friend</h3>
                 <button class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-slate-500 transition-colors" onclick="closeModal('add-friend-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
             </div>
             <div class="p-8">
-                <p class="text-sm text-slate-500 mb-6 text-center font-medium">Enter the exact AR-ID code of the target node.</p>
+                <p class="text-sm text-slate-500 mb-6 text-center font-medium">Enter your friend's AR-ID to connect.</p>
                 <div class="relative mb-2">
                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary text-[24px]">badge</span>
                     <input id="add-friend-id-input" type="text" class="ar-input pl-12 py-3.5 font-mono tracking-widest uppercase font-bold text-center text-lg" placeholder="AR-XXXX">
@@ -611,7 +693,7 @@
                 
                 <div id="friend-search-result" class="hidden mt-6 p-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-center fade-in"></div>
                 
-                <button id="search-friend-btn" class="btn-primary w-full mt-6 py-4 text-[15px] shadow-lg shadow-primary/20"><span class="material-symbols-outlined text-[20px]">radar</span> Scan Network</button>
+                <button id="search-friend-btn" class="btn-primary w-full mt-6 py-4 text-[15px] shadow-lg shadow-primary/20"><span class="material-symbols-outlined text-[20px]">search</span> Search User</button>
             </div>
         </div>
 
@@ -639,7 +721,7 @@
             </div>
             <h3 id="info-modal-title" class="text-xl font-bold mb-3 tracking-tight"></h3>
             <p id="info-modal-text" class="text-[15px] text-slate-500 font-medium mb-8 leading-relaxed whitespace-pre-line"></p>
-            <button id="info-modal-close-button" class="btn-primary w-full py-3.5 shadow-md shadow-primary/20">Acknowledge</button>
+            <button id="info-modal-close-button" class="btn-primary w-full py-3.5 shadow-md shadow-primary/20">Okay</button>
         </div>
 
         <div id="confirm-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border-t-[6px] border-t-red-500 p-8 text-center hidden fade-in relative">
@@ -649,8 +731,8 @@
             <h3 id="confirm-modal-title" class="text-xl font-bold mb-3 tracking-tight"></h3>
             <p id="confirm-modal-text" class="text-[15px] text-slate-500 font-medium mb-8 leading-relaxed"></p>
             <div class="flex gap-3">
-                <button id="confirm-cancel-btn" class="btn-secondary flex-1 py-3.5 border-none bg-slate-100 dark:bg-slate-800">Abort</button>
-                <button id="confirm-execute-btn" class="flex-1 py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold shadow-lg shadow-red-500/30 transition-all">Proceed</button>
+                <button id="confirm-cancel-btn" class="btn-secondary flex-1 py-3.5 border-none bg-slate-100 dark:bg-slate-800">Cancel</button>
+                <button id="confirm-execute-btn" class="flex-1 py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold shadow-lg shadow-red-500/30 transition-all">Yes, do it!</button>
             </div>
         </div>
     </div>
@@ -664,7 +746,7 @@
         <div class="relative z-10 flex flex-col items-center w-full max-w-sm px-6">
             <div class="bg-white/10 backdrop-blur-md px-5 py-2 rounded-full mb-12 border border-white/10 flex items-center gap-3 shadow-lg">
                 <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_10px_#4ade80]"></span>
-                <span class="text-white text-[11px] font-bold tracking-[0.2em] uppercase">Incoming Transmission</span>
+                <span class="text-white text-[11px] font-bold tracking-[0.2em] uppercase">Incoming Call</span>
             </div>
             
             <div class="relative w-40 h-40 mb-8">
@@ -675,7 +757,7 @@
             </div>
             
             <div id="incoming-caller-name" class="text-4xl font-bold text-white mb-3 tracking-tight drop-shadow-lg text-center w-full truncate">Name</div>
-            <div class="text-primary-light/80 text-sm mb-20 font-bold tracking-widest uppercase">Secure Protocol</div>
+            <div class="text-primary-light/80 text-sm mb-20 font-bold tracking-widest uppercase">Secure Connection</div>
             
             <div class="flex items-center justify-center gap-10 w-full px-4">
                 <div class="flex flex-col items-center gap-4">
@@ -796,7 +878,7 @@
                 updateThemeIcon();
             });
 
-            // Firebase Init
+            // Firebase Init (Hybrid Architecture)
             const firebaseConfig = {
               apiKey: "AIzaSyBiycL4x7tZ1WglTCAqErP4sQ4pYB_49bs",
               authDomain: "intership-database-e7687.firebaseapp.com",
@@ -807,8 +889,39 @@
               appId: "1:408176860184:web:c19feaae45bd30cf7b776d"
             };
             if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-            const auth = firebase.auth(); const db = firebase.database();
             
+            const auth = firebase.auth(); 
+            const rtdb = firebase.database();       // Used for Presence & Signaling ONLY
+            const firestore = firebase.firestore(); // Used for Persistent Storage ONLY
+            
+            // Fast Image Compressor
+            function compressImage(file, maxWidth = 1280, maxHeight = 1280, quality = 0.7) {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = event => {
+                        const img = new Image();
+                        img.src = event.target.result;
+                        img.onload = () => {
+                            let width = img.width;
+                            let height = img.height;
+                            if (width > height) {
+                                if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
+                            } else {
+                                if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
+                            }
+                            const canvas = document.createElement('canvas');
+                            canvas.width = width; canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            canvas.toBlob(blob => { 
+                                resolve(new File([blob], file.name, { type: file.type || 'image/jpeg' })); 
+                            }, file.type || 'image/jpeg', quality);
+                        };
+                    };
+                });
+            }
+
             // ImgBB Init
             const IMGBB_API_KEY = '9af51fec603af3f00f99d29b10fbea30';
             async function uploadImageToImgBB(file) {
@@ -824,8 +937,18 @@
             // State
             let currentUser = null, currentUserProfile = null, currentChatPartner = null, currentChatId = null;
             let messageListeners = {}, statusListeners = {}, typingListeners = {}, unreadListeners = {};
+            let firestoreUnsubs = []; // Store unsubs for cleanup
+            let sharedMessages = []; // For rendering messages
+            let pendingUploads = []; // Optimistic UI uploads
+            let currentChatMetadata = {}; // Local clearing settings
+            let chatMetaUnsub = null;
+
             let peerConnection, localStream, remoteStream, incomingCallData = null, callStartTime = null, callTimerInterval = null, currentCallInfo = null, pendingCandidates = [];
             let typingTimeout = null, newProfilePicFile = null, editProfilePicFile = null;
+
+            // Selection Mode State
+            let isSelectionMode = false;
+            let selectedMessages = new Set();
 
             // OTP State
             let pendingRegEmail = "";
@@ -892,16 +1015,14 @@
                 btn.disabled = true;
                 btn.innerHTML = '<div class="btn-spinner"></div> Sending OTP...';
                 
-                // Generate OTP
                 generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
                 pendingRegEmail = email;
                 pendingRegPassword = pwd;
 
-                // Send via EmailJS
                 emailjs.send("service_8bs891x", "template_porc85p", {
                     to_email: email,
                     otp: generatedOTP,
-                    message: generatedOTP // Passed as generic message for fallback
+                    message: generatedOTP
                 }).then(() => {
                     btn.disabled = false;
                     btn.innerHTML = origHTML;
@@ -929,7 +1050,7 @@
 
                 const origHTML = btn.innerHTML;
                 btn.disabled = true;
-                btn.innerHTML = '<div class="btn-spinner"></div> Registering Node...';
+                btn.innerHTML = '<div class="btn-spinner"></div> Creating Account...';
                 
                 auth.createUserWithEmailAndPassword(pendingRegEmail, pendingRegPassword)
                     .catch(err => { 
@@ -984,13 +1105,11 @@
                         firebase.auth().signOut().then(() => {
                             if(overlay) overlay.classList.add('hidden');
                             
-                            // Reset login form buttons if needed
                             const loginBtn = el('login-form').querySelector('button[type="submit"]');
                             if(loginBtn) { loginBtn.disabled = false; loginBtn.innerHTML = 'Sign In'; el('login-email').value = ''; el('login-password').value = ''; }
                             const signupBtn = el('signup-form').querySelector('button[type="submit"]');
                             if(signupBtn) { signupBtn.disabled = false; signupBtn.innerHTML = 'Create Account'; el('signup-email').value = ''; el('signup-password').value = ''; el('signup-confirm-password').value = ''; }
                             
-                            // Make sure UI drops to login form cleanly
                             el('otp-form').classList.add('hidden');
                             el('signup-form').classList.add('hidden');
                             el('login-form').classList.remove('hidden');
@@ -999,11 +1118,14 @@
                 });
             });
 
-            // Profile Setup & Logic
+            // Profile Setup & Logic (Firestore)
             async function isUsernameUnique(name, uidToExclude = null) {
-                const snap = await db.ref('users').orderByChild('name').equalTo(name).once('value');
-                if (snap.exists()) for (const uid in snap.val()) if (uid !== uidToExclude) return false;
-                return true; 
+                const snap = await firestore.collection('users').get();
+                let isUnique = true;
+                snap.forEach(doc => {
+                    if (doc.data().name === name && doc.id !== uidToExclude) isUnique = false;
+                });
+                return isUnique;
             }
 
             function createProfileDisplay(p) {
@@ -1012,17 +1134,34 @@
                 return `<span>👤</span>`;
             }
 
+            function applyWallpaper(url) {
+                const msgArea = el('chat-messages');
+                if(url) {
+                    msgArea.style.backgroundImage = `url(${url})`;
+                    msgArea.style.backgroundSize = 'cover';
+                    msgArea.style.backgroundPosition = 'center';
+                } else {
+                    msgArea.style.backgroundImage = ''; 
+                    msgArea.style.backgroundSize = '';
+                    msgArea.style.backgroundPosition = '';
+                }
+            }
+
             function checkUserProfile() {
-                db.ref(`users/${currentUser.uid}`).on('value', snap => { 
-                    if (!snap.exists() && !currentUserProfile) { 
+                const unsub = firestore.collection('users').doc(currentUser.uid).onSnapshot(doc => { 
+                    if (!doc.exists && !currentUserProfile) { 
                         openModal('profile-setup-modal');
-                    } else if (snap.exists()) {
-                        currentUserProfile = { uid: currentUser.uid, ...snap.val() };
+                    } else if (doc.exists) {
+                        currentUserProfile = { uid: currentUser.uid, ...doc.data() };
                         el('my-profile-pic').innerHTML = createProfileDisplay(currentUserProfile);
                         el('my-profile-name').textContent = currentUserProfile.name;
+                        
+                        applyWallpaper(currentUserProfile.wallpaper || null);
+                        
                         if (!el('main-app').dataset.initialized) { initializeApp(); el('main-app').dataset.initialized = "true"; }
                     }
                 });
+                firestoreUnsubs.push(unsub);
             }
 
             const handleImagePick = (input, preview, emojiInput, fileVarUpdater) => {
@@ -1039,53 +1178,107 @@
                 const btn = el('setup-save-btn'); const name = el('setup-name-input').value.trim();
                 const err = el('setup-error'); err.textContent = '';
                 if (!name) { err.textContent = 'Name required.'; return; }
-                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Initializing...';
+                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Completing...';
 
                 try {
-                    if (!(await isUsernameUnique(name))) throw new Error('Name claimed.');
+                    if (!(await isUsernameUnique(name))) throw new Error('Name taken.');
                     const profileData = {
-                        name, bio: el('setup-bio-input').value.trim() || "Available",
+                        name, bio: el('setup-bio-input').value.trim() || "Available for secure connection",
                         gender: el('setup-gender-input').value, showGender: el('setup-show-gender').checked,
                         userId: `ar-${Math.random().toString(36).substr(2, 4)}`, email: currentUser.email, photoURL: null, emoji: el('setup-emoji-input').value.trim() || '👤'
                     };
-                    if (newProfilePicFile) { profileData.photoURL = await uploadImageToImgBB(newProfilePicFile); profileData.emoji = null; }
-                    await db.ref(`users/${currentUser.uid}`).set(profileData);
+                    if (newProfilePicFile) { 
+                        const compressed = await compressImage(newProfilePicFile, 400, 400, 0.6); // Super aggressive for DP
+                        profileData.photoURL = await uploadImageToImgBB(compressed); 
+                        profileData.emoji = null; 
+                    }
+                    await firestore.collection('users').doc(currentUser.uid).set(profileData, {merge: true});
                     closeModal('profile-setup-modal'); newProfilePicFile = null; 
                 } catch (error) { 
                     err.textContent = error.message; 
                 } finally { 
-                    btn.disabled = false; btn.textContent = 'Initialize Node'; 
+                    btn.disabled = false; btn.textContent = 'Complete Profile'; 
                 }
+            });
+
+            // Chat Wallpaper Settings
+            let newWallpaperFile = null;
+            on('wallpaper-input', 'change', e => {
+                if(e.target.files[0]) {
+                    newWallpaperFile = e.target.files[0];
+                    el('wallpaper-preview').src = URL.createObjectURL(newWallpaperFile);
+                    el('wallpaper-preview').classList.remove('hidden');
+                }
+            });
+            on('remove-wallpaper-btn', 'click', async () => {
+                 el('wallpaper-preview').src = '';
+                 el('wallpaper-preview').classList.add('hidden');
+                 newWallpaperFile = null;
+                 await firestore.collection('users').doc(currentUser.uid).update({ wallpaper: null });
+                 currentUserProfile.wallpaper = null;
+                 applyWallpaper(null);
+            });
+            on('save-wallpaper-btn', 'click', async () => {
+                if(!newWallpaperFile) return;
+                const btn = el('save-wallpaper-btn');
+                btn.innerHTML = '<div class="btn-spinner"></div> Saving...';
+                btn.disabled = true;
+                try {
+                    const compressed = await compressImage(newWallpaperFile, 1280, 1280, 0.7);
+                    const url = await uploadImageToImgBB(compressed);
+                    await firestore.collection('users').doc(currentUser.uid).update({ wallpaper: url });
+                    currentUserProfile.wallpaper = url;
+                    applyWallpaper(url);
+                    showInfoModal('Success', 'Wallpaper updated!');
+                } catch(e) {
+                    el('wallpaper-error').textContent = 'Failed to upload wallpaper.';
+                }
+                btn.innerHTML = 'Apply Wallpaper';
+                btn.disabled = false;
             });
 
             // App Initialization
             function initializeApp() {
                 setupPresenceSystem(); showSidebarTab('home'); listenForContacts(); listenForFriendRequests(); listenForCalls();
             }
+            
             function cleanupListeners() {
                 if (!currentUser) return;
-                ['users', 'contacts', 'requests', 'callLogs', 'blocked'].forEach(p => db.ref(`${p}/${currentUser.uid}`).off());
-                db.ref(`calls`).orderByChild('callee').equalTo(currentUser.uid).off();
-                Object.values(messageListeners).concat(Object.values(statusListeners), Object.values(typingListeners), Object.values(unreadListeners)).forEach(ref => ref.off());
+                
+                // Unsubscribe Firestore listeners
+                firestoreUnsubs.forEach(unsub => unsub());
+                firestoreUnsubs = [];
+                Object.values(messageListeners).forEach(unsub => { if(typeof unsub === 'function') unsub(); });
+                Object.values(unreadListeners).forEach(unsub => { if(typeof unsub === 'function') unsub(); });
+                if(blockedUnsub) blockedUnsub();
+                if(logsUnsub) logsUnsub();
+                if(chatMetaUnsub) chatMetaUnsub();
+                if(friendsUnsub) friendsUnsub();
+
+                // Unsubscribe RTDB listeners
+                Object.values(statusListeners).forEach(ref => ref.off());
+                Object.values(typingListeners).forEach(ref => ref.off());
+                rtdb.ref(`calls`).orderByChild('callee').equalTo(currentUser.uid).off();
+                
                 messageListeners = {}; statusListeners = {}; typingListeners = {}; unreadListeners = {};
             }
 
-            // Presence & Typing
+            // Presence & Typing (RTDB - Kept for fast ephemeral signaling)
             function setupPresenceSystem() {
-                const ref = db.ref(`/status/${currentUser.uid}`);
+                const ref = rtdb.ref(`/status/${currentUser.uid}`);
                 const offline = { state: 'offline', last_changed: firebase.database.ServerValue.TIMESTAMP };
                 const online = { state: 'online', last_changed: firebase.database.ServerValue.TIMESTAMP };
-                db.ref('.info/connected').on('value', (snap) => {
-                    if (snap.val() === false) { if(currentChatId) db.ref(`typing/${currentChatId}/${currentUser.uid}`).set(false); return; }
+                rtdb.ref('.info/connected').on('value', (snap) => {
+                    if (snap.val() === false) { if(currentChatId) rtdb.ref(`typing/${currentChatId}/${currentUser.uid}`).set(false); return; }
                     ref.onDisconnect().set(offline).then(() => ref.set(online));
                 });
             }
 
             on('chat-input', 'input', () => {
                 if (currentChatId) {
-                    db.ref(`typing/${currentChatId}/${currentUser.uid}`).set(true);
+                    rtdb.ref(`typing/${currentChatId}/${currentUser.uid}`).set(true);
                     clearTimeout(typingTimeout);
-                    typingTimeout = setTimeout(() => db.ref(`typing/${currentChatId}/${currentUser.uid}`).set(false), 2000);
+                    typingTimeout = setTimeout(() => rtdb.ref(`typing/${currentChatId}/${currentUser.uid}`).set(false), 2000);
                 }
             });
 
@@ -1101,7 +1294,7 @@
             }
 
             function listenForUserStatus(uid, element, isChatHeader = false) {
-                const sRef = db.ref(`/status/${uid}`); const tRef = db.ref(`typing/${getChatId(currentUser.uid, uid)}/${uid}`);
+                const sRef = rtdb.ref(`/status/${uid}`); const tRef = rtdb.ref(`typing/${getChatId(currentUser.uid, uid)}/${uid}`);
                 if (statusListeners[uid]) statusListeners[uid].off(); statusListeners[uid] = sRef;
                 if (typingListeners[uid]) typingListeners[uid].off(); typingListeners[uid] = tRef;
 
@@ -1153,7 +1346,11 @@
                 const term = e.target.value.toLowerCase();
                 document.querySelectorAll('#home-content .contact-item').forEach(item => {
                     const name = item.querySelector('.contact-name').textContent.toLowerCase();
-                    item.style.display = name.includes(term) ? 'flex' : 'none';
+                    if(term === '') {
+                        item.style.display = item.classList.contains('hidden-chat') ? 'none' : 'flex';
+                    } else {
+                        item.style.display = name.includes(term) ? 'flex' : 'none';
+                    }
                 });
             });
 
@@ -1161,11 +1358,14 @@
             on('back-to-home-btn', 'click', () => {
                 currentChatId = null; 
                 el('main-chat-area').classList.remove('active'); 
+                document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active-chat'));
                 setTimeout(()=> {
                     el('active-chat-header').classList.add('hidden'); 
                     el('chat-messages').classList.add('hidden');
                     el('chat-input-container').classList.add('hidden');
+                    el('selection-action-container').classList.add('hidden');
                     el('welcome-screen').classList.remove('hidden');
+                    cancelSelectionMode();
                 },300);
             });
 
@@ -1183,7 +1383,6 @@
             setupSettingsTabs();
 
             on('open-settings-btn', 'click', () => {
-                // Populate profile edit tab
                 el('edit-name-input').value = currentUserProfile.name || '';
                 el('edit-bio-input').value = currentUserProfile.bio || '';
                 el('edit-gender-input').value = currentUserProfile.gender || 'Male';
@@ -1194,8 +1393,17 @@
                 else { emoji.value = currentUserProfile.emoji || '👤'; preview.classList.add('hidden'); emoji.classList.remove('hidden'); }
                 
                 el('profile-ar-id-display').textContent = currentUserProfile.userId; 
+                
+                // Show current wallpaper in settings if exists
+                if(currentUserProfile.wallpaper) {
+                    el('wallpaper-preview').src = currentUserProfile.wallpaper;
+                    el('wallpaper-preview').classList.remove('hidden');
+                } else {
+                    el('wallpaper-preview').src = '';
+                    el('wallpaper-preview').classList.add('hidden');
+                }
+
                 openModal('settings-modal');
-                // Force click profile tab to ensure it resets to default view
                 el('tab-profile').click();
             });
 
@@ -1207,10 +1415,14 @@
 
                 try {
                     if (newName !== currentUserProfile.name && !(await isUsernameUnique(newName, currentUser.uid))) throw new Error('Name taken.');
-                    const updates = { name: newName, bio: el('edit-bio-input').value.trim(), gender: el('edit-gender-input').value, showGender: el('edit-show-gender').checked };
-                    if (editProfilePicFile) { updates.photoURL = await uploadImageToImgBB(editProfilePicFile); updates.emoji = null; } 
+                    const updates = { name: newName, bio: el('edit-bio-input').value.trim() || "Available for secure connection", gender: el('edit-gender-input').value, showGender: el('edit-show-gender').checked };
+                    if (editProfilePicFile) { 
+                        const compressed = await compressImage(editProfilePicFile, 400, 400, 0.6); // Super aggressive DP compression
+                        updates.photoURL = await uploadImageToImgBB(compressed); 
+                        updates.emoji = null; 
+                    } 
                     else if (el('edit-pfp-preview').classList.contains('hidden')) { updates.emoji = el('edit-emoji-input').value.trim() || '👤'; updates.photoURL = null; }
-                    await db.ref(`users/${currentUser.uid}`).update(updates);
+                    await firestore.collection('users').doc(currentUser.uid).set(updates, {merge: true});
                     showInfoModal('Success', 'Preferences updated.'); closeModal('settings-modal'); editProfilePicFile = null; 
                 } catch (error) { 
                     errEl.textContent = error.message; 
@@ -1219,7 +1431,7 @@
                 }
             });
             
-            // Add Friend Flow
+            // Add Friend Flow (Firestore)
             on('add-friend-button', 'click', () => { el('add-friend-id-input').value=''; el('add-friend-status').textContent=''; el('friend-search-result').classList.add('hidden'); openModal('add-friend-modal'); });
             on('search-friend-btn', 'click', () => {
                 const idInput = el('add-friend-id-input').value.trim();
@@ -1227,20 +1439,23 @@
                 statusEl.textContent = ''; resDiv.classList.add('hidden');
                 if (!idInput) { statusEl.textContent = 'ID Required.'; return; }
                 
-                db.ref('users').orderByChild('userId').equalTo(idInput).once('value', async snap => {
-                    if (snap.exists()) {
-                        const fUid = Object.keys(snap.val())[0]; const fProfile = snap.val()[fUid];
-                        if (fUid === currentUser.uid) { statusEl.textContent = "Self-targeting invalid."; return; }
-                        if ((await db.ref(`contacts/${currentUser.uid}/${fUid}`).once('value')).exists()) { statusEl.textContent = 'Link exists.'; return; }
-                        
-                        resDiv.innerHTML = `
-                            <div class="flex flex-col items-center">
-                                <div class="w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-3xl overflow-hidden mb-3 border-2 border-slate-200 dark:border-slate-600 shadow-md">${createProfileDisplay(fProfile)}</div>
-                                <h4 class="font-bold text-slate-900 dark:text-white mb-4 text-lg">${fProfile.name}</h4>
-                                <button class="btn-primary w-full shadow-lg shadow-primary/20 py-3" id="confirm-send-request" data-uid="${fUid}"><span class="material-symbols-outlined text-[18px]">send</span> Transmit Request</button>
-                            </div>`;
-                        resDiv.classList.remove('hidden');
-                    } else { statusEl.textContent = 'Target offline/invalid.'; }
+                firestore.collection('users').get().then(snap => {
+                    let foundUser = null; let fUid = null;
+                    snap.forEach(doc => { if (doc.data().userId === idInput) { foundUser = doc.data(); fUid = doc.id; } });
+                    
+                    if (foundUser) {
+                        if (fUid === currentUser.uid) { statusEl.textContent = "You cannot add yourself."; return; }
+                        firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(fUid).get().then(contactDoc => {
+                            if (contactDoc.exists) { statusEl.textContent = 'Link exists.'; return; }
+                            resDiv.innerHTML = `
+                                <div class="flex flex-col items-center">
+                                    <div class="w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-3xl overflow-hidden mb-3 border-2 border-slate-200 dark:border-slate-600 shadow-md">${createProfileDisplay(foundUser)}</div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white mb-4 text-lg">${foundUser.name}</h4>
+                                    <button class="btn-primary w-full shadow-lg shadow-primary/20 py-3" id="confirm-send-request" data-uid="${fUid}"><span class="material-symbols-outlined text-[18px]">send</span> Send Request</button>
+                                </div>`;
+                            resDiv.classList.remove('hidden');
+                        });
+                    } else { statusEl.textContent = 'User not found or offline.'; }
                 });
             });
 
@@ -1248,27 +1463,28 @@
                 const btn = e.target.closest('#confirm-send-request');
                 if (btn) {
                     if (!currentUserProfile) return;
-                    const fUid = btn.dataset.uid; btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Transmitting...';
-                    db.ref(`requests/${fUid}/${currentUser.uid}`).set({
+                    const fUid = btn.dataset.uid; btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Sending...';
+                    firestore.collection('requests').doc(fUid).collection('incoming').doc(currentUser.uid).set({
                         name: currentUserProfile.name, emoji: currentUserProfile.emoji || null, userId: currentUserProfile.userId, photoURL: currentUserProfile.photoURL || null
                     }).then(() => {
                         el('friend-search-result').classList.add('hidden');
-                        const st = el('add-friend-status'); st.style.color = "#10b981"; st.textContent = 'Transmission complete!';
+                        const st = el('add-friend-status'); st.style.color = "#10b981"; st.textContent = 'Request Sent!';
                         setTimeout(() => { closeModal('add-friend-modal'); st.style.color = "#ef4444"; }, 1500);
                     }).catch(() => { 
-                        el('add-friend-status').textContent = 'Transmission failed.'; 
-                        btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">send</span> Transmit Request'; 
+                        el('add-friend-status').textContent = 'Request failed.'; 
+                        btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">send</span> Send Request'; 
                     });
                 }
             });
 
             function listenForFriendRequests() {
-                db.ref(`requests/${currentUser.uid}`).on('value', snap => {
+                const unsub = firestore.collection('requests').doc(currentUser.uid).collection('incoming').onSnapshot(snap => {
                     const list = el('requests-list-container'); const badge = el('requests-badge');
                     list.innerHTML = '';
-                    if (snap.exists()) {
-                        const reqs = snap.val(); badge.classList.remove('hidden');
-                        Object.entries(reqs).forEach(([uid, profile]) => {
+                    if (!snap.empty) {
+                        badge.classList.remove('hidden');
+                        snap.forEach(doc => {
+                            const uid = doc.id; const profile = doc.data();
                             const div = document.createElement('div'); div.className = 'flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50';
                             div.innerHTML = `
                                 <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center shrink-0 bg-slate-200 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-xl">${createProfileDisplay(profile)}</div>
@@ -1281,48 +1497,181 @@
                         });
                     } else { list.innerHTML = '<div class="empty-state flex flex-col justify-center items-center mt-10 opacity-50"><span class="material-symbols-outlined text-[40px] mb-2">inbox</span><p class="text-sm font-semibold">No inbound requests.</p></div>'; badge.classList.add('hidden'); }
                 });
+                firestoreUnsubs.push(unsub);
             }
             
             el('sidebar-scroll-area').addEventListener('click', e => {
                 const btn = e.target.closest('button'); if(!btn) return;
                 const uid = btn.dataset.uid;
                 if (btn.classList.contains('accept-btn')) {
-                    db.ref(`users/${uid}`).once('value', snap => {
-                        db.ref(`contacts/${currentUser.uid}/${uid}`).set(snap.val());
-                        db.ref(`contacts/${uid}/${currentUser.uid}`).set(currentUserProfile);
-                        db.ref(`requests/${currentUser.uid}/${uid}`).remove();
+                    firestore.collection('users').doc(uid).get().then(doc => {
+                        if(doc.exists) {
+                            firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(uid).set(doc.data());
+                            firestore.collection('contacts').doc(uid).collection('list').doc(currentUser.uid).set(currentUserProfile);
+                            firestore.collection('requests').doc(currentUser.uid).collection('incoming').doc(uid).delete();
+                        }
                     });
-                } else if (btn.classList.contains('reject-btn')) { db.ref(`requests/${currentUser.uid}/${uid}`).remove(); }
+                } else if (btn.classList.contains('reject-btn')) { 
+                    firestore.collection('requests').doc(currentUser.uid).collection('incoming').doc(uid).delete(); 
+                }
             });
 
-            // Contact Actions & Info Drawer
-            on('toggle-info-drawer-btn', 'click', () => el('contact-info-drawer').classList.add('active'));
-            on('close-info-drawer', 'click', () => el('contact-info-drawer').classList.remove('active'));
+            // Selection Mode Control
+            const cancelSelectionMode = () => {
+                isSelectionMode = false;
+                selectedMessages.clear();
+                el('chat-messages').classList.remove('selection-mode');
+                el('selection-action-container').classList.add('hidden');
+                el('chat-input-container').classList.remove('hidden');
+                document.querySelectorAll('.msg-select-cb').forEach(cb => cb.checked = false);
+            };
+
+            el('chat-messages').addEventListener('change', (e) => {
+                if(e.target.classList.contains('msg-select-cb')) {
+                    if(e.target.checked) selectedMessages.add(e.target.value);
+                    else selectedMessages.delete(e.target.value);
+                    el('selection-count').textContent = `${selectedMessages.size} Selected`;
+                    
+                    const delBtn = el('delete-selection-btn');
+                    if(selectedMessages.size > 0) {
+                        delBtn.disabled = false;
+                        delBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        delBtn.disabled = true;
+                        delBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                }
+            });
+
+            on('cancel-selection-btn', 'click', cancelSelectionMode);
             
-            on('chat-info-trigger', 'click', () => {
-                el('contact-info-drawer').classList.add('active');
-            });
-
-            on('drawer-clear-chat', 'click', () => {
-                showConfirmModal('Wipe Data?', 'Erase all local communication logs?', () => { 
-                    db.ref(`userChats/${currentUser.uid}/${currentChatId}`).update({ clearedAt: firebase.database.ServerValue.TIMESTAMP }); 
-                    listenForMessages(); el('contact-info-drawer').classList.remove('active');
+            on('delete-selection-btn', 'click', () => {
+                if(selectedMessages.size === 0) return;
+                showConfirmModal('Delete Messages?', `Are you sure you want to delete ${selectedMessages.size} message(s) for everyone?`, async () => {
+                    const batch = firestore.batch();
+                    selectedMessages.forEach(id => {
+                        const docRef = firestore.collection('messages').doc(currentChatId).collection('history').doc(id);
+                        batch.update(docRef, { isDeleted: true, text: "This message was deleted", type: 'deleted', content: null });
+                    });
+                    await batch.commit();
+                    cancelSelectionMode();
                 });
             });
-            on('drawer-remove-contact', 'click', () => {
-                showConfirmModal('Remove Link?', 'Sever connection with this node?', () => { 
-                    db.ref(`contacts/${currentUser.uid}/${currentChatPartner.uid}`).remove(); 
-                    db.ref(`contacts/${currentChatPartner.uid}/${currentUser.uid}`).remove(); 
-                    el('contact-info-drawer').classList.remove('active');
+
+            // Contact Actions & Info Drawer Toggles
+            on('close-info-drawer', 'click', () => {
+                const drawer = el('contact-info-drawer');
+                drawer.classList.remove('active');
+                drawer.classList.add('translate-x-full');
+                setTimeout(() => drawer.classList.add('hidden'), 300);
+            });
+            
+            on('chat-info-trigger', 'click', () => {
+                const drawer = el('contact-info-drawer');
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    drawer.classList.remove('translate-x-full');
+                    drawer.classList.add('active');
+                }, 10);
+            });
+
+            // 3-Dots Menu Logic
+            const chatOptionsBtn = el('chat-options-btn');
+            const chatOptionsMenu = el('chat-options-menu');
+
+            if(chatOptionsBtn) {
+                chatOptionsBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    chatOptionsMenu.classList.toggle('hidden');
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (chatOptionsMenu && !chatOptionsMenu.classList.contains('hidden') && !chatOptionsBtn.contains(e.target) && !chatOptionsMenu.contains(e.target)) {
+                    chatOptionsMenu.classList.add('hidden');
+                }
+            });
+
+            on('menu-close-chat', 'click', () => {
+                chatOptionsMenu.classList.add('hidden');
+                el('back-to-home-btn').click();
+            });
+
+            on('menu-clear-chat', 'click', () => {
+                chatOptionsMenu.classList.add('hidden');
+                openModal('clear-chat-modal');
+            });
+
+            on('clear-chat-me-btn', 'click', async () => {
+                await firestore.collection('userChats').doc(currentUser.uid).collection('chats').doc(currentChatId).set({ clearedAt: Date.now() }, { merge: true });
+                closeModal('clear-chat-modal');
+                el('close-info-drawer').click();
+            });
+
+            on('clear-chat-everyone-btn', 'click', async () => {
+                const snap = await firestore.collection('messages').doc(currentChatId).collection('history').get();
+                const batch = firestore.batch();
+                snap.forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+                closeModal('clear-chat-modal');
+                el('close-info-drawer').click();
+            });
+
+            on('clear-chat-cancel-btn', 'click', () => closeModal('clear-chat-modal'));
+
+            on('menu-delete-chat', 'click', () => {
+                chatOptionsMenu.classList.add('hidden');
+                showConfirmModal('Delete Chat?', 'This will remove the chat from your list and clear the history for everyone.', async () => { 
+                    // 1. Delete all history docs
+                    const snap = await firestore.collection('messages').doc(currentChatId).collection('history').get();
+                    const batch = firestore.batch();
+                    snap.forEach(doc => batch.delete(doc.ref));
+                    await batch.commit();
+
+                    // 2. Hide chat from chat list
+                    await firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).set({ chatVisible: false }, { merge: true });
+                    
+                    el('close-info-drawer').click();
                     el('back-to-home-btn').click();
                 });
             });
-            on('drawer-block-contact', 'click', () => {
-                showConfirmModal('Blacklist?', 'Node will be permanently blocked.', () => { 
-                    db.ref(`blocked/${currentUser.uid}/${currentChatPartner.uid}`).set(currentChatPartner); 
-                    db.ref(`contacts/${currentUser.uid}/${currentChatPartner.uid}`).remove(); 
-                    db.ref(`contacts/${currentChatPartner.uid}/${currentUser.uid}`).remove(); 
-                    el('contact-info-drawer').classList.remove('active');
+
+            on('menu-media', 'click', () => {
+                chatOptionsMenu.classList.add('hidden');
+                showInfoModal('Media, Links & Docs', 'No media shared in this chat yet.');
+            });
+
+            on('menu-select-msg', 'click', () => {
+                chatOptionsMenu.classList.add('hidden');
+                isSelectionMode = true;
+                selectedMessages.clear();
+                el('selection-count').textContent = '0 Selected';
+                el('chat-messages').classList.add('selection-mode');
+                el('selection-action-container').classList.remove('hidden');
+                el('chat-input-container').classList.add('hidden');
+                
+                const delBtn = el('delete-selection-btn');
+                delBtn.disabled = true;
+                delBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+
+            on('menu-unfriend', 'click', () => {
+                chatOptionsMenu.classList.add('hidden');
+                showConfirmModal('Unfriend?', 'Remove this user from your contacts?', () => { 
+                    firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).delete(); 
+                    firestore.collection('contacts').doc(currentChatPartner.uid).collection('list').doc(currentUser.uid).delete(); 
+                    el('close-info-drawer').click();
+                    el('back-to-home-btn').click();
+                });
+            });
+
+            on('menu-block', 'click', () => {
+                chatOptionsMenu.classList.add('hidden');
+                showConfirmModal('Block User?', 'This user will be permanently blocked.', () => { 
+                    firestore.collection('blocked').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).set(currentChatPartner); 
+                    firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).delete(); 
+                    firestore.collection('contacts').doc(currentChatPartner.uid).collection('list').doc(currentUser.uid).delete(); 
+                    el('close-info-drawer').click();
                     el('back-to-home-btn').click();
                 });
             });
@@ -1331,7 +1680,7 @@
                 el('drawer-pfp').innerHTML = createProfileDisplay(profile);
                 el('drawer-name').textContent = profile.name;
                 el('drawer-id').textContent = profile.userId;
-                el('drawer-bio').textContent = profile.bio || "Available";
+                el('drawer-bio').textContent = profile.bio || "Available for secure connection";
                 
                 const genBox = el('drawer-gender-box');
                 if(profile.showGender !== false && profile.gender && profile.gender !== "Prefer not to say") {
@@ -1340,56 +1689,98 @@
             }
 
             function listenForContacts() {
-                db.ref(`contacts/${currentUser.uid}`).on('child_added', snap => {
+                const unsub = firestore.collection('contacts').doc(currentUser.uid).collection('list').onSnapshot(snap => {
                     const list = el('contact-list-container');
-                    if (!list.querySelector(`#contact-${snap.key}`)) {
-                        const uid = snap.key; const profile = snap.val();
-                        const a = document.createElement('div'); a.className = 'contact-item flex items-center gap-3 px-3 py-3 cursor-pointer rounded-xl transition-colors relative';
-                        a.id = `contact-${uid}`; a.dataset.uid = uid;
-                        a.innerHTML = `
-                            <div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0 text-xl shadow-sm z-10">${createProfileDisplay(profile)}</div>
-                            <div class="flex-1 min-w-0 z-10">
-                                <div class="flex justify-between items-baseline mb-1"><h2 class="contact-name text-[15px] font-bold truncate text-slate-900 dark:text-slate-100">${profile.name}</h2><span class="contact-time text-[10px] font-bold text-slate-400 uppercase tracking-widest" id="time-${uid}"></span></div>
-                                <div class="flex justify-between items-center"><p class="contact-status text-xs text-slate-500 truncate font-medium" id="status-${uid}">Offline</p><div class="unread-badge hidden w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-sm" id="unread-${uid}"></div></div>
-                            </div>`;
+                    
+                    snap.docChanges().forEach(change => {
+                        const uid = change.doc.id;
+                        const profile = change.doc.data();
                         
-                        list.appendChild(a);
-                        listenForUserStatus(uid, a.querySelector(`#status-${uid}`), false);
+                        if (change.type === 'added' || change.type === 'modified') {
+                            if (!list.querySelector(`#contact-${uid}`)) {
+                                const a = document.createElement('div'); a.className = 'contact-item flex items-center gap-3 px-3 py-3 cursor-pointer rounded-xl transition-colors relative';
+                                a.id = `contact-${uid}`; a.dataset.uid = uid;
+                                a.innerHTML = `
+                                    <div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0 text-xl shadow-sm z-10">${createProfileDisplay(profile)}</div>
+                                    <div class="flex-1 min-w-0 z-10">
+                                        <div class="flex justify-between items-baseline mb-1"><h2 class="contact-name text-[15px] font-bold truncate text-slate-900 dark:text-slate-100">${profile.name}</h2><span class="contact-time text-[10px] font-bold text-slate-400 uppercase tracking-widest" id="time-${uid}"></span></div>
+                                        <div class="flex justify-between items-center"><p class="contact-status text-xs text-slate-500 truncate font-medium" id="status-${uid}">Offline</p><div class="unread-badge hidden w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-sm" id="unread-${uid}"></div></div>
+                                    </div>`;
+                                
+                                list.appendChild(a);
+                                listenForUserStatus(uid, a.querySelector(`#status-${uid}`), false);
 
-                        const chatId = getChatId(currentUser.uid, uid);
-                        const uRef = db.ref(`unreadCounts/${currentUser.uid}/${chatId}`);
-                        if (unreadListeners[chatId]) unreadListeners[chatId].off(); unreadListeners[chatId] = uRef; 
+                                const chatId = getChatId(currentUser.uid, uid);
+                                const uRef = firestore.collection('userChats').doc(currentUser.uid).collection('chats').doc(chatId);
+                                
+                                if (unreadListeners[chatId]) unreadListeners[chatId](); // unsub old
+                                unreadListeners[chatId] = uRef.onSnapshot(doc => {
+                                    const data = doc.data() || {};
+                                    const count = data.unread || 0;
+                                    if (currentChatId === chatId && document.visibilityState === 'visible') {
+                                        if (count > 0) uRef.set({unread: 0}, {merge: true}); 
+                                        a.querySelector('.unread-badge').classList.add('hidden');
+                                    } else if (count > 0) { 
+                                        a.querySelector('.unread-badge').textContent = count > 99 ? '99+' : count; 
+                                        a.querySelector('.unread-badge').classList.remove('hidden');
+                                    } else { 
+                                        a.querySelector('.unread-badge').classList.add('hidden'); 
+                                    }
+                                });
+                                
+                                // Re-apply active class if it's the current chat partner
+                                if(currentChatId === chatId) {
+                                    a.classList.add('active-chat');
+                                }
+                            } else if (change.type === 'modified') {
+                                const a = list.querySelector(`#contact-${uid}`);
+                                if (a) a.querySelector('.contact-name').textContent = profile.name;
+                            }
+                            
+                            // Check chat visibility
+                            const a = list.querySelector(`#contact-${uid}`);
+                            if(a) {
+                                if (profile.chatVisible === false) {
+                                    a.classList.add('hidden-chat');
+                                    a.style.display = 'none';
+                                } else {
+                                    a.classList.remove('hidden-chat');
+                                    // Check if there is an active search to prevent overriding search view
+                                    const term = el('contact-search-input').value.toLowerCase();
+                                    if(term && !profile.name.toLowerCase().includes(term)) {
+                                        a.style.display = 'none';
+                                    } else {
+                                        a.style.display = 'flex';
+                                    }
+                                }
+                            }
+                        }
                         
-                        uRef.on('value', uSnap => {
-                            const count = uSnap.val();
-                            if (currentChatId === chatId && document.visibilityState === 'visible') {
-                                if (count > 0) uRef.set(0); a.querySelector('.unread-badge').classList.add('hidden');
-                            } else if (count > 0) { a.querySelector('.unread-badge').textContent = count > 99 ? '99+' : count; a.querySelector('.unread-badge').classList.remove('hidden');
-                            } else { a.querySelector('.unread-badge').classList.add('hidden'); }
-                        });
-                    }
+                        if (change.type === 'removed') {
+                            const item = el(`contact-${uid}`); if (item) item.remove();
+                            const chatId = getChatId(currentUser.uid, uid);
+                            if (unreadListeners[chatId]) { unreadListeners[chatId](); delete unreadListeners[chatId]; }
+                            if (typingListeners[uid]) { typingListeners[uid].off(); delete typingListeners[uid]; }
+                        }
+                    });
                 });
-
-                db.ref(`contacts/${currentUser.uid}`).on('child_removed', snap => {
-                    const uid = snap.key; const chatId = getChatId(currentUser.uid, uid);
-                    const item = el(`contact-${uid}`); if (item) item.remove();
-                    if (unreadListeners[chatId]) { unreadListeners[chatId].off(); delete unreadListeners[chatId]; }
-                    if (typingListeners[uid]) { typingListeners[uid].off(); delete typingListeners[uid]; }
-                });
+                firestoreUnsubs.push(unsub);
             }
             
             el('contact-list-container').addEventListener('click', async e => {
                 const item = e.target.closest('.contact-item');
                 if (item) {
-                    document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active-chat')); item.classList.add('active-chat');
-                    const snap = await db.ref(`users/${item.dataset.uid}`).once('value'); 
-                    await openChat(snap.val(), item.dataset.uid);
+                    document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active-chat')); 
+                    item.classList.add('active-chat');
+                    const doc = await firestore.collection('users').doc(item.dataset.uid).get(); 
+                    if(doc.exists) await openChat(doc.data(), item.dataset.uid);
                 }
             });
 
             function getChatId(uid1, uid2) { return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`; }
 
             async function openChat(profile, uid) {
+                cancelSelectionMode();
                 currentChatPartner = { ...profile, uid }; currentChatId = getChatId(currentUser.uid, uid);
                 
                 el('welcome-screen').classList.add('hidden'); 
@@ -1398,47 +1789,65 @@
                 el('chat-messages').classList.remove('hidden');
                 el('chat-input-container').classList.remove('hidden');
                 
-                el('main-chat-area').classList.add('active'); // For mobile sliding
+                el('main-chat-area').classList.add('active'); 
 
                 el('chat-header-pfp').innerHTML = createProfileDisplay(profile); 
                 el('chat-header-name').textContent = profile.name;
-                populateInfoDrawer(profile);
+                
+                // Fetch the absolute latest bio for this user just in case and populate the info drawer
+                const liveProfile = await firestore.collection('users').doc(uid).get();
+                if(liveProfile.exists) {
+                    populateInfoDrawer(liveProfile.data());
+                } else {
+                    populateInfoDrawer(profile);
+                }
 
                 listenForUserStatus(uid, el('chat-header-status'), true);
                 await listenForMessages();
             }
 
-            async function listenForMessages() {
-                const msgArea = el('chat-messages'); msgArea.innerHTML = '';
-                await db.ref(`unreadCounts/${currentUser.uid}/${currentChatId}`).set(0);
-                const snap = await db.ref(`userChats/${currentUser.uid}/${currentChatId}`).once('value');
-                const clearedAt = snap.val() ? snap.val().clearedAt : 0;
-                let msgRef = db.ref(`messages/${currentChatId}`).orderByChild('timestamp');
-                if (clearedAt > 0) msgRef = msgRef.startAt(clearedAt);
-                
-                if (messageListeners[currentChatId]) messageListeners[currentChatId].off(); messageListeners[currentChatId] = msgRef;
+            function renderCurrentMessages() {
+                const msgArea = el('chat-messages'); 
                 msgArea.innerHTML = '<div class="flex justify-center my-6"><span class="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-[10px] text-slate-500 rounded-full font-bold uppercase tracking-widest shadow-sm">Secure Encrypted Session</span></div>';
 
-                msgRef.on('child_added', mSnap => {
-                    const msg = mSnap.val(); if (msg.timestamp < clearedAt) return;
-                    const isMe = msg.sender === currentUser.uid; const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                const clearedAt = currentChatMetadata.clearedAt || 0;
+                const validShared = sharedMessages.filter(m => m.timestamp > clearedAt);
+                const allMsgs = [...validShared, ...pendingUploads];
+
+                allMsgs.forEach(msg => {
+                    const isMe = msg.sender === currentUser.uid; 
+                    const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const isPending = msg.isPending;
                     
-                    const div = document.createElement('div'); div.className = `flex items-end gap-3 max-w-[85%] md:max-w-[70%] fade-in ${isMe ? 'ml-auto flex-row-reverse' : ''}`;
+                    const wrapper = document.createElement('div'); 
+                    wrapper.className = `flex items-center w-full mb-5 msg-wrapper ${isMe ? 'justify-end' : 'justify-start'}`;
                     
                     const pfpStr = isMe ? createProfileDisplay(currentUserProfile) : createProfileDisplay(currentChatPartner);
+                    const isChecked = selectedMessages.has(msg.id) ? 'checked' : '';
                     
                     let inner = `
-                        <div class="w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-sm overflow-hidden ${isMe?'bg-primary/10':'bg-slate-200 dark:bg-slate-700'} border border-slate-200 dark:border-slate-700 shadow-sm">${pfpStr}</div>
-                        <div class="flex flex-col gap-1 max-w-full min-w-0 ${isMe?'items-end':''}">
+                        <div class="message-checkbox hidden shrink-0 mr-3">
+                            <input type="checkbox" value="${msg.id}" class="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer msg-select-cb" ${isChecked}>
+                        </div>
+                        <div class="flex items-end gap-3 max-w-[85%] md:max-w-[70%] fade-in ${isMe ? 'flex-row-reverse' : ''}">
+                            <div class="w-8 h-8 rounded-full shrink-0 flex items-center justify-center text-sm overflow-hidden ${isMe?'bg-primary/10':'bg-slate-200 dark:bg-slate-700'} border border-slate-200 dark:border-slate-700 shadow-sm">${pfpStr}</div>
+                            <div class="flex flex-col gap-1 max-w-full min-w-0 ${isMe?'items-end':''}">
                     `;
                     
-                    if (msg.type === 'image') {
+                    if (msg.isDeleted || msg.type === 'deleted') {
                         inner += `
-                            <div class="relative rounded-2xl overflow-hidden shadow-sm border ${isMe?'border-primary/30':'border-slate-200 dark:border-slate-700'} bg-white dark:bg-slate-800 group w-fit inline-block">
-                                <img src="${msg.content}" class="max-h-72 object-cover cursor-pointer" onclick="window.open('${msg.content}','_blank')">
-                                <div class="absolute bottom-2 right-2 w-10 h-10 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer download-icon hover:bg-black/80 text-white" data-src="${msg.content}"><span class="material-symbols-outlined text-[20px]">download</span></div>
+                            <div class="${isMe ? 'bg-primary/40 text-white/80 shadow-md rounded-br-sm' : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700 rounded-bl-sm'} p-3.5 rounded-2xl text-[14.5px] italic flex items-center gap-2 w-fit max-w-full">
+                                <span class="material-symbols-outlined text-[16px]">block</span> This message was deleted
                             </div>
-                            <div class="flex items-center gap-1 ${isMe?'':'ml-1'} mt-0.5"><span class="text-[10px] text-slate-400 font-medium">${time}</span></div>
+                        `;
+                    } else if (msg.type === 'image') {
+                        // Scrolling to bottom after Image loads prevents layout shifts!
+                        inner += `
+                            <div class="relative rounded-2xl overflow-hidden shadow-sm border ${isMe?'border-primary/30':'border-slate-200 dark:border-slate-700'} bg-white dark:bg-slate-800 group w-fit inline-block ${isPending ? 'opacity-50 grayscale-[20%]' : ''}">
+                                <img src="${msg.content}" onload="document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;" class="max-h-72 object-cover cursor-pointer" onclick="window.open('${msg.content}','_blank')">
+                                ${isPending ? '<div class="absolute inset-0 flex items-center justify-center bg-black/20"><div class="spinner w-6 h-6 border-[2px]"></div></div>' : `<div class="absolute bottom-2 right-2 w-10 h-10 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer download-icon hover:bg-black/80 text-white" data-src="${msg.content}"><span class="material-symbols-outlined text-[20px]">download</span></div>`}
+                            </div>
+                            <div class="flex items-center gap-1 ${isMe?'':'ml-1'} mt-0.5"><span class="text-[10px] text-slate-400 font-medium">${isPending ? 'Sending...' : time}</span></div>
                         `;
                     } else {
                         inner += `
@@ -1451,8 +1860,31 @@
                             </div>
                         `;
                     }
-                    inner += `</div>`;
-                    div.innerHTML = inner; msgArea.appendChild(div); msgArea.scrollTo({ top: msgArea.scrollHeight, behavior: 'smooth' });
+                    inner += `</div></div>`;
+                    wrapper.innerHTML = inner; 
+                    msgArea.appendChild(wrapper);
+                });
+                msgArea.scrollTo({ top: msgArea.scrollHeight, behavior: 'smooth' });
+            }
+
+            async function listenForMessages() {
+                el('chat-messages').innerHTML = '';
+                
+                const chatRef = firestore.collection('userChats').doc(currentUser.uid).collection('chats').doc(currentChatId);
+                await chatRef.set({unread: 0}, {merge:true});
+                
+                if (chatMetaUnsub) chatMetaUnsub();
+                chatMetaUnsub = chatRef.onSnapshot(doc => {
+                    if (doc.exists) currentChatMetadata = doc.data() || {};
+                    renderCurrentMessages(); 
+                });
+
+                if (messageListeners[currentChatId]) messageListeners[currentChatId](); 
+                messageListeners[currentChatId] = firestore.collection('messages').doc(currentChatId).collection('history').onSnapshot(snap => {
+                    sharedMessages = [];
+                    snap.forEach(doc => sharedMessages.push({id: doc.id, ...doc.data()}));
+                    sharedMessages.sort((a,b) => a.timestamp - b.timestamp);
+                    renderCurrentMessages();
                 });
             }
 
@@ -1472,36 +1904,87 @@
 
             function sendMsg(imageUrl = null) {
                 if (!currentChatPartner || !currentChatId) return;
-                const txt = chatInput.value.trim(); if (!txt && !imageUrl) return;
-                db.ref(`messages/${currentChatId}`).push({ sender: currentUser.uid, timestamp: firebase.database.ServerValue.TIMESTAMP, type: imageUrl ? 'image' : 'text', [imageUrl ? 'content' : 'text']: imageUrl || txt });
-                db.ref(`unreadCounts/${currentChatPartner.uid}/${currentChatId}`).transaction(c => (c || 0) + 1);
+                const txt = chatInput.value.trim(); 
+                if (!txt && !imageUrl) return;
+                
+                const msgData = { 
+                    sender: currentUser.uid, 
+                    timestamp: Date.now(), 
+                    type: imageUrl ? 'image' : 'text', 
+                    [imageUrl ? 'content' : 'text']: imageUrl || txt 
+                };
+                
+                firestore.collection('messages').doc(currentChatId).collection('history').add(msgData);
+                
+                const pChatRef = firestore.collection('userChats').doc(currentChatPartner.uid).collection('chats').doc(currentChatId);
+                pChatRef.get().then(doc => {
+                    let unread = 1;
+                    if(doc.exists && doc.data().unread) unread = doc.data().unread + 1;
+                    pChatRef.set({unread}, {merge:true});
+                });
+
+                // Unhide chat for both users locally
+                firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).set({ chatVisible: true }, { merge: true });
+                firestore.collection('contacts').doc(currentChatPartner.uid).collection('list').doc(currentUser.uid).set({ chatVisible: true }, { merge: true });
+                
                 chatInput.value = ''; chatInput.style.height='auto'; 
-                db.ref(`typing/${currentChatId}/${currentUser.uid}`).set(false);
+                rtdb.ref(`typing/${currentChatId}/${currentUser.uid}`).set(false);
                 sendBtn.disabled = true;
             }
 
+            // OPTIMISTIC IMAGE UPLOAD: Fast UX without blocking the input!
             el('chat-image-input').addEventListener('change', async (e) => {
-                if (e.target.files[0]) {
-                    const overlay = el('upload-overlay');
-                    try { overlay.classList.remove('hidden'); chatInput.disabled = true; sendBtn.disabled = true; sendMsg(await uploadImageToImgBB(e.target.files[0])); } 
-                    catch(err) { showInfoModal('Upload Failed', 'Transfer interrupted.'); } 
-                    finally { overlay.classList.add('hidden'); chatInput.disabled = false; e.target.value = ''; }
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const localUrl = URL.createObjectURL(file);
+                const tempId = 'temp_' + Date.now();
+
+                // 1. Optimistically append image to the UI immediately
+                pendingUploads.push({
+                    id: tempId,
+                    type: 'image',
+                    content: localUrl,
+                    sender: currentUser.uid,
+                    timestamp: Date.now(),
+                    isPending: true
+                });
+                renderCurrentMessages();
+                
+                // Clear the input to allow sending more
+                e.target.value = '';
+
+                try { 
+                    // 2. Process and Upload in background (Aggressive Compression for speed)
+                    const compressedFile = await compressImage(file, 800, 800, 0.6);
+                    const url = await uploadImageToImgBB(compressedFile);
+                    
+                    // 3. Cleanup local pending and dispatch actual message to Firestore
+                    pendingUploads = pendingUploads.filter(p => p.id !== tempId);
+                    sendMsg(url); 
+                } 
+                catch(err) { 
+                    pendingUploads = pendingUploads.filter(p => p.id !== tempId);
+                    renderCurrentMessages();
+                    showInfoModal('Upload Failed', 'Transfer interrupted.'); 
                 }
             });
 
             // Settings views logic
+            let blockedUnsub = null;
             function listenAndDisplayBlockedUsers() {
-                db.ref(`blocked/${currentUser.uid}`).on('value', snap => {
+                if(blockedUnsub) blockedUnsub();
+                blockedUnsub = firestore.collection('blocked').doc(currentUser.uid).collection('list').onSnapshot(snap => {
                     const list = el('settings-blocked-list');
                     if(!list) return;
                     list.innerHTML = '';
-                    if (snap.exists()) {
+                    if (!snap.empty) {
                         snap.forEach(s => {
                             const div = document.createElement('div'); div.className = 'flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 mb-2 shadow-sm';
                             div.innerHTML = `
-                                <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center shrink-0 bg-slate-200 dark:bg-slate-700 text-2xl border border-slate-200 dark:border-slate-600">${createProfileDisplay(s.val())}</div>
-                                <div class="flex-1 min-w-0"><h4 class="text-[15px] font-bold truncate text-slate-900 dark:text-white">${s.val().name}</h4></div>
-                                <button class="px-4 py-2 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-lg transition-colors border border-slate-200 dark:border-slate-600 shadow-sm" onclick="db.ref('blocked/${currentUser.uid}/${s.key}').remove()">Unblock</button>`;
+                                <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center shrink-0 bg-slate-200 dark:bg-slate-700 text-2xl border border-slate-200 dark:border-slate-600">${createProfileDisplay(s.data())}</div>
+                                <div class="flex-1 min-w-0"><h4 class="text-[15px] font-bold truncate text-slate-900 dark:text-white">${s.data().name}</h4></div>
+                                <button class="px-4 py-2 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-lg transition-colors border border-slate-200 dark:border-slate-600 shadow-sm" onclick="firebase.firestore().collection('blocked').doc('${currentUser.uid}').collection('list').doc('${s.id}').delete()">Unblock</button>`;
                             list.appendChild(div);
                         });
                     } else { list.innerHTML = '<div class="empty-state h-40 flex flex-col justify-center items-center opacity-50"><span class="material-symbols-outlined text-[40px] mb-2">block</span><p class="text-sm font-semibold">No blocked users.</p></div>'; }
@@ -1509,11 +1992,54 @@
             }
             on('tab-blocked', 'click', () => listenAndDisplayBlockedUsers());
 
+            let friendsUnsub = null;
+            function listenAndDisplayFriendList() {
+                if(friendsUnsub) friendsUnsub();
+                friendsUnsub = firestore.collection('contacts').doc(currentUser.uid).collection('list').onSnapshot(snap => {
+                    const list = el('settings-friends-list');
+                    if(!list) return;
+                    list.innerHTML = '';
+                    if (!snap.empty) {
+                        snap.forEach(s => {
+                            const fUid = s.id;
+                            const p = s.data();
+                            const div = document.createElement('div'); 
+                            div.className = 'flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 mb-2 shadow-sm';
+                            div.innerHTML = `
+                                <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center shrink-0 bg-slate-200 dark:bg-slate-700 text-2xl border border-slate-200 dark:border-slate-600">${createProfileDisplay(p)}</div>
+                                <div class="flex-1 min-w-0"><h4 class="text-[15px] font-bold truncate text-slate-900 dark:text-white">${p.name}</h4></div>
+                                <button class="px-3 py-1.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg transition-colors shadow-sm btn-msg-friend" data-uid="${fUid}">Message</button>
+                                <button class="px-3 py-1.5 bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 text-xs font-bold rounded-lg transition-colors shadow-sm btn-unfriend" data-uid="${fUid}">Unfriend</button>`;
+                            list.appendChild(div);
+                        });
+                    } else { list.innerHTML = '<div class="empty-state h-40 flex flex-col justify-center items-center opacity-50"><span class="material-symbols-outlined text-[40px] mb-2">group</span><p class="text-sm font-semibold">No friends yet.</p></div>'; }
+                });
+            }
+            on('tab-friends', 'click', () => listenAndDisplayFriendList());
+            
+            el('settings-modal').addEventListener('click', async e => {
+                if(e.target.classList.contains('btn-msg-friend')) {
+                    const uid = e.target.dataset.uid;
+                    closeModal('settings-modal');
+                    const doc = await firestore.collection('users').doc(uid).get(); 
+                    if(doc.exists) await openChat(doc.data(), uid);
+                }
+                if(e.target.classList.contains('btn-unfriend')) {
+                    const uid = e.target.dataset.uid;
+                    showConfirmModal('Unfriend?', 'Are you sure you want to remove this friend?', () => {
+                        firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(uid).delete(); 
+                        firestore.collection('contacts').doc(uid).collection('list').doc(currentUser.uid).delete(); 
+                    });
+                }
+            });
+
+            let logsUnsub = null;
             function listenAndDisplayCallLogs() {
-                db.ref(`callLogs/${currentUser.uid}`).on('value', snap => {
+                if(logsUnsub) logsUnsub();
+                logsUnsub = firestore.collection('callLogs').doc(currentUser.uid).collection('logs').onSnapshot(snap => {
                     const list = el('calls-list-container'); list.innerHTML = '';
-                    if (snap.exists()) {
-                        const logs = []; snap.forEach(s => { logs.push(s.val()); });
+                    if (!snap.empty) {
+                        const logs = []; snap.forEach(s => logs.push(s.data()));
                         logs.sort((a,b) => b.timestamp - a.timestamp).forEach(log => {
                             const isMissed = log.type === 'missed';
                             const isIncoming = log.type === 'incoming';
@@ -1544,11 +2070,11 @@
 
             function logCall(partnerUid, partnerName, type) {
                 if(!currentUser) return;
-                db.ref(`callLogs/${currentUser.uid}`).push({
+                firestore.collection('callLogs').doc(currentUser.uid).collection('logs').add({
                     partnerId: partnerUid,
                     partnerName: partnerName || 'Unknown Contact',
                     type: type, // 'outgoing', 'incoming', 'missed'
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                    timestamp: Date.now()
                 });
             }
 
@@ -1558,19 +2084,20 @@
             async function startCall(fUid, isVideo) {
                 // Safely check if mediaDevices is supported in this environment
                 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    showInfoModal('Environment Error', 'Audio and Video calling features are not supported in this browser or preview environment. Please try locally or via HTTPS.');
+                    showInfoModal('Calling Unavailable 🚫', 'Audio and video calls require a secure connection or browser support. Try using a standard browser.');
                     return;
                 }
 
                 try {
-                    const fProf = (await db.ref(`users/${fUid}`).once('value')).val();
+                    const fProfDoc = await firestore.collection('users').doc(fUid).get();
+                    const fProf = fProfDoc.data();
                     currentCallInfo = { partner: { ...fProf, uid: fUid }, isVideo, isCaller: true };
 
                     locVid.srcObject = localStream = await navigator.mediaDevices.getUserMedia({ video: isVideo, audio: true });
                 } 
                 catch(e) { 
                     console.error("Media permission error:", e);
-                    showInfoModal('Hardware Error', 'Microphone or Camera permission denied, or devices not found.'); 
+                    showInfoModal('Camera & Mic Needed 📸', 'Please allow camera and microphone access in your browser settings to make or receive calls.'); 
                     if (currentCallInfo) endCall(false); 
                     return; 
                 }
@@ -1589,8 +2116,8 @@
                 localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
                 peerConnection.ontrack = e => { remVid.srcObject = e.streams[0]; };
                 
-                const cId = db.ref('calls').push().key; currentCallInfo.id = cId;
-                const cRef = db.ref(`calls/${cId}`);
+                const cId = rtdb.ref('calls').push().key; currentCallInfo.id = cId;
+                const cRef = rtdb.ref(`calls/${cId}`);
                 peerConnection.onicecandidate = e => { if (e.candidate) cRef.child('offerCandidates').push(e.candidate.toJSON()); };
 
                 peerConnection.onconnectionstatechange = () => {
@@ -1612,7 +2139,7 @@
                 
                 cRef.on('value', async snap => {
                     const d = snap.val();
-                    if (d && d.status === 'rejected') { showInfoModal('Declined', 'Target refused connection.'); endCall(true); return; }
+                    if (d && d.status === 'rejected') { showInfoModal('Call Missed', 'Your friend is unavailable right now.'); endCall(true); return; }
                     if (!d && currentCallInfo) { endCall(false); return; }
                     if (d && !peerConnection.currentRemoteDescription && d.answer) {
                         await peerConnection.setRemoteDescription(new RTCSessionDescription(d.answer));
@@ -1626,12 +2153,13 @@
             }
             
             function listenForCalls() {
-                db.ref('calls').orderByChild('callee').equalTo(currentUser.uid).on('child_added', snap => {
+                rtdb.ref('calls').orderByChild('callee').equalTo(currentUser.uid).on('child_added', snap => {
                     incomingCallData = { id: snap.key, ...snap.val() };
                     if (incomingCallData.answer) return;
 
-                    db.ref(`users/${incomingCallData.caller}`).once('value', cSnap => {
-                        const cProf = cSnap.val();
+                    firestore.collection('users').doc(incomingCallData.caller).get().then(cSnap => {
+                        if(!cSnap.exists) return;
+                        const cProf = cSnap.data();
                         el('incoming-caller-pfp').innerHTML = createProfileDisplay(cProf);
                         el('incoming-caller-name').textContent = cProf.name;
                         el('call-bg-blur').style.backgroundImage = cProf.photoURL ? `url(${cProf.photoURL})` : 'none';
@@ -1646,18 +2174,19 @@
                 
                 // Safely check if mediaDevices is supported in this environment
                 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    db.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' });
-                    showInfoModal('Environment Error', 'Media devices are not supported in this browser or preview environment.');
+                    rtdb.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' });
+                    showInfoModal('Calling Unavailable 🚫', 'Audio and video calls require a secure connection or browser support. Try using a standard browser.');
                     logCall(incomingCallData.caller, el('incoming-caller-name').textContent, 'missed');
                     endCall(false);
                     return;
                 }
 
-                const cProf = (await db.ref(`users/${incomingCallData.caller}`).once('value')).val();
+                const cProfDoc = await firestore.collection('users').doc(incomingCallData.caller).get();
+                const cProf = cProfDoc.data();
                 currentCallInfo = { partner: { ...cProf, uid: incomingCallData.caller }, isVideo: incomingCallData.isVideo, isCaller: false, id: incomingCallData.id };
 
                 try { locVid.srcObject = localStream = await navigator.mediaDevices.getUserMedia({ video: incomingCallData.isVideo, audio: true }); } 
-                catch (e) { db.ref(`calls/${currentCallInfo.id}`).update({ status: 'rejected' }); endCall(false); return; }
+                catch (e) { rtdb.ref(`calls/${currentCallInfo.id}`).update({ status: 'rejected' }); endCall(false); return; }
                 
                 actCallScreen.classList.remove('hidden');
                 el('call-ui-pfp-wrapper').innerHTML = createProfileDisplay(cProf);
@@ -1669,7 +2198,7 @@
                 // Log incoming call to receiver's history
                 logCall(incomingCallData.caller, cProf.name, 'incoming');
 
-                const cRef = db.ref(`calls/${incomingCallData.id}`);
+                const cRef = rtdb.ref(`calls/${incomingCallData.id}`);
                 peerConnection = new RTCPeerConnection(iceServers);
                 localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
                 peerConnection.ontrack = e => { remVid.srcObject = e.streams[0]; };
@@ -1699,7 +2228,7 @@
             
             on('reject-call-btn', 'click', () => {
                 if (incomingCallData) {
-                    db.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' });
+                    rtdb.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' });
                     // Log missed call
                     logCall(incomingCallData.caller, el('incoming-caller-name').textContent, 'missed');
                 }
@@ -1710,13 +2239,20 @@
             el('quick-msg-menu').addEventListener('click', (e) => {
                 if (e.target.classList.contains('quick-msg-btn') && incomingCallData) {
                     const cId = getChatId(currentUser.uid, incomingCallData.caller);
-                    db.ref(`messages/${cId}`).push({ text: e.target.textContent, type: 'text', sender: currentUser.uid, timestamp: firebase.database.ServerValue.TIMESTAMP });
-                    db.ref(`unreadCounts/${incomingCallData.caller}/${cId}`).transaction(c => (c || 0) + 1);
-                    db.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' }); // Tell other end it's over
+                    firestore.collection('messages').doc(cId).collection('history').add({ text: e.target.textContent, type: 'text', sender: currentUser.uid, timestamp: Date.now() });
+                    
+                    const pChatRef = firestore.collection('userChats').doc(incomingCallData.caller).collection('chats').doc(cId);
+                    pChatRef.get().then(doc => {
+                        let unread = 1;
+                        if(doc.exists && doc.data().unread) unread = doc.data().unread + 1;
+                        pChatRef.set({unread}, {merge:true});
+                    });
+
+                    rtdb.ref(`calls/${incomingCallData.id}`).update({ status: 'rejected' }); // Tell other end it's over
                     
                     logCall(incomingCallData.caller, el('incoming-caller-name').textContent, 'missed');
 
-                    db.ref(`calls/${incomingCallData.id}`).remove();
+                    rtdb.ref(`calls/${incomingCallData.id}`).remove();
                     inCallScreen.classList.add('hidden'); incomingCallData = null;
                 }
             });
@@ -1732,7 +2268,7 @@
             });
 
             function endCall(isInitiator = true) {
-                if (isInitiator && currentCallInfo && currentCallInfo.id) db.ref(`calls/${currentCallInfo.id}`).remove();
+                if (isInitiator && currentCallInfo && currentCallInfo.id) rtdb.ref(`calls/${currentCallInfo.id}`).remove();
                 if (localStream) localStream.getTracks().forEach(t => t.stop());
                 if (peerConnection) { peerConnection.onconnectionstatechange = null; peerConnection.onicecandidate = null; peerConnection.close(); }
 
