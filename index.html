@@ -74,7 +74,7 @@
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Loader & Spinners */
-        .loader { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .loader { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 10001; }
         .spinner { border: 4px solid rgba(43, 75, 238, 0.2); width: 48px; height: 48px; border-radius: 50%; border-top-color: #2b4bee; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
@@ -154,6 +154,10 @@
             height: 100%; background: #ffffff; width: 0%; transition: width 0.1s linear;
         }
         .story-liked { color: #ef4444 !important; font-variation-settings: 'FILL' 1 !important; }
+        
+        .color-option { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
+        .color-option:hover { transform: scale(1.1); }
+        .color-option.active { border-color: white; box-shadow: 0 0 0 2px rgba(0,0,0,0.2); }
 
         /* Mobile Adjustments */
         @media (max-width: 768px) {
@@ -183,7 +187,7 @@
     </script>
 
     <!-- Full Screen Logout Overlay -->
-    <div id="logout-overlay" class="fixed inset-0 z-[9999] bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl hidden flex-col items-center justify-center text-slate-900 dark:text-white transition-opacity duration-500">
+    <div id="logout-overlay" class="fixed inset-0 z-[10005] bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl hidden flex-col items-center justify-center text-slate-900 dark:text-white transition-opacity duration-500">
         <div class="w-20 h-20 relative flex items-center justify-center mb-6">
             <div class="absolute inset-0 border-4 border-slate-200 dark:border-slate-800 rounded-full"></div>
             <div class="absolute inset-0 border-4 border-primary rounded-full border-t-transparent animate-spin"></div>
@@ -194,7 +198,7 @@
     </div>
 
     <!-- Loader -->
-    <div id="loader" class="loader bg-background-light dark:bg-background-dark transition-opacity duration-300 z-[9999]">
+    <div id="loader" class="loader bg-background-light dark:bg-background-dark transition-opacity duration-300 z-[10005]">
         <div class="spinner"></div>
     </div>
 
@@ -265,7 +269,7 @@
         </div>
     </div>
 
-    <!-- Hidden Input for Story -->
+    <!-- Hidden Input for Story Image -->
     <input type="file" id="story-image-upload" accept="image/*" class="hidden">
 
     <!-- Main App Layout -->
@@ -311,7 +315,7 @@
                     <!-- Stories Tray -->
                     <div id="stories-tray" class="flex gap-4 p-4 overflow-x-auto border-b border-slate-200 dark:border-slate-800 scrollbar-hide">
                         <!-- Add Story Item -->
-                        <div class="flex flex-col items-center gap-1.5 cursor-pointer shrink-0 group" onclick="document.getElementById('story-image-upload').click()">
+                        <div id="add-story-trigger" class="flex flex-col items-center gap-1.5 cursor-pointer shrink-0 group" onclick="openModal('story-type-modal')">
                             <div class="relative w-14 h-14 rounded-full border-2 border-dashed border-primary flex items-center justify-center bg-primary/5 text-primary group-hover:bg-primary/10 transition-colors">
                                 <span class="material-symbols-outlined">add</span>
                             </div>
@@ -504,42 +508,113 @@
             </div>
         </div>
 
-        <!-- Center Image content -->
-        <div class="flex-1 flex items-center justify-center relative h-full">
-            <img id="story-image-display" class="max-w-full max-h-full object-contain pointer-events-none transition-opacity duration-300">
+        <!-- Center Image/Text content -->
+        <div class="flex-1 flex items-center justify-center relative h-full overflow-hidden" id="story-content-area">
+            <!-- Image Story Elements -->
+            <img id="story-image-display" class="max-w-full max-h-full object-contain pointer-events-none transition-opacity duration-300 absolute inset-0 m-auto z-0 hidden">
+            <div id="story-caption-display" class="absolute bottom-28 left-0 right-0 text-center text-white px-6 py-4 bg-gradient-to-t from-black/80 to-transparent z-10 hidden font-medium drop-shadow-md break-words"></div>
+            
+            <!-- Text Story Elements -->
+            <div id="story-text-display" class="absolute inset-0 flex items-center justify-center p-8 text-center text-white text-3xl font-bold z-0 hidden leading-snug drop-shadow-lg" style="background-color: #2b4bee; word-break: break-word; white-space: pre-wrap;"></div>
+
             <!-- Navigation Tap Zones -->
-            <div id="story-tap-prev" class="absolute left-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer"></div>
-            <div id="story-tap-next" class="absolute right-0 top-0 bottom-0 w-2/3 z-10 cursor-pointer"></div>
+            <div id="story-tap-prev" class="absolute left-0 top-0 bottom-0 w-1/3 z-20 cursor-pointer"></div>
+            <div id="story-tap-next" class="absolute right-0 top-0 bottom-0 w-2/3 z-20 cursor-pointer"></div>
         </div>
 
         <!-- Footer -->
         <div id="story-viewer-footer" class="absolute bottom-0 left-0 right-0 p-4 md:p-6 flex items-center gap-4 z-20 bg-gradient-to-t from-black/80 to-transparent">
+            
+            <!-- Other User's Story View -->
             <div class="flex-1 flex" id="story-reply-container">
                 <input type="text" id="story-reply-input" class="w-full bg-black/40 backdrop-blur-md text-white border border-white/20 rounded-full px-5 py-3 text-[15px] placeholder-white/60 outline-none focus:bg-black/60 focus:border-white/40 transition-colors shadow-lg" placeholder="Reply to story...">
             </div>
             <button id="story-reply-send" class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shrink-0 hidden">
                 <span class="material-symbols-outlined text-[20px] ml-1">send</span>
             </button>
-            <div class="flex items-center gap-2 shrink-0 bg-black/40 backdrop-blur-md rounded-full px-4 py-2 border border-white/10">
+            <div id="story-like-wrapper" class="flex items-center gap-2 shrink-0 bg-black/40 backdrop-blur-md rounded-full px-4 py-2 border border-white/10 hidden">
                 <button id="story-like-btn" class="flex items-center justify-center text-white hover:scale-110 transition-transform">
                     <span class="material-symbols-outlined text-[26px]" id="story-like-icon">favorite_border</span>
                 </button>
-                <span id="story-likes-count" class="text-white text-[15px] font-bold cursor-pointer hover:underline min-w-[16px] text-center" title="View Likes">0</span>
+            </div>
+
+            <!-- My Story View Stats -->
+            <div id="story-stats-wrapper" class="flex-1 flex justify-center items-center gap-8 hidden">
+                <div class="flex flex-col items-center cursor-pointer text-white/80 hover:text-white transition-colors" id="story-view-stats-btn" title="Views">
+                    <span class="material-symbols-outlined text-[28px]">visibility</span>
+                    <span id="story-views-count" class="text-[13px] font-bold mt-1 tracking-widest">0</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer text-white/80 hover:text-white transition-colors" id="story-like-stats-btn" title="Likes">
+                    <span class="material-symbols-outlined text-[28px] text-red-500 font-variation-settings-'FILL'-1">favorite</span>
+                    <span id="story-likes-count-me" class="text-[13px] font-bold mt-1 tracking-widest">0</span>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Central Settings & Modals Overlay System -->
-    <div id="modal-container" class="fixed inset-0 z-[3000] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-opacity">
+    <div id="modal-container" class="fixed inset-0 z-[10000] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-opacity">
         
-        <!-- Story Likes Modal -->
-        <div id="story-likes-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col h-[60vh] md:h-[400px]">
-            <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0">
-                <h3 class="text-lg font-bold tracking-tight flex items-center gap-2"><span class="material-symbols-outlined text-red-500 font-variation-settings-'FILL'-1 text-[20px]">favorite</span> Story Likes</h3>
-                <button class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-slate-500 transition-colors" onclick="closeModal('story-likes-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
+        <!-- Story Selection Modal -->
+        <div id="story-type-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in text-center p-8">
+            <h3 class="text-xl font-bold tracking-tight mb-2">Create Story</h3>
+            <p class="text-sm text-slate-500 font-medium mb-6">Choose how you want to express yourself.</p>
+            <div class="flex flex-col gap-3">
+                <button id="btn-create-image-story" class="w-full flex items-center justify-center gap-3 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-2xl font-bold transition-colors">
+                    <span class="material-symbols-outlined text-[24px] text-primary">image</span> Image Story
+                </button>
+                <button id="btn-create-text-story" class="w-full flex items-center justify-center gap-3 py-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-2xl font-bold transition-colors">
+                    <span class="material-symbols-outlined text-[24px] text-sky-500">text_fields</span> Text Story
+                </button>
+                <button class="text-slate-500 text-sm font-bold mt-2 hover:text-slate-700 dark:hover:text-slate-300 transition-colors" onclick="closeModal('story-type-modal')">Cancel</button>
             </div>
-            <div id="story-likes-list" class="flex-1 overflow-y-auto p-4 space-y-2 bg-white dark:bg-slate-900">
-                <!-- Likes populated dynamically -->
+        </div>
+
+        <!-- Story Image Preview & Caption Modal -->
+        <div id="story-image-preview-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0">
+                <h3 class="text-lg font-bold tracking-tight">Add Caption</h3>
+                <button class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-slate-500 transition-colors" onclick="closeModal('story-image-preview-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
+            </div>
+            <div class="p-5 flex flex-col gap-4 overflow-y-auto">
+                <div class="w-full h-64 bg-slate-100 dark:bg-slate-800 rounded-2xl overflow-hidden flex items-center justify-center border border-slate-200 dark:border-slate-700">
+                    <img id="story-image-preview-img" class="max-w-full max-h-full object-contain">
+                </div>
+                <input type="text" id="story-image-caption-input" class="ar-input" placeholder="Add a caption (optional)...">
+                <button id="publish-image-story-btn" class="btn-primary w-full py-3.5 shadow-lg shadow-primary/20">Publish Story</button>
+            </div>
+        </div>
+
+        <!-- Story Text Create Modal -->
+        <div id="story-text-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center shrink-0" style="background-color: #2b4bee;" id="story-text-header-bg">
+                <h3 class="text-lg font-bold tracking-tight text-white">Text Story</h3>
+                <button class="p-2 hover:bg-white/20 rounded-xl text-white transition-colors" onclick="closeModal('story-text-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
+            </div>
+            <div class="p-5 flex flex-col gap-4">
+                <textarea id="story-text-input" class="w-full h-40 p-4 rounded-2xl text-white text-xl font-bold outline-none resize-none placeholder-white/60 transition-colors shadow-inner" style="background-color: #2b4bee;" placeholder="Type something..."></textarea>
+                
+                <div class="flex gap-2 justify-center py-2" id="story-color-picker">
+                    <div class="color-option active" style="background-color: #2b4bee;" data-color="#2b4bee"></div>
+                    <div class="color-option" style="background-color: #ef4444;" data-color="#ef4444"></div>
+                    <div class="color-option" style="background-color: #10b981;" data-color="#10b981"></div>
+                    <div class="color-option" style="background-color: #f59e0b;" data-color="#f59e0b"></div>
+                    <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
+                    <div class="color-option" style="background-color: #111827;" data-color="#111827"></div>
+                </div>
+
+                <button id="publish-text-story-btn" class="btn-primary w-full py-3.5 shadow-lg shadow-primary/20">Publish Story</button>
+            </div>
+        </div>
+
+        <!-- Story Stats (Views/Likes) Modal -->
+        <div id="story-stats-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col h-[60vh] md:h-[400px]">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0">
+                <h3 class="text-lg font-bold tracking-tight flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[20px]">analytics</span> Story Insights</h3>
+                <button class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-slate-500 transition-colors" onclick="closeModal('story-stats-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
+            </div>
+            <div id="story-stats-list" class="flex-1 overflow-y-auto p-4 space-y-2 bg-white dark:bg-slate-900">
+                <!-- Insights populated dynamically -->
             </div>
         </div>
 
@@ -748,7 +823,7 @@
                         <span class="material-symbols-outlined text-[48px]">code</span>
                     </div>
                     <h3 class="text-3xl font-bold mb-2 text-slate-900 dark:text-white tracking-tight">AR CHATS</h3>
-                    <p class="text-[11px] font-mono text-slate-500 mb-10 uppercase tracking-widest font-bold">Version 6.0.0 (Web Core)</p>
+                    <p class="text-[11px] font-mono text-slate-500 mb-10 uppercase tracking-widest font-bold">Version 7.0.0 (Web Core)</p>
                     
                     <div class="w-full text-left bg-slate-50 dark:bg-slate-800/50 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
                         <p class="text-[15px] text-slate-700 dark:text-slate-300 leading-relaxed mb-6 font-medium">A fast and secure messaging application designed to keep you connected with friends and family seamlessly.</p>
@@ -756,7 +831,7 @@
                             <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">lock</span> Private & Secure Messaging</li>
                             <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">video_call</span> High-Quality Voice & Video Calls</li>
                             <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">image</span> Instant Media Sharing</li>
-                            <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">history_toggle_off</span> 24-Hour Stories</li>
+                            <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">history_toggle_off</span> 24-Hour Stories (Image/Text)</li>
                         </ul>
                         <div class="pt-6 border-t border-slate-200 dark:border-slate-700 text-center">
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Engineered By</p>
@@ -1083,6 +1158,7 @@
             let isStoryPaused = false;
             let storyStartTime = 0;
             const STORY_DURATION = 5000;
+            let pendingStoryImageFile = null;
 
             // Auth Setup
             auth.onAuthStateChanged(user => {
@@ -2027,34 +2103,115 @@
             // STORY FEATURE LOGIC
             // ==========================================
 
-            // Upload a story
-            on('story-image-upload', 'change', async (e) => {
-                const file = e.target.files[0]; 
-                if(!file) return;
+            // Story Creation Options
+            on('btn-create-image-story', 'click', () => {
+                el('story-image-upload').click();
+            });
+
+            on('story-image-upload', 'change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
                 
-                el('loader').classList.remove('hidden'); 
+                pendingStoryImageFile = file;
+                el('story-image-preview-img').src = URL.createObjectURL(file);
+                el('story-image-caption-input').value = '';
+                
+                closeModal('story-type-modal');
+                openModal('story-image-preview-modal');
+                e.target.value = '';
+            });
+
+            on('publish-image-story-btn', 'click', async () => {
+                if (!pendingStoryImageFile) return;
+                
+                const btn = el('publish-image-story-btn');
+                const caption = el('story-image-caption-input').value.trim();
+                
+                btn.disabled = true;
+                btn.innerHTML = '<div class="btn-spinner"></div> Publishing...';
                 
                 try {
-                    const compressed = await compressImage(file, 1080, 1920, 0.7);
-                    // Pass 86400 (24 hrs) for auto-deletion on ImgBB
+                    const compressed = await compressImage(pendingStoryImageFile, 1080, 1920, 0.7);
                     const url = await uploadImageToImgBB(compressed, 86400); 
                     
                     await firestore.collection('stories').add({
+                        type: 'image',
                         userId: currentUser.uid,
                         authorName: currentUserProfile.name,
                         authorPhoto: currentUserProfile.photoURL || null,
                         authorEmoji: currentUserProfile.emoji || '👤',
                         imageUrl: url,
+                        caption: caption,
                         timestamp: Date.now(),
-                        likes: []
+                        likes: [],
+                        views: []
                     });
                     
-                    showInfoModal('Story Published', 'Your story is now live for 24 hours.');
+                    closeModal('story-image-preview-modal');
+                    showInfoModal('Story Published', 'Your visual story is now live for 24 hours.');
                 } catch(err) {
-                    showInfoModal('Story Error', 'Failed to publish story.');
+                    alert('Failed to publish image story.');
                 } finally {
-                    el('loader').classList.add('hidden');
-                    e.target.value = '';
+                    btn.disabled = false;
+                    btn.textContent = 'Publish Story';
+                    pendingStoryImageFile = null;
+                }
+            });
+
+            // Text Story Setup
+            on('btn-create-text-story', 'click', () => {
+                el('story-text-input').value = '';
+                el('story-text-input').style.backgroundColor = '#2b4bee';
+                el('story-text-header-bg').style.backgroundColor = '#2b4bee';
+                document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+                document.querySelector('.color-option[data-color="#2b4bee"]').classList.add('active');
+                
+                closeModal('story-type-modal');
+                openModal('story-text-modal');
+                el('story-text-input').focus();
+            });
+
+            el('story-color-picker').addEventListener('click', (e) => {
+                if (e.target.classList.contains('color-option')) {
+                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+                    e.target.classList.add('active');
+                    const color = e.target.dataset.color;
+                    el('story-text-input').style.backgroundColor = color;
+                    el('story-text-header-bg').style.backgroundColor = color;
+                }
+            });
+
+            on('publish-text-story-btn', 'click', async () => {
+                const txt = el('story-text-input').value.trim();
+                if (!txt) return;
+
+                const btn = el('publish-text-story-btn');
+                const bgColor = el('story-text-input').style.backgroundColor;
+
+                btn.disabled = true;
+                btn.innerHTML = '<div class="btn-spinner"></div> Publishing...';
+
+                try {
+                    await firestore.collection('stories').add({
+                        type: 'text',
+                        userId: currentUser.uid,
+                        authorName: currentUserProfile.name,
+                        authorPhoto: currentUserProfile.photoURL || null,
+                        authorEmoji: currentUserProfile.emoji || '👤',
+                        textContent: txt,
+                        bgColor: bgColor,
+                        timestamp: Date.now(),
+                        likes: [],
+                        views: []
+                    });
+                    
+                    closeModal('story-text-modal');
+                    showInfoModal('Story Published', 'Your text story is now live for 24 hours.');
+                } catch(err) {
+                    alert('Failed to publish text story.');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Publish Story';
                 }
             });
 
@@ -2187,19 +2344,53 @@
                     progressContainer.appendChild(seg);
                 });
 
-                // Set Image
-                const img = el('story-image-display');
-                img.style.opacity = '0';
-                img.src = story.imageUrl;
-                img.onload = () => { img.style.opacity = '1'; };
+                // Display Logic (Image or Text)
+                const imgDisplay = el('story-image-display');
+                const captionDisplay = el('story-caption-display');
+                const textDisplay = el('story-text-display');
+                
+                imgDisplay.classList.add('hidden');
+                captionDisplay.classList.add('hidden');
+                textDisplay.classList.add('hidden');
+
+                if (story.type === 'text') {
+                    textDisplay.style.backgroundColor = story.bgColor || '#2b4bee';
+                    textDisplay.textContent = story.textContent || '';
+                    textDisplay.classList.remove('hidden');
+                } else {
+                    imgDisplay.style.opacity = '0';
+                    imgDisplay.src = story.imageUrl;
+                    imgDisplay.onload = () => { imgDisplay.style.opacity = '1'; };
+                    imgDisplay.classList.remove('hidden');
+                    
+                    if (story.caption) {
+                        captionDisplay.textContent = story.caption;
+                        captionDisplay.classList.remove('hidden');
+                    }
+                }
+
+                // Add Current User to Views if not Me
+                if (!isMe) {
+                    const views = story.views || [];
+                    if (!views.includes(currentUser.uid)) {
+                        firestore.collection('stories').doc(story.id).update({
+                            views: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+                        }).catch(()=>{}); // silent catch
+                    }
+                }
 
                 // Handle Footer and Actions
                 const deleteBtn = el('story-delete-btn');
                 const replyContainer = el('story-reply-container');
                 const replySend = el('story-reply-send');
                 const replyInput = el('story-reply-input');
+                
+                const likeWrapper = el('story-like-wrapper');
                 const likeIcon = el('story-like-icon');
-                const likeCount = el('story-likes-count');
+                
+                const statsWrapper = el('story-stats-wrapper');
+                const viewsCountMe = el('story-views-count');
+                const likesCountMe = el('story-likes-count-me');
 
                 replyInput.value = '';
 
@@ -2207,23 +2398,29 @@
                     deleteBtn.classList.remove('hidden');
                     replyContainer.classList.add('hidden');
                     replySend.classList.add('hidden');
+                    likeWrapper.classList.add('hidden');
+                    
+                    statsWrapper.classList.remove('hidden');
+                    viewsCountMe.textContent = (story.views || []).length;
+                    likesCountMe.textContent = (story.likes || []).length;
                 } else {
                     deleteBtn.classList.add('hidden');
                     replyContainer.classList.remove('hidden');
                     replySend.classList.add('hidden');
-                }
+                    likeWrapper.classList.remove('hidden');
+                    
+                    statsWrapper.classList.add('hidden');
 
-                // Likes logic
-                const hasLiked = story.likes && story.likes.includes(currentUser.uid);
-                likeIcon.textContent = hasLiked ? 'favorite' : 'favorite_border';
-                if(hasLiked) likeIcon.classList.add('story-liked'); else likeIcon.classList.remove('story-liked');
-                
-                likeCount.textContent = story.likes ? story.likes.length : 0;
+                    const hasLiked = story.likes && story.likes.includes(currentUser.uid);
+                    likeIcon.textContent = hasLiked ? 'favorite' : 'favorite_border';
+                    if(hasLiked) likeIcon.classList.add('story-liked'); else likeIcon.classList.remove('story-liked');
+                }
 
                 // Dataset for actions
                 el('story-like-btn').dataset.storyId = story.id;
                 deleteBtn.dataset.storyId = story.id;
-                likeCount.dataset.storyId = story.id;
+                el('story-view-stats-btn').dataset.storyId = story.id;
+                el('story-like-stats-btn').dataset.storyId = story.id;
                 
                 startStoryTimer();
             }
@@ -2283,7 +2480,7 @@
             });
 
             // Pause on hold
-            const viewerEl = el('story-viewer');
+            const viewerEl = el('story-content-area');
             viewerEl.addEventListener('mousedown', () => isStoryPaused = true);
             viewerEl.addEventListener('mouseup', () => isStoryPaused = false);
             viewerEl.addEventListener('touchstart', () => isStoryPaused = true);
@@ -2306,44 +2503,60 @@
                     await storyRef.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
                     el('story-like-icon').textContent = 'favorite_border';
                     el('story-like-icon').classList.remove('story-liked');
-                    el('story-likes-count').textContent = Math.max(0, likes.length - 1);
                 } else {
                     await storyRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
                     el('story-like-icon').textContent = 'favorite';
                     el('story-like-icon').classList.add('story-liked');
-                    el('story-likes-count').textContent = likes.length + 1;
                 }
             });
 
-            // View Story Likes
-            on('story-likes-count', 'click', async (e) => {
+            // View Story Stats (Views / Likes unified)
+            const openStatsModal = async (e) => {
                 isStoryPaused = true;
                 const storyId = e.currentTarget.dataset.storyId;
-                const list = el('story-likes-list');
-                openModal('story-likes-modal');
+                const list = el('story-stats-list');
+                openModal('story-stats-modal');
                 list.innerHTML = '<div class="flex justify-center p-6"><div class="spinner"></div></div>';
 
                 const storyDoc = await firestore.collection('stories').doc(storyId).get();
-                if(!storyDoc.exists || !storyDoc.data().likes || storyDoc.data().likes.length === 0) {
-                    list.innerHTML = '<div class="text-center p-6 text-slate-500 font-medium text-sm">No likes yet.</div>';
+                if(!storyDoc.exists) {
+                    list.innerHTML = '<div class="text-center p-6 text-slate-500 font-medium text-sm">Story not found.</div>';
+                    return;
+                }
+
+                const views = storyDoc.data().views || [];
+                const likes = storyDoc.data().likes || [];
+                
+                if(views.length === 0) {
+                    list.innerHTML = '<div class="text-center p-6 text-slate-500 font-medium text-sm">No views yet.</div>';
                     return;
                 }
 
                 list.innerHTML = '';
-                const uids = storyDoc.data().likes;
-                for(let uid of uids) {
+                for(let uid of views) {
                     const uDoc = await firestore.collection('users').doc(uid).get();
                     if(uDoc.exists) {
                         const profile = uDoc.data();
+                        const didLike = likes.includes(uid);
+                        
                         const div = document.createElement('div');
                         div.className = 'flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl';
                         div.innerHTML = `
-                            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-200 dark:bg-slate-700 overflow-hidden text-lg">${createProfileDisplay(profile)}</div>
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-200 dark:bg-slate-700 overflow-hidden text-lg border border-slate-200 dark:border-slate-600">${createProfileDisplay(profile)}</div>
                             <div class="font-bold text-sm text-slate-900 dark:text-white flex-1">${profile.name}</div>
-                            <span class="material-symbols-outlined text-red-500 text-[18px]">favorite</span>
+                            ${didLike ? '<span class="material-symbols-outlined text-red-500 text-[18px] font-variation-settings-\'FILL\'-1">favorite</span>' : '<span class="material-symbols-outlined text-slate-300 dark:text-slate-600 text-[18px]">visibility</span>'}
                         `;
                         list.appendChild(div);
                     }
+                }
+            };
+            on('story-view-stats-btn', 'click', openStatsModal);
+            on('story-like-stats-btn', 'click', openStatsModal);
+
+            // Close Stats Modal and resume
+            on('story-stats-modal', 'click', (e) => {
+                if(e.target.closest('button') && e.target.closest('button').querySelector('.material-symbols-outlined').textContent === 'close') {
+                    isStoryPaused = false;
                 }
             });
 
@@ -2363,7 +2576,14 @@
                 const story = storyGroups[uid][viewingStoryItemIndex];
                 
                 // Formulate a beautiful reply string that points to the story
-                const replyMessage = `Replying to your story (${story.imageUrl}):\n\n${txt}`;
+                let quoteText = '';
+                if(story.type === 'text') {
+                    quoteText = `Replying to your text story: "${story.textContent}"\n\n`;
+                } else {
+                    quoteText = `Replying to your image story (${story.imageUrl}): ${story.caption ? '\nCaption: ' + story.caption : ''}\n\n`;
+                }
+                
+                const replyMessage = `${quoteText}${txt}`;
                 
                 // Set the currentChatPartner and Id as if we opened the chat
                 const cDoc = await firestore.collection('users').doc(uid).get();
@@ -2384,7 +2604,7 @@
                 showConfirmModal('Delete Story?', 'This story will be permanently removed for everyone.', async () => {
                     await firestore.collection('stories').doc(storyId).delete();
                     nextStory(); // move to next if exists, or closes if last
-                }, () => isStoryPaused = false);
+                }, () => { isStoryPaused = false; });
             });
 
 
