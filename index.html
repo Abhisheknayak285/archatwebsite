@@ -24,7 +24,7 @@
                 "primary-hover": "#203ac0",
                 "background-light": "#ffffff",
                 "background-dark": "#101322",
-                "surface-light": "#f6f6f8",
+                "surface-light": "#f1f5f9",
                 "surface-dark": "#1a1d2d",
               },
               fontFamily: {
@@ -100,27 +100,21 @@
         .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-        /* UI Inputs */
-        .ar-input {
-            width: 100%; padding: 14px 16px; border-radius: 16px; border: 1px solid #e2e8f0;
-            background: #f8fafc; color: #0f172a; font-size: 15px; outline: none; transition: 0.2s;
-        }
-        .dark .ar-input { background: #1e293b; border-color: #334155; color: #f8fafc; }
-        .ar-input:focus { border-color: #2b4bee; box-shadow: 0 0 0 3px rgba(43, 75, 238, 0.1); }
-        
+        /* General Buttons */
         .btn-primary {
             background-color: #2b4bee; color: white; border-radius: 16px; padding: 14px 24px;
-            font-weight: 600; font-size: 15px; transition: 0.2s; border: none; display: flex; justify-content: center; align-items: center; gap: 8px;
+            font-weight: 600; font-size: 16px; transition: 0.2s; border: none; display: flex; justify-content: center; align-items: center; gap: 8px;
         }
         .btn-primary:active { transform: scale(0.97); }
         .btn-primary:hover:not(:disabled) { background-color: #203ac0; box-shadow: 0 4px 12px rgba(43, 75, 238, 0.3); }
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .btn-secondary {
-            background-color: white; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 16px; padding: 14px 24px; font-weight: 600; font-size: 15px; transition: 0.2s;
+            background-color: transparent; color: #0f172a; border: 1px solid #cbd5e1; border-radius: 16px; padding: 14px 24px; font-weight: 600; font-size: 16px; transition: 0.2s;
         }
-        .dark .btn-secondary { background-color: #1e293b; color: #f8fafc; border-color: #334155; }
-        .btn-secondary:active { transform: scale(0.97); }
+        .dark .btn-secondary { color: #f8fafc; border-color: #334155; }
+        .btn-secondary:active { transform: scale(0.97); background-color: rgba(0,0,0,0.05); }
+        .dark .btn-secondary:active { background-color: rgba(255,255,255,0.05); }
 
         /* Story Additions */
         .story-ring {
@@ -133,38 +127,45 @@
         .story-liked { color: #ef4444 !important; font-variation-settings: 'FILL' 1 !important; }
 
         /* Native App Shell Behaviors */
-        .bottom-nav-active {
-            color: #2b4bee !important;
-        }
-        .bottom-nav-active .material-symbols-outlined {
-            font-variation-settings: 'FILL' 1, 'wght' 600 !important;
-        }
-        .dark .bottom-nav-active {
-            color: #5c7cfa !important;
-        }
+        .bottom-nav-active { color: #2b4bee !important; }
+        .bottom-nav-active .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 600 !important; }
+        .dark .bottom-nav-active { color: #5c7cfa !important; }
 
-        /* Modal Overrides for Mobile (Full Screen native style) */
+        /* Modals Native Behavior overrides */
         @media (max-width: 768px) {
-            .modal-content:not(#info-modal):not(#confirm-modal) {
+            #modal-container { padding: 0 !important; align-items: flex-end !important; }
+            
+            /* Full Screen Modals (Settings, Profile Setup, Viewers) */
+            .full-screen-modal {
                 max-width: 100% !important;
                 height: 100dvh !important;
                 border-radius: 0 !important;
                 border: none !important;
                 margin: 0 !important;
-                animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             }
-            #modal-container { padding: 0 !important; }
+            
+            /* Bottom Sheet Modals (Add Friend, Clear Chat, Actions) */
+            .bottom-sheet-modal {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                border-radius: 32px 32px 0 0 !important;
+                border: none !important;
+                animation: slideUpSheet 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                padding-bottom: calc(env(safe-area-inset-bottom) + 16px) !important;
+            }
         }
         
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes slideUpSheet { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        #chat-screen { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        #chat-screen { transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .chat-active { transform: translateX(0) !important; }
-        
-        #nav-drawer { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        #nav-drawer { transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
     </style>
 </head>
-<body class="bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300 min-h-[100dvh] overflow-hidden selection:bg-primary/30">
+<body class="bg-white dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300 min-h-[100dvh] overflow-hidden selection:bg-primary/30">
 
     <!-- Global Scripts -->
     <script>
@@ -197,7 +198,7 @@
     <!-- Loader -->
     <div id="loader" class="loader bg-white dark:bg-background-dark transition-opacity duration-300 z-[10005]">
         <div class="flex flex-col items-center">
-            <div class="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mb-6 text-primary overflow-hidden shadow-sm border border-primary/20">
+            <div class="w-20 h-20 bg-primary/10 rounded-[24px] flex items-center justify-center mb-6 text-primary overflow-hidden shadow-sm border border-primary/20">
                 <img src="https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png" alt="Logo" class="w-full h-full object-cover">
             </div>
             <div class="spinner border-[3px] w-10 h-10"></div>
@@ -218,10 +219,10 @@
 
             <!-- Login Form -->
             <form id="login-form" class="flex flex-col gap-4 w-full">
-                <div class="bg-surface-light dark:bg-surface-dark p-2 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <input type="email" id="login-email" class="w-full bg-transparent px-4 py-3 text-[15px] outline-none border-b border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 font-medium" placeholder="Email Address" required>
+                <div class="bg-surface-light dark:bg-surface-dark p-2 rounded-[24px] border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <input type="email" id="login-email" class="w-full bg-transparent px-4 py-3.5 text-[16px] outline-none border-b border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 font-medium" placeholder="Email Address" required>
                     <div class="relative">
-                        <input type="password" id="login-password" class="w-full bg-transparent px-4 py-3 text-[15px] outline-none text-slate-900 dark:text-white placeholder-slate-400 font-medium pr-12" placeholder="Password" required>
+                        <input type="password" id="login-password" class="w-full bg-transparent px-4 py-3.5 text-[16px] outline-none text-slate-900 dark:text-white placeholder-slate-400 font-medium pr-12" placeholder="Password" required>
                         <button type="button" id="toggle-login-password" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors">
                             <span class="material-symbols-outlined text-[20px]">visibility_off</span>
                         </button>
@@ -232,7 +233,7 @@
                     <a id="show-forgot-password" class="text-sm text-primary font-bold hover:underline cursor-pointer">Forgot Password?</a>
                 </div>
                 
-                <button type="submit" class="btn-primary w-full mt-6 py-4 shadow-lg shadow-primary/25 rounded-2xl text-[16px]">Sign In</button>
+                <button type="submit" class="btn-primary w-full mt-6 shadow-lg shadow-primary/25">Sign In</button>
                 <p id="login-error" class="text-red-500 text-sm text-center font-bold min-h-[20px]"></p>
                 
                 <div class="mt-auto pt-10 pb-4 text-center">
@@ -242,23 +243,23 @@
 
             <!-- Signup Form -->
             <form id="signup-form" class="flex flex-col gap-4 w-full hidden">
-                <div class="bg-surface-light dark:bg-surface-dark p-2 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <input type="email" id="signup-email" class="w-full bg-transparent px-4 py-3 text-[15px] outline-none border-b border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 font-medium" placeholder="Email Address" required>
+                <div class="bg-surface-light dark:bg-surface-dark p-2 rounded-[24px] border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <input type="email" id="signup-email" class="w-full bg-transparent px-4 py-3.5 text-[16px] outline-none border-b border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 font-medium" placeholder="Email Address" required>
                     <div class="relative border-b border-slate-200 dark:border-slate-700">
-                        <input type="password" id="signup-password" class="w-full bg-transparent px-4 py-3 text-[15px] outline-none text-slate-900 dark:text-white placeholder-slate-400 font-medium pr-12" placeholder="Create Password" required>
+                        <input type="password" id="signup-password" class="w-full bg-transparent px-4 py-3.5 text-[16px] outline-none text-slate-900 dark:text-white placeholder-slate-400 font-medium pr-12" placeholder="Create Password" required>
                         <button type="button" id="toggle-signup-password" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors">
                             <span class="material-symbols-outlined text-[20px]">visibility_off</span>
                         </button>
                     </div>
                     <div class="relative">
-                        <input type="password" id="signup-confirm-password" class="w-full bg-transparent px-4 py-3 text-[15px] outline-none text-slate-900 dark:text-white placeholder-slate-400 font-medium pr-12" placeholder="Confirm Password" required>
+                        <input type="password" id="signup-confirm-password" class="w-full bg-transparent px-4 py-3.5 text-[16px] outline-none text-slate-900 dark:text-white placeholder-slate-400 font-medium pr-12" placeholder="Confirm Password" required>
                         <button type="button" id="toggle-signup-confirm-password" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors">
                             <span class="material-symbols-outlined text-[20px]">visibility_off</span>
                         </button>
                     </div>
                 </div>
                 
-                <button type="submit" class="btn-primary w-full mt-6 py-4 shadow-lg shadow-primary/25 rounded-2xl text-[16px]">Create Account</button>
+                <button type="submit" class="btn-primary w-full mt-6 shadow-lg shadow-primary/25">Create Account</button>
                 <p id="signup-error" class="text-red-500 text-sm text-center font-bold min-h-[20px]"></p>
                 
                 <div class="mt-auto pt-10 pb-4 text-center">
@@ -274,9 +275,9 @@
                 <h2 class="text-2xl font-bold text-center text-slate-900 dark:text-white mb-2">Verify Email</h2>
                 <p class="text-[15px] text-slate-500 font-medium mb-6 text-center px-4">Enter the 6-digit security code sent to your email address.</p>
                 
-                <input type="text" id="otp-input" class="w-full bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-800 rounded-2xl text-center tracking-[0.6em] text-3xl font-black py-5 text-slate-900 dark:text-white outline-none focus:border-primary transition-colors shadow-sm" placeholder="••••••" maxlength="6" required autocomplete="off">
+                <input type="text" id="otp-input" class="w-full bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-slate-800 rounded-[24px] text-center tracking-[0.6em] text-3xl font-black py-5 text-slate-900 dark:text-white outline-none focus:border-primary transition-colors shadow-sm" placeholder="••••••" maxlength="6" required autocomplete="off">
                 
-                <button type="submit" class="btn-primary w-full mt-6 py-4 shadow-lg shadow-primary/25 rounded-2xl text-[16px]">Verify & Complete</button>
+                <button type="submit" class="btn-primary w-full mt-6 shadow-lg shadow-primary/25">Verify & Complete</button>
                 <p id="otp-error" class="text-red-500 text-sm text-center font-bold min-h-[20px]"></p>
                 
                 <div class="mt-auto pt-10 pb-4 text-center">
@@ -290,7 +291,7 @@
     <input type="file" id="story-image-upload" accept="image/*" class="hidden">
 
     <!-- MAIN NATIVE APP SHELL -->
-    <div id="main-app" class="flex w-full h-[100dvh] overflow-hidden hidden relative bg-background-light dark:bg-background-dark">
+    <div id="main-app" class="flex w-full h-[100dvh] overflow-hidden hidden relative bg-white dark:bg-background-dark">
         
         <!-- App Navigation Drawer (Hamburger Menu Overlay) -->
         <div id="drawer-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] hidden fade-in" onclick="closeDrawer()"></div>
@@ -331,53 +332,53 @@
         </aside>
 
         <!-- Home Screen / Main List View (Left on Desktop, Full on Mobile) -->
-        <section class="flex flex-col w-full h-full md:w-[360px] lg:w-[400px] border-r border-slate-200 dark:border-slate-800 shrink-0 bg-background-light dark:bg-background-dark z-10 relative pb-[calc(70px+env(safe-area-inset-bottom))] md:pb-0" id="home-screen">
+        <section class="flex flex-col w-full h-full md:w-[360px] lg:w-[400px] border-r border-slate-200 dark:border-slate-800 shrink-0 bg-white dark:bg-background-dark z-10 relative pb-[calc(70px+env(safe-area-inset-bottom))] md:pb-0" id="home-screen">
             
             <!-- Top App Bar -->
-            <header class="h-[64px] md:h-[76px] px-2 md:px-4 flex items-center justify-between bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800 shrink-0 z-20 pt-[env(safe-area-inset-top)] sticky top-0">
+            <header class="h-[64px] md:h-[76px] px-2 md:px-4 flex items-center justify-between bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shrink-0 z-20 pt-[env(safe-area-inset-top)] sticky top-0 border-b border-transparent transition-colors" id="home-header">
                 <div class="flex items-center gap-1">
                     <button class="w-12 h-12 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors" onclick="openDrawer()">
                         <span class="material-symbols-outlined text-[26px]">menu</span>
                     </button>
-                    <h1 class="text-xl font-bold text-slate-900 dark:text-white tracking-tight ml-1">AR CHATS</h1>
+                    <h1 class="text-xl font-bold text-slate-900 dark:text-white tracking-tight ml-1">Chats</h1>
                 </div>
                 <div class="flex items-center pr-2">
-                    <button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors" title="Add Contact" id="add-friend-button">
-                        <span class="material-symbols-outlined text-[24px]">person_add</span>
+                    <button class="w-10 h-10 rounded-full flex items-center justify-center bg-primary/10 text-primary hover:bg-primary/20 transition-colors" title="Add Contact" id="add-friend-button">
+                        <span class="material-symbols-outlined text-[20px]">person_add</span>
                     </button>
                 </div>
             </header>
 
-            <!-- Search Bar (Pinned below App Bar) -->
-            <div class="px-4 py-3 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shrink-0">
+            <!-- Search Bar -->
+            <div class="px-4 py-2 bg-white dark:bg-background-dark shrink-0">
                 <div class="relative">
                     <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
-                    <input id="contact-search-input" class="w-full pl-12 pr-4 py-3 bg-slate-100 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-primary/50 text-[15px] outline-none placeholder-slate-500 dark:placeholder-slate-400 font-medium text-slate-900 dark:text-white transition-shadow" placeholder="Search chats..." autocomplete="off"/>
+                    <input id="contact-search-input" class="w-full pl-12 pr-4 py-2.5 bg-surface-light dark:bg-slate-800 border-none rounded-[16px] focus:ring-2 focus:ring-primary/50 text-[16px] outline-none placeholder-slate-500 dark:placeholder-slate-400 font-medium text-slate-900 dark:text-white transition-shadow" placeholder="Search" autocomplete="off"/>
                 </div>
             </div>
 
             <!-- Scrollable List Area -->
-            <div class="flex-1 overflow-y-auto scrollbar-hide" id="sidebar-scroll-area">
+            <div class="flex-1 overflow-y-auto scrollbar-hide bg-white dark:bg-background-dark" id="sidebar-scroll-area">
                 
                 <!-- Chats Tab -->
                 <div id="home-content" class="fade-in pb-4">
                     <!-- Stories Tray -->
-                    <div id="stories-tray" class="flex gap-4 p-4 overflow-x-auto border-b border-slate-100 dark:border-slate-800 scrollbar-hide bg-white dark:bg-slate-900">
+                    <div id="stories-tray" class="flex gap-4 p-4 pt-2 overflow-x-auto scrollbar-hide bg-white dark:bg-background-dark">
                         <div id="add-story-trigger" class="flex flex-col items-center gap-1.5 cursor-pointer shrink-0 group" onclick="openModal('story-type-modal')">
-                            <div class="relative w-14 h-14 rounded-full border-2 border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center bg-slate-50 dark:bg-slate-800 text-slate-500 group-hover:border-primary group-hover:text-primary transition-all">
+                            <div class="relative w-14 h-14 rounded-full border-2 border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center bg-surface-light dark:bg-slate-800 text-slate-500 group-hover:border-primary group-hover:text-primary transition-all">
                                 <span class="material-symbols-outlined text-[24px]">add</span>
                             </div>
-                            <span class="text-[11px] font-semibold text-slate-600 dark:text-slate-400">My Story</span>
+                            <span class="text-[11px] font-semibold text-slate-600 dark:text-slate-400">Your Story</span>
                         </div>
                         <div id="friends-stories-list" class="flex gap-4 shrink-0"></div>
                     </div>
                     <!-- Contact List -->
-                    <div id="contact-list-container" class="p-2 space-y-1"></div>
+                    <div id="contact-list-container" class="p-2 pt-0 space-y-0.5"></div>
                 </div>
                 
                 <!-- Calls Tab -->
                 <div id="calls-content" class="hidden fade-in p-2 pb-4">
-                    <div id="calls-list-container" class="space-y-1"></div>
+                    <div id="calls-list-container" class="space-y-0.5"></div>
                 </div>
                 
                 <!-- Requests Tab -->
@@ -387,7 +388,7 @@
             </div>
 
             <!-- Native Bottom Navigation (Mobile + Tablet) -->
-            <nav class="absolute bottom-0 left-0 right-0 h-[70px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 flex justify-around items-center pb-[env(safe-area-inset-bottom)] shrink-0 z-30 md:static md:border-none md:bg-white md:dark:bg-slate-900 md:h-[80px]">
+            <nav class="absolute bottom-0 left-0 right-0 h-[70px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800 flex justify-around items-center pb-[env(safe-area-inset-bottom)] shrink-0 z-30 md:static md:border-none md:bg-white md:dark:bg-slate-900 md:h-[80px]">
                 <button id="nav-chats" class="nav-btn flex-1 h-full flex flex-col justify-center items-center gap-1 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors bottom-nav-active">
                     <span class="material-symbols-outlined text-[26px]">chat_bubble</span>
                     <span class="text-[11px] font-bold tracking-wide">Chats</span>
@@ -405,10 +406,10 @@
         </section>
 
         <!-- Main Chat Area (Slide-in on Mobile, Static Right on Desktop) -->
-        <main class="fixed inset-0 transform translate-x-full md:relative md:translate-x-0 md:flex-1 flex flex-col bg-background-light dark:bg-background-dark z-40 md:z-0 transition-transform duration-300 ease-out shadow-[-10px_0_30px_rgba(0,0,0,0.1)] dark:shadow-[-10px_0_30px_rgba(0,0,0,0.5)] md:shadow-none" id="main-chat-area">
+        <main class="fixed inset-0 transform translate-x-full md:relative md:translate-x-0 md:flex-1 flex flex-col bg-white dark:bg-background-dark z-40 md:z-0 transition-transform duration-300 ease-out shadow-[-10px_0_30px_rgba(0,0,0,0.1)] dark:shadow-[-10px_0_30px_rgba(0,0,0,0.5)] md:shadow-none" id="main-chat-area">
             
             <!-- Welcome Screen (Desktop only technically) -->
-            <div id="welcome-screen" class="absolute inset-0 flex flex-col items-center justify-center bg-surface-light dark:bg-surface-dark z-20 hidden md:flex">
+            <div id="welcome-screen" class="absolute inset-0 flex flex-col items-center justify-center bg-surface-light dark:bg-background-dark z-20 hidden md:flex border-l border-slate-200 dark:border-slate-800">
                 <div class="w-32 h-32 bg-white rounded-[40px] flex items-center justify-center mb-8 shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden text-primary transform -rotate-3 hover:rotate-0 transition-transform">
                     <img src="https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png" alt="AR CHATS Logo" class="w-full h-full object-cover">
                 </div>
@@ -417,7 +418,7 @@
             </div>
 
             <!-- Active Chat Header -->
-            <header id="active-chat-header" class="h-[64px] md:h-[76px] px-2 md:px-6 flex items-center justify-between bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 shrink-0 hidden z-50 w-full relative pt-[env(safe-area-inset-top)]">
+            <header id="active-chat-header" class="h-[64px] md:h-[76px] px-2 md:px-6 flex items-center justify-between bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800 shrink-0 hidden z-50 w-full relative pt-[env(safe-area-inset-top)]">
                 <div class="flex items-center gap-1 min-w-0 flex-1">
                     <!-- Native Back Button (Mobile) -->
                     <button id="back-to-home-btn" class="w-12 h-12 flex items-center justify-center text-primary md:hidden shrink-0 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors ml-1">
@@ -426,70 +427,70 @@
                     
                     <!-- Clickable Header for Contact Info -->
                     <div id="chat-info-trigger" class="flex items-center gap-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 p-2 rounded-2xl transition-colors flex-1 min-w-0" title="View User Info">
-                        <div id="chat-header-pfp" class="w-11 h-11 md:w-12 md:h-12 rounded-full bg-slate-200 dark:bg-slate-700 shrink-0 overflow-hidden flex items-center justify-center bg-cover bg-center text-xl border border-slate-200 dark:border-slate-600"></div>
+                        <div id="chat-header-pfp" class="w-10 h-10 md:w-11 md:h-11 rounded-full bg-slate-200 dark:bg-slate-700 shrink-0 overflow-hidden flex items-center justify-center bg-cover bg-center text-lg border border-slate-200 dark:border-slate-600"></div>
                         <div class="min-w-0">
-                            <h3 id="chat-header-name" class="text-[16px] md:text-lg font-bold truncate text-slate-900 dark:text-white flex items-center gap-1">Contact Name</h3>
+                            <h3 id="chat-header-name" class="text-[16px] font-bold truncate text-slate-900 dark:text-white flex items-center gap-1">Contact Name</h3>
                             <p id="chat-header-status" class="text-[11px] text-slate-500 font-medium truncate mt-0.5">Offline</p>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Chat Actions -->
-                <div class="flex items-center shrink-0 pr-1">
-                    <button id="start-audio-call" class="w-11 h-11 rounded-full flex items-center justify-center text-primary hover:bg-primary/10 transition-colors">
+                <div class="flex items-center shrink-0 pr-1 gap-1">
+                    <button id="start-audio-call" class="w-10 h-10 rounded-full flex items-center justify-center text-primary hover:bg-primary/10 transition-colors">
                         <span class="material-symbols-outlined text-[24px]">call</span>
                     </button>
-                    <button id="start-video-call" class="w-11 h-11 rounded-full flex items-center justify-center text-primary hover:bg-primary/10 transition-colors">
+                    <button id="start-video-call" class="w-10 h-10 rounded-full flex items-center justify-center text-primary hover:bg-primary/10 transition-colors">
                         <span class="material-symbols-outlined text-[26px]">videocam</span>
                     </button>
                     
                     <!-- 3-Dots Menu -->
-                    <div class="relative flex items-center ml-1">
-                        <button id="chat-options-btn" class="w-11 h-11 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <div class="relative flex items-center">
+                        <button id="chat-options-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                             <span class="material-symbols-outlined text-[26px]">more_vert</span>
                         </button>
-                        <div id="chat-options-menu" class="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 hidden flex-col py-2 z-[60]">
-                            <button class="w-full text-left px-4 py-3 text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-close-chat"><span class="material-symbols-outlined text-[20px] text-slate-400">close</span> Close Chat</button>
-                            <button class="w-full text-left px-4 py-3 text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-clear-chat"><span class="material-symbols-outlined text-[20px] text-slate-400">cleaning_services</span> Clear Chat</button>
-                            <button class="w-full text-left px-4 py-3 text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-delete-chat"><span class="material-symbols-outlined text-[20px] text-slate-400">delete</span> Delete Chat</button>
+                        <div id="chat-options-menu" class="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-800 rounded-[20px] shadow-2xl border border-slate-100 dark:border-slate-700 hidden flex-col py-2 z-[60]">
+                            <button class="w-full text-left px-5 py-3.5 text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-close-chat"><span class="material-symbols-outlined text-[20px] text-slate-400">close</span> Close Chat</button>
+                            <button class="w-full text-left px-5 py-3.5 text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-clear-chat"><span class="material-symbols-outlined text-[20px] text-slate-400">cleaning_services</span> Clear Chat</button>
+                            <button class="w-full text-left px-5 py-3.5 text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-delete-chat"><span class="material-symbols-outlined text-[20px] text-slate-400">delete</span> Delete Chat</button>
                             <div class="h-px bg-slate-100 dark:bg-slate-700 my-1"></div>
-                            <button class="w-full text-left px-4 py-3 text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-media"><span class="material-symbols-outlined text-[20px] text-slate-400">perm_media</span> Shared Media</button>
-                            <button class="w-full text-left px-4 py-3 text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-select-msg"><span class="material-symbols-outlined text-[20px] text-slate-400">check_box</span> Select Messages</button>
+                            <button class="w-full text-left px-5 py-3.5 text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-media"><span class="material-symbols-outlined text-[20px] text-slate-400">perm_media</span> Shared Media</button>
+                            <button class="w-full text-left px-5 py-3.5 text-[15px] font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" id="menu-select-msg"><span class="material-symbols-outlined text-[20px] text-slate-400">check_box</span> Select Messages</button>
                             <div class="h-px bg-slate-100 dark:bg-slate-700 my-1" id="menu-divider-2"></div>
-                            <button class="w-full text-left px-4 py-3 text-[15px] font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-3" id="menu-report-user"><span class="material-symbols-outlined text-[20px]">flag</span> Report User</button>
-                            <button class="w-full text-left px-4 py-3 text-[15px] font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-3" id="menu-unfriend"><span class="material-symbols-outlined text-[20px]">person_remove</span> Unfriend</button>
-                            <button class="w-full text-left px-4 py-3 text-[15px] font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-3" id="menu-block"><span class="material-symbols-outlined text-[20px]">block</span> Block User</button>
+                            <button class="w-full text-left px-5 py-3.5 text-[15px] font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-3" id="menu-report-user"><span class="material-symbols-outlined text-[20px]">flag</span> Report User</button>
+                            <button class="w-full text-left px-5 py-3.5 text-[15px] font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-3" id="menu-unfriend"><span class="material-symbols-outlined text-[20px]">person_remove</span> Unfriend</button>
+                            <button class="w-full text-left px-5 py-3.5 text-[15px] font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-3" id="menu-block"><span class="material-symbols-outlined text-[20px]">block</span> Block User</button>
                         </div>
                     </div>
                 </div>
             </header>
 
             <!-- Messages Area -->
-            <div id="chat-messages" class="flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8 chat-bg hidden z-0 scrollbar-hide">
+            <div id="chat-messages" class="flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8 chat-bg hidden z-0 scrollbar-hide bg-surface-light dark:bg-background-dark">
                 <!-- Messages populated via JS -->
             </div>
 
             <!-- Chat Input Container (Native style) -->
-            <div id="chat-input-container" class="w-full px-3 py-3 md:px-6 md:py-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 shrink-0 hidden z-10 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 relative">
+            <div id="chat-input-container" class="w-full px-3 py-3 md:px-6 md:py-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800 shrink-0 hidden z-10 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 relative">
                 <div class="max-w-4xl mx-auto flex items-end gap-2 md:gap-3">
                     <input type="file" id="chat-image-input" class="hidden" accept="image/*">
-                    <label for="chat-image-input" class="w-11 h-11 md:w-12 md:h-12 rounded-full text-slate-500 hover:text-primary hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center cursor-pointer transition-colors shrink-0 mb-0.5">
-                        <span class="material-symbols-outlined text-[28px]">add</span>
+                    <label for="chat-image-input" class="w-10 h-10 md:w-12 md:h-12 rounded-full text-primary hover:bg-primary/10 flex items-center justify-center cursor-pointer transition-colors shrink-0 mb-1">
+                        <span class="material-symbols-outlined text-[28px]">add_circle</span>
                     </label>
                     
-                    <div class="flex-1 relative flex items-center bg-surface-light dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl overflow-hidden shadow-inner">
-                        <textarea id="chat-input" rows="1" class="w-full py-3 md:py-3.5 px-5 bg-transparent text-[16px] outline-none resize-none max-h-32 placeholder-slate-500 dark:placeholder-slate-400 disabled:opacity-70 disabled:cursor-not-allowed leading-relaxed text-slate-900 dark:text-white" placeholder="Message..."></textarea>
+                    <div class="flex-1 relative flex items-center bg-surface-light dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[20px] overflow-hidden shadow-inner">
+                        <textarea id="chat-input" rows="1" class="w-full py-3 px-4 bg-transparent text-[16px] outline-none resize-none max-h-32 placeholder-slate-500 dark:placeholder-slate-400 disabled:opacity-70 disabled:cursor-not-allowed leading-relaxed text-slate-900 dark:text-white" placeholder="Message..."></textarea>
                     </div>
                     
-                    <button id="chat-action-button" class="w-11 h-11 md:w-12 md:h-12 rounded-full bg-primary text-white flex items-center justify-center disabled:opacity-0 disabled:scale-50 transition-all shrink-0 mb-0.5 shadow-lg shadow-primary/30 active:scale-95 transform origin-center" disabled>
+                    <button id="chat-action-button" class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary text-white flex items-center justify-center disabled:opacity-0 disabled:scale-50 transition-all shrink-0 mb-1 shadow-lg shadow-primary/30 active:scale-95 transform origin-center" disabled>
                         <span class="material-symbols-outlined text-[20px] ml-1">send</span>
                     </button>
                 </div>
             </div>
 
             <!-- Selection Action Container -->
-            <div id="selection-action-container" class="w-full p-4 md:p-6 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shrink-0 hidden z-20 flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.1)] pb-[calc(16px+env(safe-area-inset-bottom))] pt-4">
-                <span id="selection-count" class="text-[15px] font-bold text-slate-700 dark:text-slate-200">0 Selected</span>
+            <div id="selection-action-container" class="w-full p-4 md:p-6 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 shrink-0 hidden z-20 flex justify-between items-center shadow-[0_-10px_40px_rgba(0,0,0,0.05)] pb-[calc(16px+env(safe-area-inset-bottom))] pt-4">
+                <span id="selection-count" class="text-[16px] font-bold text-slate-700 dark:text-slate-200">0 Selected</span>
                 <div class="flex gap-3">
                     <button id="cancel-selection-btn" class="btn-secondary py-2 border-slate-300 dark:border-slate-600 rounded-xl text-sm">Cancel</button>
                     <button id="delete-selection-btn" class="bg-red-500 hover:bg-red-600 text-white rounded-xl px-5 py-2 font-bold shadow-md shadow-red-500/20 text-sm transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -501,29 +502,29 @@
         </main>
         
         <!-- Right Sidebar: Contact Info Drawer (Slides over everything) -->
-        <section id="contact-info-drawer" class="fixed inset-y-0 right-0 w-full md:w-96 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 hidden pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
-            <div class="h-[64px] md:h-[76px] flex items-center justify-between px-4 md:px-6 border-b border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900 relative">
+        <section id="contact-info-drawer" class="fixed inset-y-0 right-0 w-full md:w-96 border-l border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col shadow-2xl z-[60] transform translate-x-full transition-transform duration-300 hidden pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+            <div class="h-[64px] md:h-[76px] flex items-center justify-between px-4 md:px-6 border-b border-slate-100 dark:border-slate-800 shrink-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl relative z-10">
                 <button id="close-info-drawer" class="w-12 h-12 flex items-center justify-center text-primary rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
                     <span class="material-symbols-outlined text-[28px]">arrow_back_ios_new</span>
                 </button>
                 <h3 class="font-bold text-slate-900 dark:text-white text-lg absolute left-1/2 -translate-x-1/2">Contact Info</h3>
             </div>
             
-            <div class="flex-1 overflow-y-auto scrollbar-hide">
-                <div class="px-6 py-10 flex flex-col items-center border-b border-slate-100 dark:border-slate-800 bg-surface-light dark:bg-slate-800/10">
-                    <div id="drawer-pfp" class="w-36 h-36 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center mb-6 flex items-center justify-center text-5xl overflow-hidden shadow-xl border-4 border-white dark:border-slate-800"></div>
-                    <h2 id="drawer-name" class="text-3xl font-black text-slate-900 dark:text-white text-center mb-2 tracking-tight flex items-center justify-center gap-1.5 w-full px-4 text-center">Name</h2>
+            <div class="flex-1 overflow-y-auto scrollbar-hide bg-surface-light dark:bg-background-dark">
+                <div class="px-6 py-10 flex flex-col items-center bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
+                    <div id="drawer-pfp" class="w-32 h-32 rounded-full bg-slate-200 dark:bg-slate-700 bg-cover bg-center mb-5 flex items-center justify-center text-5xl overflow-hidden shadow-md border-[4px] border-white dark:border-slate-800"></div>
+                    <h2 id="drawer-name" class="text-2xl font-black text-slate-900 dark:text-white text-center mb-2 tracking-tight flex items-center justify-center gap-1.5 w-full px-4">Name</h2>
                     <span class="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-xs font-mono font-bold tracking-widest uppercase border border-primary/20 mt-1" id="drawer-id">ID</span>
                 </div>
                 
                 <div class="p-6 space-y-6">
-                    <div>
-                        <p class="text-[11px] text-primary uppercase font-bold tracking-widest mb-2 ml-2">About</p>
-                        <p id="drawer-bio" class="text-[15px] text-slate-800 dark:text-slate-200 leading-relaxed bg-surface-light dark:bg-slate-800/50 p-5 rounded-3xl font-medium"></p>
+                    <div class="bg-white dark:bg-slate-900 rounded-[24px] p-5 shadow-sm border border-slate-100 dark:border-slate-800">
+                        <p class="text-[11px] text-slate-400 uppercase font-bold tracking-widest mb-3">About</p>
+                        <p id="drawer-bio" class="text-[16px] text-slate-900 dark:text-slate-100 leading-relaxed font-medium"></p>
                     </div>
-                    <div id="drawer-gender-box" class="bg-surface-light dark:bg-slate-800/50 p-5 rounded-3xl flex justify-between items-center">
-                        <p class="text-[11px] text-primary uppercase font-bold tracking-widest">Gender</p>
-                        <p id="drawer-gender" class="text-[15px] font-bold text-slate-800 dark:text-slate-200"></p>
+                    <div id="drawer-gender-box" class="bg-white dark:bg-slate-900 rounded-[24px] p-5 shadow-sm border border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                        <p class="text-[11px] text-slate-400 uppercase font-bold tracking-widest">Gender</p>
+                        <p id="drawer-gender" class="text-[16px] font-bold text-slate-900 dark:text-slate-100"></p>
                     </div>
                 </div>
             </div>
@@ -574,7 +575,7 @@
             
             <!-- Other User's Story View -->
             <div class="flex-1 flex pointer-events-auto" id="story-reply-container">
-                <input type="text" id="story-reply-input" class="w-full bg-black/40 backdrop-blur-xl text-white border border-white/20 rounded-full px-6 py-4 text-[15px] placeholder-white/70 outline-none focus:bg-black/60 focus:border-white/50 transition-colors shadow-lg font-medium" placeholder="Send message...">
+                <input type="text" id="story-reply-input" class="w-full bg-black/40 backdrop-blur-xl text-white border border-white/20 rounded-[24px] px-6 py-4 text-[16px] placeholder-white/70 outline-none focus:bg-black/60 focus:border-white/50 transition-colors shadow-lg font-medium" placeholder="Send message...">
             </div>
             <button id="story-reply-send" class="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white shadow-xl shrink-0 hidden pointer-events-auto transition-transform active:scale-95">
                 <span class="material-symbols-outlined text-[24px] ml-1">send</span>
@@ -600,43 +601,43 @@
     <div id="modal-container" class="fixed inset-0 z-[10050] bg-black/40 dark:bg-black/60 backdrop-blur-sm hidden flex items-end md:items-center justify-center md:p-4 transition-opacity duration-300">
         
         <!-- Story Selection Modal -->
-        <div id="story-type-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-t-[32px] md:rounded-[32px] shadow-2xl overflow-hidden hidden text-center p-8 relative z-[10060] pb-[calc(32px+env(safe-area-inset-bottom))]">
+        <div id="story-type-modal" class="modal-content bottom-sheet-modal bg-white dark:bg-slate-900 w-full max-w-sm shadow-2xl overflow-hidden hidden text-center p-8 relative z-[10060]">
             <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6 md:hidden"></div>
             <h3 class="text-2xl font-bold tracking-tight mb-2">Create Story</h3>
             <p class="text-[15px] text-slate-500 font-medium mb-8">Choose how you want to express yourself.</p>
             <div class="flex flex-col gap-3 w-full">
-                <button id="btn-create-image-story" class="w-full flex items-center justify-center gap-3 py-4 bg-surface-light dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-2xl font-bold transition-colors text-[16px]">
+                <button id="btn-create-image-story" class="w-full flex items-center justify-center gap-3 py-4 bg-surface-light dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-[20px] font-bold transition-colors text-[16px]">
                     <span class="material-symbols-outlined text-[26px] text-primary">image</span> Image Story
                 </button>
-                <button id="btn-create-text-story" class="w-full flex items-center justify-center gap-3 py-4 bg-surface-light dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-2xl font-bold transition-colors text-[16px]">
+                <button id="btn-create-text-story" class="w-full flex items-center justify-center gap-3 py-4 bg-surface-light dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white rounded-[20px] font-bold transition-colors text-[16px]">
                     <span class="material-symbols-outlined text-[26px] text-sky-500">text_fields</span> Text Story
                 </button>
-                <button class="text-slate-500 text-[15px] font-bold mt-4 hover:text-slate-700 dark:hover:text-slate-300 transition-colors" onclick="closeModal('story-type-modal')">Cancel</button>
+                <button class="text-slate-500 text-[16px] font-bold mt-4 hover:text-slate-700 dark:hover:text-slate-300 transition-colors" onclick="closeModal('story-type-modal')">Cancel</button>
             </div>
         </div>
 
         <!-- Story Image Preview & Caption Modal -->
-        <div id="story-image-preview-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-md rounded-t-[32px] md:rounded-[32px] shadow-2xl overflow-hidden hidden flex flex-col relative z-[10060] h-[90vh] md:h-auto pb-[env(safe-area-inset-bottom)]">
+        <div id="story-image-preview-modal" class="modal-content full-screen-modal bg-white dark:bg-slate-900 w-full max-w-md shadow-2xl overflow-hidden hidden flex flex-col relative z-[10060] pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
             <div class="p-4 flex justify-between items-center shrink-0">
-                <button class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 transition-colors" onclick="closeModal('story-image-preview-modal')"><span class="material-symbols-outlined text-[24px]">close</span></button>
+                <button class="w-12 h-12 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors" onclick="closeModal('story-image-preview-modal')"><span class="material-symbols-outlined text-[24px]">close</span></button>
                 <h3 class="text-[17px] font-bold tracking-tight absolute left-1/2 -translate-x-1/2">Preview</h3>
-                <div class="w-10"></div>
+                <div class="w-12"></div>
             </div>
             <div class="p-6 flex flex-col gap-6 overflow-y-auto flex-1">
                 <div class="w-full h-[60vh] md:h-72 bg-black rounded-[24px] overflow-hidden flex items-center justify-center shadow-md">
                     <img id="story-image-preview-img" class="max-w-full max-h-full object-contain">
                 </div>
-                <input type="text" id="story-image-caption-input" class="ar-input py-4 text-[16px] text-center" placeholder="Add a caption...">
+                <input type="text" id="story-image-caption-input" class="w-full bg-surface-light dark:bg-slate-800 outline-none rounded-[20px] px-6 py-4 text-[16px] text-center font-medium" placeholder="Add a caption...">
                 <button id="publish-image-story-btn" class="btn-primary w-full py-4 shadow-lg shadow-primary/25 rounded-2xl text-[16px] mt-auto">Publish to Story</button>
             </div>
         </div>
 
         <!-- Story Text Create Modal -->
-        <div id="story-text-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-md rounded-t-[32px] md:rounded-[32px] shadow-2xl overflow-hidden hidden flex flex-col relative z-[10060] h-[90vh] md:h-auto pb-[env(safe-area-inset-bottom)]">
+        <div id="story-text-modal" class="modal-content full-screen-modal bg-white dark:bg-slate-900 w-full max-w-md shadow-2xl overflow-hidden hidden flex flex-col relative z-[10060] pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
             <div class="p-4 flex justify-between items-center shrink-0 transition-colors" id="story-text-header-bg" style="background: linear-gradient(to bottom right, #3b82f6, #4f46e5);">
-                <button class="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 text-white transition-colors" onclick="closeModal('story-text-modal')"><span class="material-symbols-outlined text-[24px]">close</span></button>
+                <button class="w-12 h-12 flex items-center justify-center rounded-full bg-black/20 text-white transition-colors" onclick="closeModal('story-text-modal')"><span class="material-symbols-outlined text-[24px]">close</span></button>
                 <h3 class="text-[17px] font-bold tracking-tight text-white absolute left-1/2 -translate-x-1/2">Text Story</h3>
-                <div class="w-10"></div>
+                <div class="w-12"></div>
             </div>
             <div class="p-0 flex flex-col flex-1 bg-white dark:bg-slate-900">
                 <textarea id="story-text-input" class="w-full flex-1 md:h-72 p-8 text-white text-3xl font-black outline-none resize-none placeholder-white/60 transition-colors text-center shadow-inner" style="background: linear-gradient(to bottom right, #3b82f6, #4f46e5);" placeholder="Type something..."></textarea>
@@ -659,7 +660,7 @@
         </div>
 
         <!-- Story Stats Modal -->
-        <div id="story-stats-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-t-[32px] md:rounded-[32px] shadow-2xl overflow-hidden hidden flex flex-col h-[70vh] md:h-[500px] relative z-[10060] pb-[env(safe-area-inset-bottom)]">
+        <div id="story-stats-modal" class="modal-content bottom-sheet-modal bg-white dark:bg-slate-900 w-full max-w-sm shadow-2xl overflow-hidden hidden flex flex-col h-[70vh] relative z-[10060]">
             <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mt-4 mb-2 md:hidden"></div>
             <div class="p-4 flex justify-between items-center shrink-0">
                 <div class="w-10"></div>
@@ -672,63 +673,63 @@
         </div>
 
         <!-- Profile Setup (Initial) -->
-        <div id="profile-setup-modal" class="modal-content bg-white dark:bg-slate-900 w-full h-full md:h-auto max-w-md md:rounded-[32px] overflow-y-auto hidden fade-in z-[10060] pb-[env(safe-area-inset-bottom)]">
-            <div class="p-8 text-center bg-gradient-to-br from-primary/10 to-sky-400/10 relative overflow-hidden pt-[calc(32px+env(safe-area-inset-top))] pb-20">
-                <div class="absolute -right-4 -top-4 w-32 h-32 bg-primary/20 rounded-full blur-2xl"></div>
-                <div class="absolute -left-4 -bottom-4 w-32 h-32 bg-sky-400/20 rounded-full blur-2xl"></div>
+        <div id="profile-setup-modal" class="modal-content full-screen-modal bg-white dark:bg-background-dark w-full max-w-md overflow-y-auto hidden fade-in z-[10060] pb-[env(safe-area-inset-bottom)]">
+            <div class="p-8 text-center bg-gradient-to-br from-primary/10 to-sky-400/10 relative overflow-hidden pt-[calc(40px+env(safe-area-inset-top))] pb-24">
+                <div class="absolute -right-4 -top-4 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
+                <div class="absolute -left-4 -bottom-4 w-32 h-32 bg-sky-400/20 rounded-full blur-3xl"></div>
                 <div class="relative z-10">
-                    <h3 class="text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-2">Your Profile</h3>
-                    <p class="text-[15px] text-slate-500 dark:text-slate-400 font-medium">Let's set up your digital identity.</p>
+                    <h3 class="text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-2">Your Profile</h3>
+                    <p class="text-[16px] text-slate-600 dark:text-slate-300 font-medium">Let's set up your digital identity.</p>
                 </div>
             </div>
-            <div class="p-6 md:p-8 space-y-5 relative bg-white dark:bg-slate-900 flex-1 rounded-t-[32px] -mt-10">
+            <div class="px-6 pb-8 pt-0 space-y-6 relative bg-white dark:bg-background-dark flex-1">
                 <div class="flex justify-center mb-6 relative -mt-20 z-20">
-                    <div class="w-36 h-36 rounded-full border-[6px] border-white dark:border-slate-900 bg-surface-light dark:bg-slate-800 flex items-center justify-center text-7xl overflow-hidden relative group shadow-xl">
+                    <div class="w-36 h-36 rounded-full border-[6px] border-white dark:border-background-dark bg-surface-light dark:bg-slate-800 flex items-center justify-center text-7xl overflow-hidden relative group shadow-xl">
                         <img id="setup-pfp-preview" class="w-full h-full object-cover hidden">
                         <input id="setup-emoji-input" type="text" class="w-full h-full bg-transparent text-center border-none outline-none focus:ring-0 p-0 m-0 cursor-text pb-2" placeholder="👤" maxlength="2">
                         <input type="file" id="setup-pic-input" class="hidden" accept="image/*">
-                        <label for="setup-pic-input" class="absolute inset-0 bg-black/60 text-white opacity-0 group-hover:opacity-100 cursor-pointer flex flex-col items-center justify-center transition-all text-sm font-bold backdrop-blur-sm">
+                        <label for="setup-pic-input" class="absolute inset-0 bg-black/50 text-white opacity-0 group-hover:opacity-100 cursor-pointer flex flex-col items-center justify-center transition-all text-sm font-bold backdrop-blur-sm">
                             <span class="material-symbols-outlined mb-1 text-[32px]">add_a_photo</span>
                             Upload
                         </label>
                     </div>
                 </div>
                 
-                <div class="space-y-5">
-                    <div>
-                        <label class="block text-[11px] font-bold text-primary uppercase tracking-widest mb-2 ml-2">Display Name *</label>
-                        <input id="setup-name-input" type="text" class="ar-input py-4 text-[16px]" placeholder="Full Name" maxlength="25">
+                <div class="bg-surface-light dark:bg-slate-800/50 rounded-[24px] overflow-hidden border border-slate-100 dark:border-slate-800">
+                    <div class="p-4 border-b border-slate-200 dark:border-slate-700">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Display Name *</label>
+                        <input id="setup-name-input" type="text" class="w-full bg-transparent text-[16px] outline-none font-medium text-slate-900 dark:text-white" placeholder="Full Name" maxlength="25">
                     </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-primary uppercase tracking-widest mb-2 ml-2">About You</label>
-                        <input id="setup-bio-input" type="text" class="ar-input py-4 text-[16px]" placeholder="Hey there! I am using AR Chats." maxlength="60">
+                    <div class="p-4 border-b border-slate-200 dark:border-slate-700">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">About You</label>
+                        <input id="setup-bio-input" type="text" class="w-full bg-transparent text-[16px] outline-none font-medium text-slate-900 dark:text-white" placeholder="Hey there! I am using AR Chats." maxlength="60">
                     </div>
-                    <div class="flex gap-4">
-                        <div class="flex-1">
-                            <label class="block text-[11px] font-bold text-primary uppercase tracking-widest mb-2 ml-2">Gender</label>
-                            <select id="setup-gender-input" class="ar-input appearance-none py-4 text-[16px] cursor-pointer">
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Prefer not to say">Prefer not to say</option>
+                    <div class="flex">
+                        <div class="flex-1 p-4 border-r border-slate-200 dark:border-slate-700">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Gender</label>
+                            <select id="setup-gender-input" class="w-full bg-transparent text-[16px] outline-none font-medium text-slate-900 dark:text-white appearance-none cursor-pointer">
+                                <option value="Male" class="text-black">Male</option>
+                                <option value="Female" class="text-black">Female</option>
+                                <option value="Prefer not to say" class="text-black">Prefer not to say</option>
                             </select>
                         </div>
-                        <div class="flex flex-col items-center justify-center pt-6 px-4">
-                            <label class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Public</label>
+                        <div class="p-4 flex flex-col items-center justify-center bg-transparent">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Public</label>
                             <input type="checkbox" id="setup-show-gender" class="w-6 h-6 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer" checked>
                         </div>
                     </div>
                 </div>
-                <p id="setup-error" class="text-red-500 text-sm text-center font-bold min-h-[20px] mt-4"></p>
-                <button id="setup-save-btn" class="btn-primary w-full py-4 text-[16px] mt-4 shadow-lg shadow-primary/30 rounded-2xl">Complete Setup</button>
+                <p id="setup-error" class="text-red-500 text-sm text-center font-bold min-h-[20px]"></p>
+                <button id="setup-save-btn" class="btn-primary w-full py-4 text-[16px] shadow-lg shadow-primary/30 rounded-2xl mt-4">Complete Setup</button>
             </div>
         </div>
 
         <!-- Central Settings Modal (Full screen on mobile) -->
-        <div id="settings-modal" class="modal-content bg-white dark:bg-slate-900 w-full h-full md:h-[700px] md:max-w-4xl md:rounded-[32px] flex flex-col md:flex-row overflow-hidden shadow-2xl hidden fade-in relative z-[10060]">
+        <div id="settings-modal" class="modal-content full-screen-modal bg-white dark:bg-background-dark w-full md:max-w-4xl md:rounded-[32px] flex flex-col md:flex-row overflow-hidden shadow-2xl hidden z-[10060]">
             
             <!-- Mobile Header inside Settings -->
-            <div class="md:hidden h-[64px] flex items-center justify-between px-4 border-b border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900 pt-[env(safe-area-inset-top)] relative">
-                <button class="w-12 h-12 flex items-center justify-center text-primary rounded-full" onclick="closeModal('settings-modal')">
+            <div class="md:hidden h-[64px] flex items-center justify-between px-4 border-b border-slate-100 dark:border-slate-800 shrink-0 bg-white/95 dark:bg-background-dark/95 backdrop-blur-xl pt-[env(safe-area-inset-top)] relative z-20">
+                <button class="w-12 h-12 flex items-center justify-center text-primary rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="closeModal('settings-modal')">
                     <span class="material-symbols-outlined text-[28px]">arrow_back_ios_new</span>
                 </button>
                 <h3 class="font-bold text-lg text-slate-900 dark:text-white absolute left-1/2 -translate-x-1/2" id="mobile-settings-title">Settings</h3>
@@ -743,7 +744,7 @@
                 
                 <div class="flex flex-col gap-2">
                     <button id="tab-profile" class="settings-tab active-link flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold text-[15px] transition-colors" data-target="set-profile" data-title="Profile">
-                        <span class="material-symbols-outlined text-[22px]">person</span> Profile & Privacy
+                        <span class="material-symbols-outlined text-[22px]">person</span> Profile
                     </button>
                     <button id="tab-friends" class="settings-tab flex items-center gap-3 px-5 py-3.5 rounded-2xl hover:bg-slate-200 dark:hover:bg-slate-700 font-semibold text-[15px] text-slate-700 dark:text-slate-300 transition-colors" data-target="set-friends" data-title="Friends">
                         <span class="material-symbols-outlined text-[22px]">group</span> Friend List
@@ -764,61 +765,69 @@
             </div>
             
             <!-- Settings Content Area -->
-            <div class="flex-1 overflow-y-auto bg-white dark:bg-slate-900 pb-[env(safe-area-inset-bottom)]" id="settings-content-area">
+            <div class="flex-1 overflow-y-auto bg-surface-light dark:bg-background-dark pb-[calc(100px+env(safe-area-inset-bottom))] relative h-full" id="settings-content-area">
                 
                 <!-- Profile Edit View -->
-                <div id="set-profile" class="settings-view block w-full max-w-lg mx-auto p-6 md:p-10 fade-in">
-                    <h3 class="text-3xl font-black mb-8 tracking-tight hidden md:block">Profile</h3>
+                <div id="set-profile" class="settings-view block w-full max-w-lg mx-auto md:p-10 fade-in flex flex-col min-h-full">
+                    <h3 class="text-3xl font-black mb-8 tracking-tight hidden md:block px-6">Profile</h3>
                     
-                    <div class="flex flex-col items-center gap-6 mb-10">
-                        <div class="w-36 h-36 rounded-full border-4 border-slate-100 dark:border-slate-800 bg-surface-light dark:bg-slate-800 flex items-center justify-center text-6xl overflow-hidden relative group shadow-lg">
+                    <div class="flex flex-col items-center mt-6 mb-8 px-6">
+                        <div class="w-32 h-32 rounded-full border-4 border-white dark:border-slate-800 bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-5xl overflow-hidden relative group shadow-md">
                             <img id="edit-pfp-preview" class="w-full h-full object-cover hidden">
                             <input id="edit-emoji-input" type="text" class="w-full h-full bg-transparent text-center border-none outline-none focus:ring-0 p-0 m-0 cursor-text pb-2" placeholder="👤" maxlength="2">
                             <input type="file" id="edit-pic-input" class="hidden" accept="image/*">
-                            <label for="edit-pic-input" class="absolute inset-0 bg-black/60 text-white opacity-0 group-hover:opacity-100 cursor-pointer flex flex-col items-center justify-center transition-all text-sm font-bold backdrop-blur-sm">
-                                <span class="material-symbols-outlined mb-1 text-[32px]">add_a_photo</span>
+                            <label for="edit-pic-input" class="absolute inset-0 bg-black/50 text-white opacity-0 group-hover:opacity-100 cursor-pointer flex flex-col items-center justify-center transition-all text-sm font-bold backdrop-blur-sm">
+                                <span class="material-symbols-outlined mb-1 text-[28px]">add_a_photo</span>
                             </label>
                         </div>
-                        <div class="w-full bg-primary/5 dark:bg-primary/10 p-6 rounded-3xl border border-primary/20 text-center">
-                            <p class="text-[11px] font-bold text-primary uppercase tracking-widest mb-3">Your Unique AR ID</p>
-                            <p id="profile-ar-id-display" class="font-mono text-2xl font-black text-slate-900 dark:text-white select-all bg-white dark:bg-slate-900 px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 inline-block mb-2 shadow-sm">Loading...</p>
-                            <p class="text-[13px] text-slate-500 font-medium">Share this ID with friends to connect.</p>
+                        
+                        <div class="mt-5 text-center px-4 w-full">
+                            <span class="text-[11px] text-slate-500 uppercase tracking-widest font-bold">Your Unique AR ID</span>
+                            <div class="flex items-center justify-center gap-3 mt-1.5 bg-white dark:bg-slate-800 py-2.5 px-6 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm w-fit mx-auto">
+                                <p class="text-xl font-black text-slate-900 dark:text-white font-mono tracking-wider select-all" id="profile-ar-id-display">Loading...</p>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-2">Display Name</label>
-                            <input id="edit-name-input" type="text" class="ar-input py-4 text-[16px]" maxlength="25">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-2">Bio</label>
-                            <textarea id="edit-bio-input" class="ar-input resize-none py-4 text-[16px]" rows="2" maxlength="100"></textarea>
-                        </div>
-                        <div class="flex gap-5">
-                            <div class="flex-1">
-                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-2">Gender</label>
-                                <select id="edit-gender-input" class="ar-input appearance-none py-4 text-[16px] cursor-pointer">
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Prefer not to say">Prefer not to say</option>
-                                </select>
+                    <div class="px-4 w-full">
+                        <div class="bg-white dark:bg-slate-800 rounded-[24px] overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm">
+                            <div class="px-5 py-3 border-b border-slate-100 dark:border-slate-700 focus-within:bg-slate-50 dark:focus-within:bg-slate-700/50 transition-colors">
+                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Display Name</label>
+                                <input id="edit-name-input" type="text" class="w-full bg-transparent outline-none text-[16px] text-slate-900 dark:text-white font-semibold" maxlength="25">
                             </div>
-                            <div class="flex flex-col items-center justify-center pt-6 px-4">
-                                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Public</label>
-                                <input type="checkbox" id="edit-show-gender" class="w-6 h-6 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer">
+                            <div class="px-5 py-3 border-b border-slate-100 dark:border-slate-700 focus-within:bg-slate-50 dark:focus-within:bg-slate-700/50 transition-colors">
+                                <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Bio</label>
+                                <textarea id="edit-bio-input" class="w-full bg-transparent outline-none text-[16px] text-slate-900 dark:text-white font-semibold resize-none" rows="2" maxlength="100"></textarea>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="flex-1 px-5 py-3 border-r border-slate-100 dark:border-slate-700 focus-within:bg-slate-50 dark:focus-within:bg-slate-700/50 transition-colors">
+                                    <label class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Gender</label>
+                                    <select id="edit-gender-input" class="w-full bg-transparent outline-none text-[16px] text-slate-900 dark:text-white font-semibold appearance-none cursor-pointer">
+                                        <option value="Male" class="text-black">Male</option>
+                                        <option value="Female" class="text-black">Female</option>
+                                        <option value="Prefer not to say" class="text-black">Prefer not to say</option>
+                                    </select>
+                                </div>
+                                <div class="px-6 py-3 flex flex-col items-center justify-center">
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Public</label>
+                                    <input type="checkbox" id="edit-show-gender" class="w-6 h-6 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer">
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <p id="profile-edit-error" class="text-red-500 text-sm mt-6 min-h-[20px] font-bold text-center"></p>
-                    <button id="save-profile-changes-btn" class="btn-primary w-full py-4 mt-2 shadow-lg shadow-primary/25 rounded-2xl text-[16px]">Save Changes</button>
+
+                    <p id="profile-edit-error" class="text-red-500 text-sm mt-4 min-h-[20px] font-bold text-center px-4"></p>
+                    
+                    <div class="mt-auto px-4 pt-6 pb-2 w-full max-w-lg mx-auto fixed bottom-0 left-0 right-0 md:static md:bg-transparent bg-surface-light dark:bg-background-dark pb-[calc(20px+env(safe-area-inset-bottom))] border-t md:border-none border-slate-200 dark:border-slate-800 z-10">
+                        <button id="save-profile-changes-btn" class="btn-primary w-full py-4 shadow-lg shadow-primary/25 rounded-2xl text-[16px]">Save Changes</button>
+                    </div>
                 </div>
 
                 <!-- Friend List View -->
-                <div id="set-friends" class="settings-view hidden w-full max-w-2xl mx-auto p-6 md:p-10 fade-in">
+                <div id="set-friends" class="settings-view hidden w-full max-w-2xl mx-auto p-4 md:p-10 fade-in">
                     <h3 class="text-3xl font-black mb-2 tracking-tight hidden md:block">Friend List</h3>
-                    <p class="text-[15px] text-slate-500 mb-8 font-medium">Manage your connected friends.</p>
-                    <div id="settings-friends-list" class="space-y-3"></div>
+                    <p class="text-[15px] text-slate-500 mb-6 font-medium px-2">Manage your connected friends.</p>
+                    <div class="bg-white dark:bg-slate-800 rounded-[24px] overflow-hidden border border-slate-100 dark:border-slate-700 shadow-sm divide-y divide-slate-100 dark:divide-slate-700" id="settings-friends-list"></div>
                 </div>
 
                 <!-- Chat Wallpaper View -->
@@ -826,10 +835,10 @@
                     <h3 class="text-3xl font-black mb-2 tracking-tight hidden md:block">Chat Wallpaper</h3>
                     <p class="text-[15px] text-slate-500 mb-8 font-medium">Customize the background image for all conversations.</p>
                     
-                    <div class="w-full h-72 rounded-[32px] border-4 border-dashed border-slate-200 dark:border-slate-700 bg-surface-light dark:bg-slate-800/50 flex flex-col items-center justify-center relative overflow-hidden mb-8 group cursor-pointer transition-colors hover:border-primary/50 hover:bg-primary/5">
+                    <div class="w-full h-80 rounded-[32px] border-[3px] border-dashed border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 flex flex-col items-center justify-center relative overflow-hidden mb-8 group cursor-pointer transition-colors hover:border-primary/50 hover:bg-primary/5">
                         <img id="wallpaper-preview" class="w-full h-full object-cover hidden absolute inset-0 z-10">
-                        <span class="material-symbols-outlined text-[48px] text-slate-400 group-hover:text-primary transition-colors relative z-20 mb-3">image</span>
-                        <span class="text-[15px] font-bold text-slate-500 group-hover:text-primary relative z-20">Tap to upload image</span>
+                        <span class="material-symbols-outlined text-[56px] text-slate-300 dark:text-slate-500 group-hover:text-primary transition-colors relative z-20 mb-3">image</span>
+                        <span class="text-[16px] font-bold text-slate-500 group-hover:text-primary relative z-20">Tap to upload</span>
                         <input type="file" id="wallpaper-input" class="absolute inset-0 opacity-0 cursor-pointer z-30" accept="image/*">
                     </div>
                     
@@ -841,17 +850,17 @@
                 </div>
 
                 <!-- Blocked View -->
-                <div id="set-blocked" class="settings-view hidden w-full max-w-2xl mx-auto p-6 md:p-10 fade-in">
+                <div id="set-blocked" class="settings-view hidden w-full max-w-2xl mx-auto p-4 md:p-10 fade-in">
                     <h3 class="text-3xl font-black mb-2 tracking-tight hidden md:block">Blocked Users</h3>
-                    <p class="text-[15px] text-slate-500 mb-8 font-medium">These users cannot message or call you.</p>
-                    <div id="settings-blocked-list" class="space-y-3"></div>
+                    <p class="text-[15px] text-slate-500 mb-6 font-medium px-2">These users cannot message or call you.</p>
+                    <div class="bg-white dark:bg-slate-800 rounded-[24px] overflow-hidden border border-slate-100 dark:border-slate-700 shadow-sm divide-y divide-slate-100 dark:divide-slate-700" id="settings-blocked-list"></div>
                 </div>
 
                 <!-- Report App Issue View -->
                 <div id="set-report" class="settings-view hidden w-full max-w-lg mx-auto p-6 md:p-10 fade-in">
                     <h3 class="text-3xl font-black mb-2 tracking-tight hidden md:block">Report Issue</h3>
                     <p class="text-[15px] text-slate-500 mb-8 font-medium">Describe any bugs or issues you've encountered.</p>
-                    <textarea id="settings-report-input" class="ar-input resize-none mb-6 py-4 text-[16px] rounded-3xl" rows="6" placeholder="Please provide details..."></textarea>
+                    <textarea id="settings-report-input" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-none focus:border-primary resize-none mb-6 py-4 px-5 text-[16px] rounded-3xl shadow-sm text-slate-900 dark:text-white" rows="6" placeholder="Please provide details..."></textarea>
                     <button id="submit-settings-report-btn" class="btn-primary w-full py-4 shadow-lg shadow-primary/25 rounded-2xl text-[16px]">Submit Report</button>
                     <p id="settings-report-status" class="text-green-500 text-sm mt-4 min-h-[20px] font-bold text-center"></p>
                 </div>
@@ -862,15 +871,15 @@
                         <span class="material-symbols-outlined text-[64px]">chat_bubble</span>
                     </div>
                     <h3 class="text-4xl font-black mb-2 text-slate-900 dark:text-white tracking-tight">AR CHATS</h3>
-                    <p class="text-[13px] font-mono text-slate-500 mb-12 uppercase tracking-widest font-bold">Version 7.0.0 (Native)</p>
+                    <p class="text-[13px] font-mono text-slate-500 mb-10 uppercase tracking-widest font-bold">Version 7.0.0 (Native)</p>
                     
-                    <div class="w-full text-left bg-surface-light dark:bg-slate-800/50 p-8 rounded-[32px] border border-slate-100 dark:border-slate-700 shadow-sm">
-                        <ul class="text-[15px] text-slate-700 dark:text-slate-300 space-y-5 mb-8 font-semibold">
-                            <li class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-green-500/10 text-green-500 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">lock</span></div> End-to-End Style Encryption</li>
-                            <li class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">video_call</span></div> High-Quality WebRTC Calls</li>
-                            <li class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-pink-500/10 text-pink-500 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">history_toggle_off</span></div> 24-Hour Expressive Stories</li>
+                    <div class="w-full text-left bg-white dark:bg-slate-800 p-8 rounded-[32px] border border-slate-100 dark:border-slate-700 shadow-sm">
+                        <ul class="text-[15px] text-slate-700 dark:text-slate-300 space-y-6 mb-8 font-semibold">
+                            <li class="flex items-center gap-4"><div class="w-12 h-12 rounded-full bg-green-50 dark:bg-green-500/10 text-green-500 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[24px]">lock</span></div> Secure Encryption</li>
+                            <li class="flex items-center gap-4"><div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[24px]">video_call</span></div> High-Quality Calls</li>
+                            <li class="flex items-center gap-4"><div class="w-12 h-12 rounded-full bg-pink-50 dark:bg-pink-500/10 text-pink-500 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[24px]">history_toggle_off</span></div> 24-Hour Stories</li>
                         </ul>
-                        <div class="pt-8 border-t border-slate-200 dark:border-slate-700 text-center">
+                        <div class="pt-8 border-t border-slate-100 dark:border-slate-700 text-center">
                             <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Engineered By</p>
                             <p class="font-black text-2xl text-primary tracking-widest">ARINFOTECH</p>
                         </div>
@@ -883,7 +892,7 @@
         <!-- Action Modals (Clear Chat, Report User, Add Friend, Confirmations) -->
         
         <!-- Clear Chat Modal -->
-        <div id="clear-chat-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-t-[32px] md:rounded-[32px] shadow-2xl p-8 text-center hidden flex-col relative z-[10060] pb-[calc(32px+env(safe-area-inset-bottom))]">
+        <div id="clear-chat-modal" class="modal-content bottom-sheet-modal bg-white dark:bg-slate-900 w-full max-w-sm shadow-2xl p-8 text-center hidden flex-col relative z-[10060]">
             <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6 md:hidden"></div>
             <div class="w-20 h-20 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-red-100 dark:border-red-500/20">
                 <span class="material-symbols-outlined text-[36px]">cleaning_services</span>
@@ -898,43 +907,44 @@
         </div>
 
         <!-- Report User Modal -->
-        <div id="report-user-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-t-[32px] md:rounded-[32px] shadow-2xl p-8 hidden flex-col text-center relative z-[10060] pb-[calc(32px+env(safe-area-inset-bottom))]">
+        <div id="report-user-modal" class="modal-content bottom-sheet-modal bg-white dark:bg-slate-900 w-full max-w-sm shadow-2xl p-8 hidden flex-col text-center relative z-[10060]">
             <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6 md:hidden"></div>
             <div class="w-20 h-20 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-red-100 dark:border-red-500/20">
                 <span class="material-symbols-outlined text-[36px]">flag</span>
             </div>
             <h3 class="text-2xl font-bold mb-2 tracking-tight">Report User</h3>
             <p class="text-[15px] text-slate-500 font-medium mb-6">Help us understand the issue.</p>
-            <textarea id="report-user-input" class="ar-input resize-none mb-6 py-4 text-[16px] text-left rounded-2xl" rows="4" placeholder="Describe the behavior..."></textarea>
+            <textarea id="report-user-input" class="w-full bg-surface-light dark:bg-slate-800 outline-none border border-slate-200 dark:border-slate-700 focus:border-primary resize-none mb-6 py-4 px-5 text-[16px] text-left rounded-2xl" rows="4" placeholder="Describe the behavior..."></textarea>
             <div class="flex gap-3 w-full">
                 <button class="btn-secondary flex-1 py-4 rounded-2xl border-none bg-surface-light dark:bg-slate-800" onclick="closeModal('report-user-modal')">Cancel</button>
-                <button id="submit-user-report-btn" class="flex-1 py-4 bg-red-500 hover:bg-red-600 text-white rounded-2xl font-bold shadow-lg shadow-red-500/25 transition-all">Submit</button>
+                <button id="submit-user-report-btn" class="flex-1 py-4 bg-red-500 hover:bg-red-600 text-white rounded-2xl font-bold shadow-lg shadow-red-500/25 transition-all text-[16px]">Submit</button>
             </div>
         </div>
 
         <!-- Add Friend Modal -->
-        <div id="add-friend-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-t-[32px] md:rounded-[32px] shadow-2xl overflow-hidden hidden flex-col relative z-[10060] pb-[env(safe-area-inset-bottom)]">
-            <div class="p-4 flex justify-between items-center shrink-0">
+        <div id="add-friend-modal" class="modal-content bottom-sheet-modal bg-white dark:bg-slate-900 w-full max-w-sm shadow-2xl overflow-hidden hidden flex-col relative z-[10060]">
+            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mt-6 mb-2 md:hidden"></div>
+            <div class="p-4 flex justify-between items-center shrink-0 px-6">
                 <div class="w-10"></div>
-                <h3 class="text-[17px] font-bold tracking-tight absolute left-1/2 -translate-x-1/2">Add Contact</h3>
-                <button class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 transition-colors" onclick="closeModal('add-friend-modal')"><span class="material-symbols-outlined text-[24px]">close</span></button>
+                <h3 class="text-[18px] font-bold tracking-tight absolute left-1/2 -translate-x-1/2">Add Contact</h3>
+                <button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-light dark:bg-slate-800 text-slate-500 transition-colors" onclick="closeModal('add-friend-modal')"><span class="material-symbols-outlined text-[24px]">close</span></button>
             </div>
-            <div class="p-8">
+            <div class="px-8 pb-8 pt-4">
                 <p class="text-[15px] text-slate-500 mb-8 text-center font-medium">Enter your friend's AR-ID to connect securely.</p>
                 <div class="relative mb-2">
                     <span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-primary text-[28px]">badge</span>
-                    <input id="add-friend-id-input" type="text" class="ar-input pl-14 py-4 rounded-2xl font-mono tracking-[0.2em] uppercase font-black text-center text-xl" placeholder="AR-XXXX">
+                    <input id="add-friend-id-input" type="text" class="w-full bg-surface-light dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-none focus:border-primary pl-14 py-4 rounded-2xl font-mono tracking-[0.2em] uppercase font-black text-center text-xl text-slate-900 dark:text-white" placeholder="AR-XXXX">
                 </div>
                 <p id="add-friend-status" class="text-sm text-center min-h-[20px] font-bold mt-3 text-red-500"></p>
                 
-                <div id="friend-search-result" class="hidden mt-6 p-6 bg-surface-light dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-3xl text-center fade-in"></div>
+                <div id="friend-search-result" class="hidden mt-6 p-6 bg-surface-light dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-3xl text-center fade-in"></div>
                 
                 <button id="search-friend-btn" class="btn-primary w-full mt-6 py-4 text-[16px] rounded-2xl shadow-lg shadow-primary/25"><span class="material-symbols-outlined text-[22px]">search</span> Find User</button>
             </div>
         </div>
 
         <!-- Forgot Password Modal -->
-        <div id="forgot-password-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-t-[32px] md:rounded-[32px] shadow-2xl overflow-hidden p-8 hidden flex-col text-center relative z-[10060] pb-[calc(32px+env(safe-area-inset-bottom))]">
+        <div id="forgot-password-modal" class="modal-content bottom-sheet-modal bg-white dark:bg-slate-900 w-full max-w-sm shadow-2xl overflow-hidden p-8 hidden flex-col text-center relative z-[10060]">
             <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6 md:hidden"></div>
             <div class="w-20 h-20 bg-primary/10 text-primary border border-primary/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
                 <span class="material-symbols-outlined text-[36px]">lock_reset</span>
@@ -952,7 +962,8 @@
         </div>
 
         <!-- Generic Modals (Info/Confirm) -->
-        <div id="info-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] shadow-2xl p-8 text-center hidden flex-col relative z-[10060]">
+        <div id="info-modal" class="modal-content bottom-sheet-modal bg-white dark:bg-slate-900 w-full max-w-sm shadow-2xl p-8 text-center hidden flex-col relative z-[10060]">
+            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6 md:hidden"></div>
             <div class="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-primary/20">
                 <span class="material-symbols-outlined text-[36px]">info</span>
             </div>
@@ -961,7 +972,8 @@
             <button id="info-modal-close-button" class="btn-primary w-full py-4 rounded-2xl shadow-lg shadow-primary/25 text-[16px]">Acknowledge</button>
         </div>
 
-        <div id="confirm-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] shadow-2xl p-8 text-center hidden flex-col relative z-[10060]">
+        <div id="confirm-modal" class="modal-content bottom-sheet-modal bg-white dark:bg-slate-900 w-full max-w-sm shadow-2xl p-8 text-center hidden flex-col relative z-[10060]">
+            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6 md:hidden"></div>
             <div class="w-20 h-20 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border border-red-100 dark:border-red-500/20">
                 <span class="material-symbols-outlined text-[36px]">warning</span>
             </div>
@@ -1529,6 +1541,14 @@
                 const target = el(`${tabName === 'blocked' ? 'blocked-users' : tabName}-content`);
                 if(target) target.classList.remove('hidden');
                 
+                // Update Main Screen Header Text based on tab
+                const headerTitle = el('home-header').querySelector('h1');
+                if (headerTitle) {
+                    if (tabName === 'home') headerTitle.textContent = 'Chats';
+                    if (tabName === 'calls') headerTitle.textContent = 'Calls';
+                    if (tabName === 'notifications') headerTitle.textContent = 'Requests';
+                }
+
                 ['nav-chats', 'nav-requests', 'nav-calls'].forEach(id => {
                     const btn = el(id);
                     if(btn) {
