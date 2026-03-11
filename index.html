@@ -44,16 +44,23 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .material-symbols-outlined.filled { font-variation-settings: 'FILL' 1; }
         
-        .active-link { background-color: rgba(43, 75, 238, 0.1) !important; }
+        .active-link {
+            background-color: rgba(43, 75, 238, 0.1) !important;
+        }
         .active-link h2 { color: #2b4bee; }
         .dark .active-link h2 { color: #5c7cfa; }
         
-        .active-chat { background-color: rgba(43, 75, 238, 0.08) !important; }
-        .dark .active-chat { background-color: rgba(43, 75, 238, 0.15) !important; }
+        .active-chat {
+            background-color: rgba(43, 75, 238, 0.08) !important;
+        }
+        .dark .active-chat {
+            background-color: rgba(43, 75, 238, 0.15) !important;
+        }
         
-        .selection-mode .message-checkbox { display: block !important; }
+        .selection-mode .message-checkbox {
+            display: block !important;
+        }
         
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -62,23 +69,44 @@
         .dark ::-webkit-scrollbar-thumb { background: #334155; }
         .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Hide scrollbar specifically for story tray */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
         /* Loader & Spinners */
         .loader { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .spinner { border: 4px solid rgba(43, 75, 238, 0.2); width: 48px; height: 48px; border-radius: 50%; border-top-color: #2b4bee; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .btn-spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; }
-
-        /* Story Rings */
-        .story-ring-active { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); padding: 2px; border-radius: 50%; }
-        .story-ring-viewed { background: #cbd5e1; padding: 2px; border-radius: 50%; }
-        .dark .story-ring-viewed { background: #475569; }
+        .btn-spinner {
+            width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;
+        }
 
         /* Chat Pattern */
-        .chat-bg { background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); background-color: transparent; }
+        .chat-bg {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-color: transparent; /* Allow underlying colors/wallpapers to show */
+        }
+
+        /* Toggles */
+        .toggle-checkbox {
+            appearance: none; width: 44px; height: 24px; background: #cbd5e1; border-radius: 12px;
+            position: relative; cursor: pointer; outline: none; transition: 0.3s;
+        }
+        .dark .toggle-checkbox { background: #475569; }
+        .toggle-checkbox::after {
+            content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
+            background: white; border-radius: 50%; transition: 0.3s;
+        }
+        .toggle-checkbox:checked { background: #2b4bee; }
+        .toggle-checkbox:checked::after { transform: translateX(20px); }
+
+        /* Call Rings */
+        .call-ring {
+            position: absolute; inset: -15px; border: 2px solid rgba(43, 75, 238, 0.5); border-radius: 50%;
+            animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        @keyframes ping { 75%, 100% { transform: scale(1.5); opacity: 0; } }
 
         /* Animations */
         .fade-in { animation: fadeIn 0.2s ease-out; }
@@ -92,19 +120,42 @@
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
         /* General UI Elements */
-        .ar-input { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; color: #0f172a; font-size: 14px; outline: none; transition: 0.2s; }
+        .ar-input {
+            width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0;
+            background: #f8fafc; color: #0f172a; font-size: 14px; outline: none; transition: 0.2s;
+        }
         .dark .ar-input { background: #1e293b; border-color: #334155; color: #f8fafc; }
         .ar-input:focus { border-color: #2b4bee; box-shadow: 0 0 0 3px rgba(43, 75, 238, 0.1); }
         
-        .btn-primary { background-color: #2b4bee; color: white; border-radius: 12px; padding: 12px 24px; font-weight: 500; font-size: 14px; transition: 0.2s; border: none; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-primary {
+            background-color: #2b4bee; color: white; border-radius: 12px; padding: 12px 24px;
+            font-weight: 500; font-size: 14px; transition: 0.2s; border: none; display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
         .btn-primary:hover:not(:disabled) { background-color: #203ac0; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(43, 75, 238, 0.2); }
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .btn-secondary { background-color: white; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 24px; font-weight: 500; font-size: 14px; transition: 0.2s; }
+        .btn-secondary {
+            background-color: white; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 24px; font-weight: 500; font-size: 14px; transition: 0.2s;
+        }
         .dark .btn-secondary { background-color: #1e293b; color: #f8fafc; border-color: #334155; }
         .btn-secondary:hover { background-color: #f8fafc; }
         .dark .btn-secondary:hover { background-color: #0f172a; }
 
+        /* Story Additions */
+        .story-ring {
+            padding: 2px;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            border-radius: 50%;
+        }
+        .story-progress-segment {
+            height: 2px; background: rgba(255,255,255,0.3); flex: 1; border-radius: 2px; overflow: hidden;
+        }
+        .story-progress-fill {
+            height: 100%; background: #ffffff; width: 0%; transition: width 0.1s linear;
+        }
+        .story-liked { color: #ef4444 !important; font-variation-settings: 'FILL' 1 !important; }
+
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
             #main-chat-area { position: absolute; inset: 0; z-index: 30; transform: translateX(100%); transition: transform 0.3s ease; }
             #main-chat-area.active { transform: translateX(0); }
@@ -114,6 +165,7 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300 min-h-[100dvh]">
 
+    <!-- Global Modal Exposer Script -->
     <script>
         window.openModal = function(id) {
             const container = document.getElementById('modal-container');
@@ -121,8 +173,7 @@
                 container.classList.remove('hidden');
                 const modals = container.querySelectorAll('.modal-content');
                 modals.forEach(m => m.classList.add('hidden'));
-                const target = document.getElementById(id);
-                if(target) target.classList.remove('hidden');
+                document.getElementById(id).classList.remove('hidden');
             }
         };
         window.closeModal = function(id) {
@@ -131,7 +182,7 @@
         };
     </script>
 
-    <!-- Logout Overlay -->
+    <!-- Full Screen Logout Overlay -->
     <div id="logout-overlay" class="fixed inset-0 z-[9999] bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl hidden flex-col items-center justify-center text-slate-900 dark:text-white transition-opacity duration-500">
         <div class="w-20 h-20 relative flex items-center justify-center mb-6">
             <div class="absolute inset-0 border-4 border-slate-200 dark:border-slate-800 rounded-full"></div>
@@ -197,13 +248,13 @@
                 </div>
             </form>
             
-            <!-- OTP Form -->
+            <!-- OTP Verification Form -->
             <form id="otp-form" class="flex flex-col gap-4 text-left hidden fade-in">
                 <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2 text-primary">
                     <span class="material-symbols-outlined text-[24px]">mark_email_read</span>
                 </div>
                 <h2 class="text-xl font-bold text-center text-slate-900 dark:text-white">Verification Required</h2>
-                <p class="text-sm text-slate-500 font-medium mb-4 text-center">We've sent a 6-digit code to your email. Enter it below.</p>
+                <p class="text-sm text-slate-500 font-medium mb-4 text-center">We've sent a 6-digit code to your email. Enter it below to proceed.</p>
                 <input type="text" id="otp-input" class="ar-input text-center tracking-[0.7em] text-2xl font-bold py-4" placeholder="••••••" maxlength="6" required autocomplete="off">
                 <button type="submit" class="btn-primary w-full mt-2 py-3.5 shadow-lg shadow-primary/20">Verify & Complete</button>
                 <p id="otp-error" class="text-red-500 text-xs text-center min-h-[16px] font-medium"></p>
@@ -213,6 +264,9 @@
             </form>
         </div>
     </div>
+
+    <!-- Hidden Input for Story -->
+    <input type="file" id="story-image-upload" accept="image/*" class="hidden">
 
     <!-- Main App Layout -->
     <div id="main-app" class="flex h-[100dvh] w-full overflow-hidden hidden relative">
@@ -251,31 +305,31 @@
             </div>
 
             <!-- List Containers -->
-            <div class="flex-1 overflow-y-auto p-3" id="sidebar-scroll-area">
+            <div class="flex-1 overflow-y-auto" id="sidebar-scroll-area">
                 <div id="home-content" class="fade-in">
                     
-                    <!-- Stories Bar -->
-                    <div id="stories-bar" class="flex gap-4 overflow-x-auto pb-4 pt-1 px-1 mb-2 border-b border-slate-200 dark:border-slate-800 shrink-0 hide-scrollbar">
-                        <!-- Add story button -->
-                        <div class="flex flex-col items-center gap-1.5 cursor-pointer shrink-0" onclick="openModal('create-story-modal')">
-                            <div class="w-14 h-14 rounded-full bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-500 relative transition-transform hover:scale-105">
+                    <!-- Stories Tray -->
+                    <div id="stories-tray" class="flex gap-4 p-4 overflow-x-auto border-b border-slate-200 dark:border-slate-800 scrollbar-hide">
+                        <!-- Add Story Item -->
+                        <div class="flex flex-col items-center gap-1.5 cursor-pointer shrink-0 group" onclick="document.getElementById('story-image-upload').click()">
+                            <div class="relative w-14 h-14 rounded-full border-2 border-dashed border-primary flex items-center justify-center bg-primary/5 text-primary group-hover:bg-primary/10 transition-colors">
                                 <span class="material-symbols-outlined">add</span>
                             </div>
-                            <span class="text-[10px] font-bold text-slate-500 truncate w-16 text-center">Add Story</span>
+                            <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400">My Story</span>
                         </div>
-                        <!-- Story Items Injected Here -->
-                        <div id="stories-list" class="flex gap-4 items-center"></div>
+                        <!-- Friends Stories inserted here -->
+                        <div id="friends-stories-list" class="flex gap-4 shrink-0"></div>
                     </div>
 
-                    <div id="contact-list-container" class="space-y-1"></div>
+                    <div id="contact-list-container" class="space-y-1 p-3"></div>
                 </div>
-                <div id="calls-content" class="hidden fade-in">
+                <div id="calls-content" class="hidden fade-in p-3">
                     <div id="calls-list-container" class="space-y-1"></div>
                 </div>
-                <div id="notifications-content" class="hidden fade-in">
+                <div id="notifications-content" class="hidden fade-in p-3">
                     <div id="requests-list-container" class="space-y-2 mt-1"></div>
                 </div>
-                <div id="blocked-users-content" class="hidden fade-in">
+                <div id="blocked-users-content" class="hidden fade-in p-3">
                     <div class="px-2 py-2 mb-2 text-xs font-bold text-red-500 uppercase tracking-wider">Blocked Users</div>
                     <div id="blocked-list-container" class="space-y-2"></div>
                 </div>
@@ -299,6 +353,7 @@
         <!-- Main Chat Area -->
         <main class="flex-1 flex flex-col bg-background-light dark:bg-background-dark relative" id="main-chat-area">
             
+            <!-- Chat Container -->
             <section class="flex-1 flex flex-col h-full overflow-hidden relative w-full">
                 
                 <!-- Welcome Screen -->
@@ -307,7 +362,7 @@
                         <img src="https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png" alt="AR CHATS Logo" class="w-full h-full object-cover">
                     </div>
                     <h2 class="text-3xl font-bold mb-3 text-slate-900 dark:text-white tracking-tight">Your Workspace</h2>
-                    <p class="text-slate-500 text-sm max-w-sm text-center leading-relaxed">Select a conversation from the sidebar or view stories from your friends.</p>
+                    <p class="text-slate-500 text-sm max-w-sm text-center leading-relaxed">Select a conversation from the sidebar or add a new friend to begin connecting securely.</p>
                 </div>
 
                 <!-- Active Chat Header -->
@@ -317,6 +372,7 @@
                             <span class="material-symbols-outlined">arrow_back</span>
                         </button>
                         
+                        <!-- Clickable Header for Contact Info -->
                         <div id="chat-info-trigger" class="flex items-center gap-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 p-2 -ml-2 rounded-xl transition-colors flex-1 min-w-0 group" title="View User Info">
                             <div id="chat-header-pfp" class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 shrink-0 overflow-hidden flex items-center justify-center bg-cover bg-center text-xl shadow-sm border border-slate-200 dark:border-slate-700 group-hover:border-primary transition-colors"></div>
                             <div class="min-w-0">
@@ -335,6 +391,7 @@
                         </button>
                         <div class="h-6 w-[1px] bg-slate-200 dark:bg-slate-700 mx-1 md:mx-2" id="chat-header-divider"></div>
                         
+                        <!-- 3-Dots Menu inside Header -->
                         <div class="relative flex items-center">
                             <button id="chat-options-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                                 <span class="material-symbols-outlined text-[22px]">more_vert</span>
@@ -419,32 +476,70 @@
                     </div>
                 </div>
             </section>
+
         </main>
+    </div>
+
+    <!-- Story Viewer Overlay -->
+    <div id="story-viewer" class="fixed inset-0 z-[9999] bg-black hidden flex-col select-none">
+        <!-- Progress Bars -->
+        <div id="story-progress-container" class="absolute top-2 left-2 right-2 flex gap-1.5 z-20 px-2 py-1"></div>
+        
+        <!-- Header -->
+        <div class="absolute top-6 left-0 right-0 px-4 py-2 flex items-center justify-between z-20 bg-gradient-to-b from-black/60 to-transparent">
+            <div class="flex items-center gap-3">
+                <div id="story-viewer-pfp" class="w-10 h-10 rounded-full overflow-hidden bg-slate-800 flex items-center justify-center border border-white/20 shadow-sm text-xl text-white"></div>
+                <div class="text-white">
+                    <div id="story-viewer-name" class="font-bold text-[15px] drop-shadow-md"></div>
+                    <div id="story-viewer-time" class="text-[11px] text-white/80 font-medium drop-shadow-md"></div>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button id="story-delete-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 hover:bg-white/10 transition-colors hidden" title="Delete Story">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+                <button id="story-close-btn" class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 hover:bg-white/10 transition-colors bg-black/20 backdrop-blur-sm">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Center Image content -->
+        <div class="flex-1 flex items-center justify-center relative h-full">
+            <img id="story-image-display" class="max-w-full max-h-full object-contain pointer-events-none transition-opacity duration-300">
+            <!-- Navigation Tap Zones -->
+            <div id="story-tap-prev" class="absolute left-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer"></div>
+            <div id="story-tap-next" class="absolute right-0 top-0 bottom-0 w-2/3 z-10 cursor-pointer"></div>
+        </div>
+
+        <!-- Footer -->
+        <div id="story-viewer-footer" class="absolute bottom-0 left-0 right-0 p-4 md:p-6 flex items-center gap-4 z-20 bg-gradient-to-t from-black/80 to-transparent">
+            <div class="flex-1 flex" id="story-reply-container">
+                <input type="text" id="story-reply-input" class="w-full bg-black/40 backdrop-blur-md text-white border border-white/20 rounded-full px-5 py-3 text-[15px] placeholder-white/60 outline-none focus:bg-black/60 focus:border-white/40 transition-colors shadow-lg" placeholder="Reply to story...">
+            </div>
+            <button id="story-reply-send" class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shrink-0 hidden">
+                <span class="material-symbols-outlined text-[20px] ml-1">send</span>
+            </button>
+            <div class="flex items-center gap-2 shrink-0 bg-black/40 backdrop-blur-md rounded-full px-4 py-2 border border-white/10">
+                <button id="story-like-btn" class="flex items-center justify-center text-white hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined text-[26px]" id="story-like-icon">favorite_border</span>
+                </button>
+                <span id="story-likes-count" class="text-white text-[15px] font-bold cursor-pointer hover:underline min-w-[16px] text-center" title="View Likes">0</span>
+            </div>
+        </div>
     </div>
 
     <!-- Central Settings & Modals Overlay System -->
     <div id="modal-container" class="fixed inset-0 z-[3000] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-opacity">
         
-        <!-- Story Creator Modal -->
-        <div id="create-story-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-[32px] shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col h-[80vh] max-h-[600px]">
-            <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center shrink-0">
-                <h3 class="text-lg font-bold tracking-tight">Create Story</h3>
-                <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl text-slate-500 transition-colors" onclick="closeModal('create-story-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
+        <!-- Story Likes Modal -->
+        <div id="story-likes-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col h-[60vh] md:h-[400px]">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0">
+                <h3 class="text-lg font-bold tracking-tight flex items-center gap-2"><span class="material-symbols-outlined text-red-500 font-variation-settings-'FILL'-1 text-[20px]">favorite</span> Story Likes</h3>
+                <button class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-slate-500 transition-colors" onclick="closeModal('story-likes-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
             </div>
-            <div class="flex-1 flex flex-col p-6 overflow-y-auto">
-                <div class="w-full aspect-[9/16] bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center relative overflow-hidden group border-2 border-dashed border-slate-300 dark:border-slate-600 mb-4 shrink-0">
-                    <img id="story-image-preview" class="w-full h-full object-cover hidden absolute inset-0 z-10">
-                    <input type="file" id="story-file-input" class="absolute inset-0 opacity-0 cursor-pointer z-30" accept="image/*">
-                    <div class="text-center relative z-20 pointer-events-none group-hover:scale-110 transition-transform">
-                        <span class="material-symbols-outlined text-[48px] text-slate-400 mb-2">add_photo_alternate</span>
-                        <p class="text-sm font-bold text-slate-500">Tap to select photo</p>
-                    </div>
-                </div>
-                <input type="text" id="story-caption-input" class="ar-input shrink-0" placeholder="Add a caption..." maxlength="100">
-                <p class="text-[10px] text-slate-400 font-medium text-center mt-3">Stories disappear automatically after 24 hours.</p>
-            </div>
-            <div class="p-5 border-t border-slate-100 dark:border-slate-800 shrink-0">
-                <button id="post-story-btn" class="btn-primary w-full py-4 text-[15px] shadow-lg shadow-primary/30" disabled>Post Story</button>
+            <div id="story-likes-list" class="flex-1 overflow-y-auto p-4 space-y-2 bg-white dark:bg-slate-900">
+                <!-- Likes populated dynamically -->
             </div>
         </div>
 
@@ -501,6 +596,8 @@
 
         <!-- Central Settings Modal -->
         <div id="settings-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-4xl h-[85vh] md:h-[650px] rounded-3xl flex flex-col md:flex-row overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 hidden fade-in relative">
+            
+            <!-- Settings Sidebar -->
             <div class="w-full md:w-64 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 p-5 flex flex-col gap-2 shrink-0">
                 <div class="flex items-center justify-between mb-6 px-1">
                     <h2 class="text-2xl font-bold tracking-tight">Settings</h2>
@@ -524,11 +621,14 @@
                 </div>
             </div>
             
+            <!-- Settings Content Area -->
             <div class="flex-1 overflow-y-auto p-6 md:p-10 relative bg-white dark:bg-slate-900">
                 <button class="absolute top-6 right-6 p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hidden md:block transition-colors" onclick="closeModal('settings-modal')"><span class="material-symbols-outlined text-[24px]">close</span></button>
                 
+                <!-- Profile Edit View -->
                 <div id="set-profile" class="settings-view block max-w-md fade-in">
                     <h3 class="text-2xl font-bold mb-8 tracking-tight">Profile Configuration</h3>
+                    
                     <div class="flex flex-col sm:flex-row items-center sm:items-start gap-8 mb-10">
                         <div class="w-28 h-28 rounded-full border-4 border-slate-100 dark:border-slate-800 bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-5xl overflow-hidden relative group shrink-0 shadow-md">
                             <img id="edit-pfp-preview" class="w-full h-full object-cover hidden">
@@ -544,6 +644,7 @@
                             <p class="text-[11px] text-slate-500 font-medium">Share this exact ID with peers to establish a secure link.</p>
                         </div>
                     </div>
+
                     <div class="space-y-5">
                         <div>
                             <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Full Name</label>
@@ -569,24 +670,31 @@
                     </div>
                     <p id="profile-edit-error" class="text-red-500 text-xs mt-4 min-h-[16px] font-bold text-center"></p>
                     <button id="save-profile-changes-btn" class="btn-primary w-full py-4 mt-4 shadow-lg shadow-primary/20 text-[15px]">Save Configuration</button>
+                    
                     <button class="w-full mt-6 md:hidden py-4 bg-red-50 dark:bg-red-500/10 text-red-600 rounded-xl font-bold text-[15px] transition-colors border border-red-100 dark:border-red-500/20 logout-btn">Log Out</button>
                 </div>
 
+                <!-- Friend List View -->
                 <div id="set-friends" class="settings-view hidden max-w-lg fade-in">
                     <h3 class="text-2xl font-bold mb-3 tracking-tight">Friend List</h3>
                     <p class="text-sm text-slate-500 mb-8 font-medium">Manage your connected friends.</p>
-                    <div id="settings-friends-list" class="space-y-3"></div>
+                    <div id="settings-friends-list" class="space-y-3">
+                        <!-- Populated dynamically -->
+                    </div>
                 </div>
 
+                <!-- Chat Wallpaper View -->
                 <div id="set-wallpaper" class="settings-view hidden max-w-md fade-in">
                     <h3 class="text-2xl font-bold mb-8 tracking-tight">Chat Wallpaper</h3>
                     <p class="text-sm text-slate-500 mb-6 font-medium">Customize the background image for all your chat conversations.</p>
+                    
                     <div class="w-full h-56 rounded-2xl border-4 border-dashed border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 flex flex-col items-center justify-center relative overflow-hidden mb-6 group cursor-pointer transition-colors hover:border-primary/50 hover:bg-primary/5">
                         <img id="wallpaper-preview" class="w-full h-full object-cover hidden absolute inset-0 z-10">
                         <span class="material-symbols-outlined text-[48px] text-slate-400 group-hover:text-primary transition-colors relative z-20 mb-2">image</span>
                         <span class="text-sm font-bold text-slate-500 group-hover:text-primary relative z-20">Click to upload background</span>
                         <input type="file" id="wallpaper-input" class="absolute inset-0 opacity-0 cursor-pointer z-30" accept="image/*">
                     </div>
+                    
                     <div class="flex gap-3">
                         <button id="remove-wallpaper-btn" class="btn-secondary flex-1 py-3.5">Reset Default</button>
                         <button id="save-wallpaper-btn" class="btn-primary flex-1 py-3.5 shadow-md shadow-primary/20">Apply Wallpaper</button>
@@ -594,12 +702,16 @@
                     <p id="wallpaper-error" class="text-red-500 text-xs mt-4 min-h-[16px] font-bold text-center"></p>
                 </div>
 
+                <!-- Blocked View -->
                 <div id="set-blocked" class="settings-view hidden max-w-lg fade-in">
                     <h3 class="text-2xl font-bold mb-3 tracking-tight">Blocked Users</h3>
                     <p class="text-sm text-slate-500 mb-8 font-medium">Users listed here are blocked and cannot send you messages or call you.</p>
-                    <div id="settings-blocked-list" class="space-y-3"></div>
+                    <div id="settings-blocked-list" class="space-y-3">
+                        <!-- Blocked dynamically populated -->
+                    </div>
                 </div>
 
+                <!-- Report App Issue View -->
                 <div id="set-report" class="settings-view hidden max-w-md fade-in">
                     <h3 class="text-2xl font-bold mb-4 tracking-tight">Report an Issue</h3>
                     <p class="text-sm text-slate-500 mb-6 font-medium">Help us keep AR CHATS safe. Describe the issue or bug you encountered.</p>
@@ -608,6 +720,7 @@
                     <p id="settings-report-status" class="text-green-500 text-xs mt-4 min-h-[16px] font-bold text-center"></p>
                 </div>
 
+                <!-- Help View -->
                 <div id="set-help" class="settings-view hidden max-w-lg fade-in">
                     <h3 class="text-2xl font-bold mb-8 tracking-tight">Support Center</h3>
                     <div class="bg-primary/10 border border-primary/20 p-6 rounded-2xl mb-8 flex items-start gap-4">
@@ -629,19 +742,21 @@
                     </div>
                 </div>
 
+                <!-- About View -->
                 <div id="set-about" class="settings-view hidden max-w-lg text-center flex flex-col items-center pt-8 fade-in mx-auto">
                     <div class="w-24 h-24 bg-gradient-to-tr from-primary to-sky-400 text-white rounded-3xl flex items-center justify-center mb-6 shadow-xl shadow-primary/30">
                         <span class="material-symbols-outlined text-[48px]">code</span>
                     </div>
                     <h3 class="text-3xl font-bold mb-2 text-slate-900 dark:text-white tracking-tight">AR CHATS</h3>
-                    <p class="text-[11px] font-mono text-slate-500 mb-10 uppercase tracking-widest font-bold">Version 5.1.0 (Web Core)</p>
+                    <p class="text-[11px] font-mono text-slate-500 mb-10 uppercase tracking-widest font-bold">Version 6.0.0 (Web Core)</p>
                     
                     <div class="w-full text-left bg-slate-50 dark:bg-slate-800/50 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
                         <p class="text-[15px] text-slate-700 dark:text-slate-300 leading-relaxed mb-6 font-medium">A fast and secure messaging application designed to keep you connected with friends and family seamlessly.</p>
                         <ul class="text-sm text-slate-600 dark:text-slate-400 space-y-4 mb-8 font-semibold">
                             <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">lock</span> Private & Secure Messaging</li>
-                            <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">auto_stories</span> View & Share 24-hr Stories</li>
                             <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">video_call</span> High-Quality Voice & Video Calls</li>
+                            <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">image</span> Instant Media Sharing</li>
+                            <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">history_toggle_off</span> 24-Hour Stories</li>
                         </ul>
                         <div class="pt-6 border-t border-slate-200 dark:border-slate-700 text-center">
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Engineered By</p>
@@ -649,10 +764,11 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
-        <!-- Utility Modals -->
+        <!-- Clear Chat Modal (Me or Everyone) -->
         <div id="clear-chat-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 text-center hidden fade-in relative">
             <div class="w-16 h-16 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
                 <span class="material-symbols-outlined text-[32px]">cleaning_services</span>
@@ -666,6 +782,7 @@
             </div>
         </div>
 
+        <!-- Report User Modal (From 3-Dot Menu) -->
         <div id="report-user-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 hidden fade-in text-center">
             <div class="w-16 h-16 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
                 <span class="material-symbols-outlined text-[32px]">flag</span>
@@ -679,6 +796,7 @@
             </div>
         </div>
 
+        <!-- Add Friend Modal -->
         <div id="add-friend-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in">
             <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
                 <h3 class="text-xl font-bold tracking-tight">Add Friend</h3>
@@ -698,20 +816,24 @@
             </div>
         </div>
 
+        <!-- Forgot Password Modal -->
         <div id="forgot-password-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden p-8 hidden fade-in text-center">
             <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
                 <span class="material-symbols-outlined text-[32px]">lock_reset</span>
             </div>
             <h3 class="text-2xl font-bold mb-2 tracking-tight">Recovery</h3>
             <p class="text-sm text-slate-500 font-medium mb-8">Enter your email to receive a secure link.</p>
+            
             <input id="forgot-password-email" type="email" class="ar-input mb-3" placeholder="name@company.com">
             <p id="forgot-password-status" class="text-xs text-center min-h-[16px] text-primary font-bold mb-6"></p>
+            
             <div class="flex gap-3">
                 <button id="cancel-forgot-password" class="btn-secondary flex-1 py-3.5">Cancel</button>
                 <button id="send-reset-link-button" class="btn-primary flex-1 py-3.5 shadow-md shadow-primary/20">Send Link</button>
             </div>
         </div>
 
+        <!-- Generic Modals (Info/Confirm) -->
         <div id="info-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 text-center hidden fade-in">
             <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
                 <span class="material-symbols-outlined text-[32px]">info</span>
@@ -732,64 +854,10 @@
                 <button id="confirm-execute-btn" class="flex-1 py-3.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold shadow-lg shadow-red-500/30 transition-all">Yes, do it!</button>
             </div>
         </div>
-        
-        <!-- Story Viewer Modal -->
-        <div id="story-viewer-modal" class="modal-content fixed inset-0 z-[4000] bg-black hidden flex-col justify-center items-center fade-in">
-            <div id="story-progress-container" class="flex gap-1.5 px-3 pt-4 absolute top-0 left-0 w-full z-20"></div>
-            
-            <div class="absolute top-8 left-4 z-20 flex items-center gap-3">
-                <div id="story-viewer-pfp" class="w-10 h-10 rounded-full border border-white/50 bg-slate-800 flex items-center justify-center overflow-hidden"></div>
-                <div class="flex flex-col">
-                    <span id="story-viewer-name" class="text-white font-bold text-[15px] drop-shadow-md"></span>
-                    <span id="story-viewer-time" class="text-white/70 text-[11px] font-medium drop-shadow-md"></span>
-                </div>
-            </div>
-            
-            <button class="absolute top-8 right-4 z-20 text-white drop-shadow-md p-1 hover:bg-white/10 rounded-full transition-colors" onclick="closeStoryViewer()"><span class="material-symbols-outlined text-[28px]">close</span></button>
-
-            <!-- Navigation Areas -->
-            <div id="story-nav-left" class="absolute left-0 top-1/2 -translate-y-1/2 h-2/3 w-1/3 z-10 cursor-pointer"></div>
-            <div id="story-nav-right" class="absolute right-0 top-1/2 -translate-y-1/2 h-2/3 w-1/3 z-10 cursor-pointer"></div>
-
-            <img id="story-viewer-img" class="w-full max-w-lg h-full max-h-[90vh] object-contain relative z-0">
-            <div id="story-viewer-caption" class="absolute bottom-24 left-0 w-full text-center text-white px-6 font-medium text-[15px] drop-shadow-lg z-10 bg-black/30 py-2"></div>
-
-            <!-- Bottom Actions -->
-            <div id="story-bottom-bar" class="absolute bottom-0 left-0 w-full p-4 flex items-center gap-3 bg-gradient-to-t from-black/80 to-transparent z-20 pb-8">
-                
-                <!-- If My Story -->
-                <div id="my-story-actions" class="hidden w-full flex justify-between items-center px-4 max-w-lg mx-auto">
-                    <button id="story-views-btn" class="flex items-center gap-2 text-white bg-white/20 hover:bg-white/30 backdrop-blur-md px-4 py-2 rounded-full font-bold transition-colors">
-                        <span class="material-symbols-outlined text-[20px]">favorite</span> <span id="story-views-count">0</span>
-                    </button>
-                    <button id="delete-story-btn" class="text-white bg-red-500/80 hover:bg-red-500 backdrop-blur-md p-2.5 rounded-full shadow-lg transition-transform hover:scale-105">
-                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                    </button>
-                </div>
-
-                <!-- If Friend's Story -->
-                <div id="other-story-actions" class="hidden w-full flex items-center gap-3 max-w-lg mx-auto">
-                    <input type="text" id="story-reply-input" placeholder="Reply to story..." class="flex-1 bg-white/20 border border-white/30 text-white rounded-full px-5 py-3 outline-none placeholder-white/70 focus:bg-white/30 transition-colors">
-                    <button id="like-story-btn" class="text-white p-2 hover:scale-110 transition-transform relative shrink-0 drop-shadow-md">
-                        <span class="material-symbols-outlined text-[32px]" id="like-story-icon">favorite</span>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Likes Overlay (My Story) -->
-            <div id="story-likes-overlay" class="absolute inset-0 bg-black/80 backdrop-blur-sm z-30 hidden flex flex-col justify-end">
-                <div class="bg-white dark:bg-slate-900 rounded-t-[32px] w-full max-w-lg mx-auto h-[60vh] flex flex-col overflow-hidden">
-                    <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center shrink-0">
-                        <h3 class="font-bold text-lg">Story Likes</h3>
-                        <button class="text-slate-500 p-1" id="close-likes-overlay"><span class="material-symbols-outlined">close</span></button>
-                    </div>
-                    <div id="story-likes-list" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Calls UI (Incoming & Active) -->
+    <!-- Incoming Call -->
     <div id="incoming-call-screen" class="fixed inset-0 z-[6000] hidden bg-slate-900 flex flex-col justify-center items-center overflow-hidden fade-in">
         <div id="call-bg-blur" class="absolute inset-[-10%] bg-cover bg-center blur-[60px] opacity-40"></div>
         <div class="absolute inset-0 bg-black/50 z-[1]"></div>
@@ -824,6 +892,7 @@
                     </button>
                     <span class="text-white/60 text-[10px] font-bold tracking-widest uppercase">Message</span>
                     
+                    <!-- Quick messages popover -->
                     <div id="quick-msg-menu" class="absolute bottom-24 left-1/2 -translate-x-1/2 w-56 hidden flex-col gap-1.5 p-2 bg-slate-900/95 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl">
                         <button class="w-full text-left px-4 py-3 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-xl transition-colors border border-white/5 quick-msg-btn">I'll call you right back.</button>
                         <button class="w-full text-left px-4 py-3 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-xl transition-colors border border-white/5 quick-msg-btn">I'm currently occupied.</button>
@@ -876,23 +945,43 @@
             const el = id => document.getElementById(id);
             const on = (id, event, cb) => { const e = el(id); if(e) e.addEventListener(event, cb); };
 
-            // Alerts & Modals (handled globally in inline script for standard open/close)
+            // Modals
+            const openModal = id => {
+                const c = el('modal-container');
+                if(!c && id.includes('modal')) { el(id).classList.remove('hidden'); return;}
+                if(c) {
+                    c.classList.remove('hidden');
+                    const modals = c.querySelectorAll('.modal-content');
+                    modals.forEach(m => m.classList.add('hidden')); 
+                    el(id).classList.remove('hidden');
+                }
+            };
+            const closeModal = id => {
+                el(id).classList.add('hidden');
+                const c = el('modal-container');
+                if(c) {
+                    const anyOpen = Array.from(c.children).some(child => !child.classList.contains('hidden'));
+                    if(!anyOpen) c.classList.add('hidden');
+                }
+            };
+
+            // Alerts
             const showInfoModal = (title, text) => {
                 el('info-modal-title').textContent = title;
                 el('info-modal-text').textContent = text;
-                window.openModal('info-modal');
+                openModal('info-modal');
             };
-            on('info-modal-close-button', 'click', () => window.closeModal('info-modal'));
+            on('info-modal-close-button', 'click', () => closeModal('info-modal'));
 
             let confirmCallbacks = {};
             const showConfirmModal = (title, text, onConfirm, onCancel) => {
                 el('confirm-modal-title').textContent = title;
                 el('confirm-modal-text').textContent = text;
                 confirmCallbacks = { onConfirm, onCancel };
-                window.openModal('confirm-modal');
+                openModal('confirm-modal');
             };
-            on('confirm-cancel-btn', 'click', () => { if(confirmCallbacks.onCancel) confirmCallbacks.onCancel(); window.closeModal('confirm-modal'); confirmCallbacks={}; });
-            on('confirm-execute-btn', 'click', () => { if(confirmCallbacks.onConfirm) confirmCallbacks.onConfirm(); window.closeModal('confirm-modal'); confirmCallbacks={}; });
+            on('confirm-cancel-btn', 'click', () => { if(confirmCallbacks.onCancel) confirmCallbacks.onCancel(); closeModal('confirm-modal'); confirmCallbacks={}; });
+            on('confirm-execute-btn', 'click', () => { if(confirmCallbacks.onConfirm) confirmCallbacks.onConfirm(); closeModal('confirm-modal'); confirmCallbacks={}; });
 
             // Theme Logic
             const savedTheme = localStorage.getItem('ar-theme') || 'light';
@@ -933,22 +1022,30 @@
                         const img = new Image();
                         img.src = event.target.result;
                         img.onload = () => {
-                            let width = img.width; let height = img.height;
-                            if (width > height) { if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; } } 
-                            else { if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; } }
-                            const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
-                            const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
-                            canvas.toBlob(blob => { resolve(new File([blob], file.name, { type: file.type || 'image/jpeg' })); }, file.type || 'image/jpeg', quality);
+                            let width = img.width;
+                            let height = img.height;
+                            if (width > height) {
+                                if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
+                            } else {
+                                if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
+                            }
+                            const canvas = document.createElement('canvas');
+                            canvas.width = width; canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            canvas.toBlob(blob => { 
+                                resolve(new File([blob], file.name, { type: file.type || 'image/jpeg' })); 
+                            }, file.type || 'image/jpeg', quality);
                         };
                     };
                 });
             }
 
-            // ImgBB Init (Now with expiration support)
+            // ImgBB Init
             const IMGBB_API_KEY = '9af51fec603af3f00f99d29b10fbea30';
             async function uploadImageToImgBB(file, expiration = null) {
                 const fd = new FormData(); fd.append('image', file);
-                if (expiration) fd.append('expiration', expiration); // Auto-deletes from ImgBB!
+                if(expiration) fd.append('expiration', expiration);
                 try {
                     const r = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: fd });
                     const d = await r.json();
@@ -969,24 +1066,36 @@
             let peerConnection, localStream, remoteStream, incomingCallData = null, callStartTime = null, callTimerInterval = null, currentCallInfo = null, pendingCandidates = [];
             let typingTimeout = null, newProfilePicFile = null, editProfilePicFile = null;
 
-            let isSelectionMode = false; let selectedMessages = new Set();
-            
+            window.myContacts = new Set(); // Global set to keep track of friends for Stories
+
+            // Selection Mode State
+            let isSelectionMode = false;
+            let selectedMessages = new Set();
+
             // Story State
-            let allStories = {}; // Groups stories by userId
-            let activeStoryUser = null; 
-            let currentStoryIndex = 0;
-            let storyTimer = null; 
-            let storyProgressTime = 0; 
-            let newStoryFile = null;
+            let allStories = [];
+            let storyGroups = {};
+            let currentStoryUserIds = [];
+            let viewingStoryUserIndex = 0;
+            let viewingStoryItemIndex = 0;
+            let storyTimer;
+            let storyProgress = 0;
+            let isStoryPaused = false;
+            let storyStartTime = 0;
+            const STORY_DURATION = 5000;
 
             // Auth Setup
             auth.onAuthStateChanged(user => {
                 setTimeout(() => { if(el('loader')) el('loader').classList.add('hidden'); }, 800);
                 if (user) {
-                    currentUser = user; el('main-app').classList.remove('hidden'); el('auth-screen').classList.add('hidden');
+                    currentUser = user;
+                    el('main-app').classList.remove('hidden');
+                    el('auth-screen').classList.add('hidden');
                     checkUserProfile();
                 } else {
-                    currentUser = null; currentUserProfile = null; el('auth-screen').classList.remove('hidden'); el('main-app').classList.add('hidden');
+                    currentUser = null; currentUserProfile = null;
+                    el('auth-screen').classList.remove('hidden');
+                    el('main-app').classList.add('hidden');
                     cleanupListeners();
                 }
             });
@@ -995,19 +1104,34 @@
 
             on('login-form', 'submit', e => {
                 e.preventDefault();
-                const btn = e.target.querySelector('button[type="submit"]'); const origHTML = btn.innerHTML;
-                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Authenticating...';
-                auth.signInWithEmailAndPassword(el('login-email').value, el('login-password').value).catch(err => { el('login-error').textContent = 'Invalid credentials.'; btn.disabled = false; btn.innerHTML = origHTML; });
+                const btn = e.target.querySelector('button[type="submit"]');
+                const origHTML = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<div class="btn-spinner"></div> Authenticating...';
+                
+                auth.signInWithEmailAndPassword(el('login-email').value, el('login-password').value)
+                    .catch(err => { 
+                        el('login-error').textContent = 'Invalid credentials.'; 
+                        btn.disabled = false;
+                        btn.innerHTML = origHTML;
+                    });
             });
 
             on('signup-form', 'submit', e => {
                 e.preventDefault();
-                const btn = e.target.querySelector('button[type="submit"]'); const email = el('signup-email').value.trim();
-                const pwd = el('signup-password').value; const confirmPwd = el('signup-confirm-password').value;
+                const btn = e.target.querySelector('button[type="submit"]');
+                const email = el('signup-email').value.trim();
+                const pwd = el('signup-password').value;
+                const confirmPwd = el('signup-confirm-password').value;
+
                 if (pwd !== confirmPwd) { el('signup-error').textContent = 'Passwords do not match.'; return; }
 
-                const origHTML = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Sending OTP...';
-                window.generatedOTP = Math.floor(100000 + Math.random() * 900000).toString(); window.pendingRegEmail = email; window.pendingRegPassword = pwd;
+                const origHTML = btn.innerHTML;
+                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Sending OTP...';
+                
+                window.generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+                window.pendingRegEmail = email;
+                window.pendingRegPassword = pwd;
 
                 emailjs.send("service_8bs891x", "template_porc85p", { to_email: email, otp: window.generatedOTP, message: window.generatedOTP })
                 .then(() => {
@@ -1015,7 +1139,8 @@
                     el('signup-form').classList.add('hidden'); el('otp-form').classList.remove('hidden');
                     el('otp-error').textContent = ''; el('otp-input').value = '';
                 }).catch(err => {
-                    el('signup-error').textContent = 'Failed to send OTP. Check email connection.'; btn.disabled = false; btn.innerHTML = origHTML;
+                    el('signup-error').textContent = 'Failed to send OTP. Check email connection.';
+                    btn.disabled = false; btn.innerHTML = origHTML;
                 });
             });
 
@@ -1023,25 +1148,33 @@
                 e.preventDefault();
                 const btn = e.target.querySelector('button[type="submit"]');
                 if (el('otp-input').value.trim() !== window.generatedOTP) { el('otp-error').textContent = 'Invalid OTP.'; return; }
-                const origHTML = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Creating Account...';
-                auth.createUserWithEmailAndPassword(window.pendingRegEmail, window.pendingRegPassword).catch(err => { el('otp-error').textContent = err.code === 'auth/weak-password' ? 'Password too weak.' : 'Email in use.'; btn.disabled = false; btn.innerHTML = origHTML; });
+
+                const origHTML = btn.innerHTML;
+                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Creating Account...';
+                
+                auth.createUserWithEmailAndPassword(window.pendingRegEmail, window.pendingRegPassword)
+                    .catch(err => { 
+                        el('otp-error').textContent = err.code === 'auth/weak-password' ? 'Password too weak.' : 'Email in use.';
+                        btn.disabled = false; btn.innerHTML = origHTML;
+                    });
             });
 
             on('show-signup', 'click', () => { el('login-form').classList.add('hidden'); el('otp-form').classList.add('hidden'); el('signup-form').classList.remove('hidden'); });
             on('show-login', 'click', () => { el('signup-form').classList.add('hidden'); el('otp-form').classList.add('hidden'); el('login-form').classList.remove('hidden'); });
             on('back-to-signup-from-otp', 'click', () => { el('otp-form').classList.add('hidden'); el('signup-form').classList.remove('hidden'); });
             
-            on('show-forgot-password', 'click', () => window.openModal('forgot-password-modal'));
-            on('cancel-forgot-password', 'click', () => window.closeModal('forgot-password-modal'));
+            on('show-forgot-password', 'click', () => openModal('forgot-password-modal'));
+            on('cancel-forgot-password', 'click', () => closeModal('forgot-password-modal'));
             on('send-reset-link-button', 'click', () => {
                 const email = el('forgot-password-email').value.trim();
                 if (!email) { el('forgot-password-status').textContent = 'Please enter email.'; return; }
-                auth.sendPasswordResetEmail(email).then(() => { window.closeModal('forgot-password-modal'); showInfoModal('Success', 'Recovery link dispatched.'); }).catch(e => { el('forgot-password-status').textContent = e.message; });
+                auth.sendPasswordResetEmail(email).then(() => { closeModal('forgot-password-modal'); showInfoModal('Success', 'Recovery link dispatched.'); }).catch(e => { el('forgot-password-status').textContent = e.message; });
             });
 
             function togglePwd(inputId, btnId) {
                 const input = el(inputId); const isPwd = input.type === "password";
-                input.type = isPwd ? "text" : "password"; el(btnId).innerHTML = `<span class="material-symbols-outlined text-[20px]">${isPwd?'visibility':'visibility_off'}</span>`;
+                input.type = isPwd ? "text" : "password";
+                el(btnId).innerHTML = `<span class="material-symbols-outlined text-[20px]">${isPwd?'visibility':'visibility_off'}</span>`;
             }
             on('toggle-login-password', 'click', () => togglePwd('login-password', 'toggle-login-password'));
             on('toggle-signup-password', 'click', () => togglePwd('signup-password', 'toggle-signup-password'));
@@ -1049,7 +1182,7 @@
 
             document.querySelectorAll('.logout-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    window.closeModal('settings-modal');
+                    closeModal('settings-modal');
                     if(el('logout-overlay')) el('logout-overlay').classList.remove('hidden');
                     setTimeout(() => {
                         firebase.auth().signOut().then(() => {
@@ -1063,8 +1196,10 @@
             });
 
             async function isUsernameUnique(name, uidToExclude = null) {
-                const snap = await firestore.collection('users').get(); let isUnique = true;
-                snap.forEach(doc => { if (doc.data().name === name && doc.id !== uidToExclude) isUnique = false; }); return isUnique;
+                const snap = await firestore.collection('users').get();
+                let isUnique = true;
+                snap.forEach(doc => { if (doc.data().name === name && doc.id !== uidToExclude) isUnique = false; });
+                return isUnique;
             }
 
             function createProfileDisplay(p) {
@@ -1075,14 +1210,20 @@
 
             function applyWallpaper(url) {
                 const msgArea = el('chat-messages');
-                if(url) { msgArea.style.backgroundImage = `url(${url})`; msgArea.style.backgroundSize = 'cover'; msgArea.style.backgroundPosition = 'center'; } 
-                else { msgArea.style.backgroundImage = ''; msgArea.style.backgroundSize = ''; msgArea.style.backgroundPosition = ''; }
+                if(url) {
+                    msgArea.style.backgroundImage = `url(${url})`;
+                    msgArea.style.backgroundSize = 'cover';
+                    msgArea.style.backgroundPosition = 'center';
+                } else {
+                    msgArea.style.backgroundImage = ''; msgArea.style.backgroundSize = ''; msgArea.style.backgroundPosition = '';
+                }
             }
 
             function checkUserProfile() {
                 const unsub = firestore.collection('users').doc(currentUser.uid).onSnapshot(doc => { 
-                    if (!doc.exists && !currentUserProfile) { window.openModal('profile-setup-modal'); } 
-                    else if (doc.exists) {
+                    if (!doc.exists && !currentUserProfile) { 
+                        openModal('profile-setup-modal');
+                    } else if (doc.exists) {
                         currentUserProfile = { uid: currentUser.uid, ...doc.data() };
                         el('my-profile-pic').innerHTML = createProfileDisplay(currentUserProfile);
                         el('my-profile-name').textContent = currentUserProfile.name;
@@ -1111,10 +1252,18 @@
 
                 try {
                     if (!(await isUsernameUnique(name))) throw new Error('Name taken.');
-                    const profileData = { name, bio: el('setup-bio-input').value.trim() || "Available for secure connection", gender: el('setup-gender-input').value, showGender: el('setup-show-gender').checked, userId: `ar-${Math.random().toString(36).substr(2, 4)}`, email: currentUser.email, photoURL: null, emoji: el('setup-emoji-input').value.trim() || '👤' };
-                    if (newProfilePicFile) { const compressed = await compressImage(newProfilePicFile, 400, 400, 0.6); profileData.photoURL = await uploadImageToImgBB(compressed); profileData.emoji = null; }
+                    const profileData = {
+                        name, bio: el('setup-bio-input').value.trim() || "Available for secure connection",
+                        gender: el('setup-gender-input').value, showGender: el('setup-show-gender').checked,
+                        userId: `ar-${Math.random().toString(36).substr(2, 4)}`, email: currentUser.email, photoURL: null, emoji: el('setup-emoji-input').value.trim() || '👤'
+                    };
+                    if (newProfilePicFile) { 
+                        const compressed = await compressImage(newProfilePicFile, 400, 400, 0.6); 
+                        profileData.photoURL = await uploadImageToImgBB(compressed); 
+                        profileData.emoji = null; 
+                    }
                     await firestore.collection('users').doc(currentUser.uid).set(profileData, {merge: true});
-                    window.closeModal('profile-setup-modal'); newProfilePicFile = null; 
+                    closeModal('profile-setup-modal'); newProfilePicFile = null; 
                 } catch (error) { err.textContent = error.message; } 
                 finally { btn.disabled = false; btn.textContent = 'Complete Profile'; }
             });
@@ -1122,25 +1271,41 @@
             // Chat Wallpaper Settings
             let newWallpaperFile = null;
             on('wallpaper-input', 'change', e => {
-                if(e.target.files[0]) { newWallpaperFile = e.target.files[0]; el('wallpaper-preview').src = URL.createObjectURL(newWallpaperFile); el('wallpaper-preview').classList.remove('hidden'); }
+                if(e.target.files[0]) {
+                    newWallpaperFile = e.target.files[0];
+                    el('wallpaper-preview').src = URL.createObjectURL(newWallpaperFile);
+                    el('wallpaper-preview').classList.remove('hidden');
+                }
             });
             on('remove-wallpaper-btn', 'click', async () => {
-                 el('wallpaper-preview').src = ''; el('wallpaper-preview').classList.add('hidden'); newWallpaperFile = null;
-                 await firestore.collection('users').doc(currentUser.uid).update({ wallpaper: null }); currentUserProfile.wallpaper = null; applyWallpaper(null);
+                 el('wallpaper-preview').src = ''; el('wallpaper-preview').classList.add('hidden');
+                 newWallpaperFile = null;
+                 await firestore.collection('users').doc(currentUser.uid).update({ wallpaper: null });
+                 currentUserProfile.wallpaper = null; applyWallpaper(null);
             });
             on('save-wallpaper-btn', 'click', async () => {
                 if(!newWallpaperFile) return;
-                const btn = el('save-wallpaper-btn'); btn.innerHTML = '<div class="btn-spinner"></div> Saving...'; btn.disabled = true;
+                const btn = el('save-wallpaper-btn');
+                btn.innerHTML = '<div class="btn-spinner"></div> Saving...'; btn.disabled = true;
                 try {
-                    const compressed = await compressImage(newWallpaperFile, 1920, 1920, 0.8); const url = await uploadImageToImgBB(compressed);
-                    await firestore.collection('users').doc(currentUser.uid).update({ wallpaper: url }); currentUserProfile.wallpaper = url; applyWallpaper(url);
+                    const compressed = await compressImage(newWallpaperFile, 1920, 1920, 0.8);
+                    const url = await uploadImageToImgBB(compressed);
+                    await firestore.collection('users').doc(currentUser.uid).update({ wallpaper: url });
+                    currentUserProfile.wallpaper = url; applyWallpaper(url);
                     showInfoModal('Success', 'Wallpaper updated!');
                 } catch(e) { el('wallpaper-error').textContent = 'Failed to upload wallpaper.'; }
                 btn.innerHTML = 'Apply Wallpaper'; btn.disabled = false;
             });
 
             // App Initialization
-            function initializeApp() { setupPresenceSystem(); showSidebarTab('home'); listenForContacts(); listenForFriendRequests(); listenForCalls(); listenForStories(); }
+            function initializeApp() { 
+                setupPresenceSystem(); 
+                showSidebarTab('home'); 
+                listenForContacts(); 
+                listenForFriendRequests(); 
+                listenForCalls(); 
+                listenForStories();
+            }
             
             function cleanupListeners() {
                 if (!currentUser) return;
@@ -1151,10 +1316,10 @@
                 if(window.logsUnsub) window.logsUnsub();
                 if(chatMetaUnsub) chatMetaUnsub();
                 if(window.friendsUnsub) window.friendsUnsub();
-                if(window.storyUnsub) window.storyUnsub();
+                if(window.storiesUnsub) window.storiesUnsub();
                 Object.values(statusListeners).forEach(ref => ref.off()); Object.values(typingListeners).forEach(ref => ref.off());
                 rtdb.ref(`calls`).orderByChild('callee').equalTo(currentUser.uid).off();
-                messageListeners = {}; statusListeners = {}; typingListeners = {}; unreadListeners = {}; allStories = {};
+                messageListeners = {}; statusListeners = {}; typingListeners = {}; unreadListeners = {};
             }
 
             function setupPresenceSystem() {
@@ -1170,15 +1335,20 @@
             on('chat-input', 'input', () => {
                 if (currentChatId) {
                     rtdb.ref(`typing/${currentChatId}/${currentUser.uid}`).set(true);
-                    clearTimeout(typingTimeout); typingTimeout = setTimeout(() => rtdb.ref(`typing/${currentChatId}/${currentUser.uid}`).set(false), 2000);
+                    clearTimeout(typingTimeout);
+                    typingTimeout = setTimeout(() => rtdb.ref(`typing/${currentChatId}/${currentUser.uid}`).set(false), 2000);
                 }
             });
 
             function timeAgo(ts) {
                 const s = Math.floor((Date.now() - ts) / 1000);
-                if(s < 60) return "just now"; let i = s / 31536000; if (i > 1) return Math.floor(i) + "y";
-                i = s / 2592000; if (i > 1) return Math.floor(i) + "mo"; i = s / 86400; if (i > 1) return Math.floor(i) + "d";
-                i = s / 3600; if (i > 1) return Math.floor(i) + "h"; i = s / 60; if (i > 1) return Math.floor(i) + "m"; return "now";
+                if(s < 60) return "just now";
+                let i = s / 31536000; if (i > 1) return Math.floor(i) + "y ago";
+                i = s / 2592000; if (i > 1) return Math.floor(i) + "mo ago";
+                i = s / 86400; if (i > 1) return Math.floor(i) + "d ago";
+                i = s / 3600; if (i > 1) return Math.floor(i) + "h ago";
+                i = s / 60; if (i > 1) return Math.floor(i) + "m ago";
+                return "now";
             }
 
             function listenForUserStatus(uid, element, isChatHeader = false) {
@@ -1187,11 +1357,13 @@
                 if (typingListeners[uid]) typingListeners[uid].off(); typingListeners[uid] = tRef;
 
                 const update = (snap) => {
-                    if (!element) return; const st = snap.val();
+                    if (!element) return;
+                    const st = snap.val();
                     if (st && st.state === 'online') { element.textContent = 'Online'; element.className = 'text-[11px] text-green-500 font-bold truncate mt-0.5 tracking-wider uppercase'; } 
-                    else if (st && st.state === 'offline') { element.textContent = `Seen ${timeAgo(st.last_changed)} ago`; element.className = 'text-[11px] text-slate-500 font-medium truncate mt-0.5'; } 
+                    else if (st && st.state === 'offline') { element.textContent = `Seen ${timeAgo(st.last_changed)}`; element.className = 'text-[11px] text-slate-500 font-medium truncate mt-0.5'; } 
                     else { element.textContent = 'Offline'; element.className = 'text-[11px] text-slate-500 font-medium truncate mt-0.5'; }
                 };
+                
                 if (isChatHeader) {
                     tRef.on('value', (tSnap) => {
                         if (tSnap.val() === true) { element.innerHTML = '<div class="typing-dots flex items-center pt-1"><span></span><span></span><span></span></div>'; element.className = 'text-[11px] text-primary font-bold truncate mt-0.5 typing uppercase tracking-wider'; } 
@@ -1203,7 +1375,9 @@
 
             function showSidebarTab(tabName) {
                 ['home', 'notifications', 'calls', 'blocked-users'].forEach(v => { const c = el(`${v}-content`); if(c) c.classList.add('hidden'); });
-                const target = el(`${tabName === 'blocked' ? 'blocked-users' : tabName}-content`); if(target) target.classList.remove('hidden');
+                const target = el(`${tabName === 'blocked' ? 'blocked-users' : tabName}-content`);
+                if(target) target.classList.remove('hidden');
+                
                 ['nav-chats', 'nav-requests', 'nav-calls'].forEach(id => {
                     const btn = el(id);
                     if(btn) {
@@ -1249,14 +1423,21 @@
             setupSettingsTabs();
 
             on('open-settings-btn', 'click', () => {
-                el('edit-name-input').value = currentUserProfile.name || ''; el('edit-bio-input').value = currentUserProfile.bio || ''; el('edit-gender-input').value = currentUserProfile.gender || 'Male'; el('edit-show-gender').checked = currentUserProfile.showGender !== false;
+                el('edit-name-input').value = currentUserProfile.name || '';
+                el('edit-bio-input').value = currentUserProfile.bio || '';
+                el('edit-gender-input').value = currentUserProfile.gender || 'Male';
+                el('edit-show-gender').checked = currentUserProfile.showGender !== false;
+
                 const preview = el('edit-pfp-preview'); const emoji = el('edit-emoji-input');
                 if (currentUserProfile.photoURL) { preview.src = currentUserProfile.photoURL; preview.classList.remove('hidden'); emoji.classList.add('hidden'); } 
                 else { emoji.value = currentUserProfile.emoji || '👤'; preview.classList.add('hidden'); emoji.classList.remove('hidden'); }
+                
                 el('profile-ar-id-display').textContent = currentUserProfile.userId; 
+                
                 if(currentUserProfile.wallpaper) { el('wallpaper-preview').src = currentUserProfile.wallpaper; el('wallpaper-preview').classList.remove('hidden'); } 
                 else { el('wallpaper-preview').src = ''; el('wallpaper-preview').classList.add('hidden'); }
-                window.openModal('settings-modal'); el('tab-profile').click();
+
+                openModal('settings-modal'); el('tab-profile').click();
             });
 
             on('save-profile-changes-btn', 'click', async () => {
@@ -1268,33 +1449,47 @@
                 try {
                     if (newName !== currentUserProfile.name && !(await isUsernameUnique(newName, currentUser.uid))) throw new Error('Name taken.');
                     const updates = { name: newName, bio: el('edit-bio-input').value.trim() || "Available for secure connection", gender: el('edit-gender-input').value, showGender: el('edit-show-gender').checked };
-                    if (editProfilePicFile) { const compressed = await compressImage(editProfilePicFile, 400, 400, 0.6); updates.photoURL = await uploadImageToImgBB(compressed); updates.emoji = null; } 
+                    if (editProfilePicFile) { 
+                        const compressed = await compressImage(editProfilePicFile, 400, 400, 0.6); 
+                        updates.photoURL = await uploadImageToImgBB(compressed); 
+                        updates.emoji = null; 
+                    } 
                     else if (el('edit-pfp-preview').classList.contains('hidden')) { updates.emoji = el('edit-emoji-input').value.trim() || '👤'; updates.photoURL = null; }
                     await firestore.collection('users').doc(currentUser.uid).set(updates, {merge: true});
-                    showInfoModal('Success', 'Preferences updated.'); window.closeModal('settings-modal'); editProfilePicFile = null; 
+                    showInfoModal('Success', 'Preferences updated.'); closeModal('settings-modal'); editProfilePicFile = null; 
                 } catch (error) { errEl.textContent = error.message; } 
                 finally { btn.disabled = false; btn.textContent = 'Save Configuration'; }
             });
 
+            // Report logic from Settings
             on('submit-settings-report-btn', 'click', async () => {
-                const txt = el('settings-report-input').value.trim(); if(!txt) return;
-                const btn = el('submit-settings-report-btn'); btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div>';
+                const txt = el('settings-report-input').value.trim();
+                if(!txt) return;
+                const btn = el('submit-settings-report-btn');
+                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div>';
                 try {
                     await firestore.collection('reports').add({ reportedBy: currentUser.uid, targetId: 'General App Issue', reason: txt, timestamp: Date.now() });
-                    el('settings-report-input').value = ''; el('settings-report-status').textContent = 'Report submitted successfully.';
+                    el('settings-report-input').value = '';
+                    el('settings-report-status').textContent = 'Report submitted successfully.';
                     setTimeout(() => el('settings-report-status').textContent='', 3000);
-                } catch (e) { el('settings-report-status').textContent = 'Error: ' + e.message; el('settings-report-status').classList.replace('text-green-500', 'text-red-500'); }
+                } catch (e) {
+                    el('settings-report-status').textContent = 'Error: ' + e.message;
+                    el('settings-report-status').classList.replace('text-green-500', 'text-red-500');
+                }
                 btn.disabled = false; btn.textContent = 'Submit Report';
             });
             
-            on('add-friend-button', 'click', () => { el('add-friend-id-input').value=''; el('add-friend-status').textContent=''; el('friend-search-result').classList.add('hidden'); window.openModal('add-friend-modal'); });
+            on('add-friend-button', 'click', () => { el('add-friend-id-input').value=''; el('add-friend-status').textContent=''; el('friend-search-result').classList.add('hidden'); openModal('add-friend-modal'); });
             on('search-friend-btn', 'click', () => {
-                const idInput = el('add-friend-id-input').value.trim(); const statusEl = el('add-friend-status'); const resDiv = el('friend-search-result');
+                const idInput = el('add-friend-id-input').value.trim();
+                const statusEl = el('add-friend-status'); const resDiv = el('friend-search-result');
                 statusEl.textContent = ''; resDiv.classList.add('hidden');
                 if (!idInput) { statusEl.textContent = 'ID Required.'; return; }
+                
                 firestore.collection('users').get().then(snap => {
                     let foundUser = null; let fUid = null;
                     snap.forEach(doc => { if (doc.data().userId === idInput) { foundUser = doc.data(); fUid = doc.id; } });
+                    
                     if (foundUser) {
                         if (fUid === currentUser.uid) { statusEl.textContent = "You cannot add yourself."; return; }
                         firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(fUid).get().then(contactDoc => {
@@ -1321,14 +1516,18 @@
                     }).then(() => {
                         el('friend-search-result').classList.add('hidden');
                         const st = el('add-friend-status'); st.style.color = "#10b981"; st.textContent = 'Request Sent!';
-                        setTimeout(() => { window.closeModal('add-friend-modal'); st.style.color = "#ef4444"; }, 1500);
-                    }).catch(() => { el('add-friend-status').textContent = 'Request failed.'; btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">send</span> Send Request'; });
+                        setTimeout(() => { closeModal('add-friend-modal'); st.style.color = "#ef4444"; }, 1500);
+                    }).catch(() => { 
+                        el('add-friend-status').textContent = 'Request failed.'; 
+                        btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">send</span> Send Request'; 
+                    });
                 }
             });
 
             function listenForFriendRequests() {
                 const unsub = firestore.collection('requests').doc(currentUser.uid).collection('incoming').onSnapshot(snap => {
-                    const list = el('requests-list-container'); const badge = el('requests-badge'); list.innerHTML = '';
+                    const list = el('requests-list-container'); const badge = el('requests-badge');
+                    list.innerHTML = '';
                     if (!snap.empty) {
                         badge.classList.remove('hidden');
                         snap.forEach(doc => {
@@ -1359,20 +1558,29 @@
                             firestore.collection('requests').doc(currentUser.uid).collection('incoming').doc(uid).delete();
                         }
                     });
-                } else if (btn.classList.contains('reject-btn')) { firestore.collection('requests').doc(currentUser.uid).collection('incoming').doc(uid).delete(); }
+                } else if (btn.classList.contains('reject-btn')) { 
+                    firestore.collection('requests').doc(currentUser.uid).collection('incoming').doc(uid).delete(); 
+                }
             });
 
             const cancelSelectionMode = () => {
-                isSelectionMode = false; selectedMessages.clear(); el('chat-messages').classList.remove('selection-mode');
+                isSelectionMode = false; selectedMessages.clear();
+                el('chat-messages').classList.remove('selection-mode');
                 el('selection-action-container').classList.add('hidden');
-                if (currentChatId && !currentChatId.startsWith('SYSTEM_')) { el('chat-input-container').classList.remove('hidden'); }
+                
+                if (currentChatId && !currentChatId.startsWith('SYSTEM_')) {
+                    el('chat-input-container').classList.remove('hidden');
+                }
+                
                 document.querySelectorAll('.msg-select-cb').forEach(cb => cb.checked = false);
             };
 
             el('chat-messages').addEventListener('change', (e) => {
                 if(e.target.classList.contains('msg-select-cb')) {
-                    if(e.target.checked) selectedMessages.add(e.target.value); else selectedMessages.delete(e.target.value);
+                    if(e.target.checked) selectedMessages.add(e.target.value);
+                    else selectedMessages.delete(e.target.value);
                     el('selection-count').textContent = `${selectedMessages.size} Selected`;
+                    
                     const delBtn = el('delete-selection-btn');
                     if(selectedMessages.size > 0) { delBtn.disabled = false; delBtn.classList.remove('opacity-50', 'cursor-not-allowed'); } 
                     else { delBtn.disabled = true; delBtn.classList.add('opacity-50', 'cursor-not-allowed'); }
@@ -1380,6 +1588,7 @@
             });
 
             on('cancel-selection-btn', 'click', cancelSelectionMode);
+            
             on('delete-selection-btn', 'click', () => {
                 if(selectedMessages.size === 0) return;
                 showConfirmModal('Delete Messages?', `Are you sure you want to delete ${selectedMessages.size} message(s) for everyone?`, async () => {
@@ -1388,42 +1597,78 @@
                         const docRef = firestore.collection('messages').doc(currentChatId).collection('history').doc(id);
                         batch.update(docRef, { isDeleted: true, text: "This message was deleted", type: 'deleted', content: null });
                     });
-                    await batch.commit(); cancelSelectionMode();
+                    await batch.commit();
+                    cancelSelectionMode();
                 });
             });
 
-            on('close-info-drawer', 'click', () => { const drawer = el('contact-info-drawer'); drawer.classList.remove('active'); drawer.classList.add('translate-x-full'); setTimeout(() => drawer.classList.add('hidden'), 300); });
-            on('chat-info-trigger', 'click', () => { const drawer = el('contact-info-drawer'); drawer.classList.remove('hidden'); setTimeout(() => { drawer.classList.remove('translate-x-full'); drawer.classList.add('active'); }, 10); });
+            on('close-info-drawer', 'click', () => {
+                const drawer = el('contact-info-drawer');
+                drawer.classList.remove('active');
+                drawer.classList.add('translate-x-full');
+                setTimeout(() => drawer.classList.add('hidden'), 300);
+            });
+            
+            on('chat-info-trigger', 'click', () => {
+                const drawer = el('contact-info-drawer');
+                drawer.classList.remove('hidden');
+                setTimeout(() => { drawer.classList.remove('translate-x-full'); drawer.classList.add('active'); }, 10);
+            });
 
-            const chatOptionsBtn = el('chat-options-btn'); const chatOptionsMenu = el('chat-options-menu');
-            if(chatOptionsBtn) { chatOptionsBtn.addEventListener('click', (e) => { e.stopPropagation(); chatOptionsMenu.classList.toggle('hidden'); }); }
-            document.addEventListener('click', (e) => { if (chatOptionsMenu && !chatOptionsMenu.classList.contains('hidden') && !chatOptionsBtn.contains(e.target) && !chatOptionsMenu.contains(e.target)) { chatOptionsMenu.classList.add('hidden'); } });
+            const chatOptionsBtn = el('chat-options-btn');
+            const chatOptionsMenu = el('chat-options-menu');
+            if(chatOptionsBtn) {
+                chatOptionsBtn.addEventListener('click', (e) => { e.stopPropagation(); chatOptionsMenu.classList.toggle('hidden'); });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (chatOptionsMenu && !chatOptionsMenu.classList.contains('hidden') && !chatOptionsBtn.contains(e.target) && !chatOptionsMenu.contains(e.target)) {
+                    chatOptionsMenu.classList.add('hidden');
+                }
+            });
 
             on('menu-close-chat', 'click', () => { chatOptionsMenu.classList.add('hidden'); el('back-to-home-btn').click(); });
-            on('menu-clear-chat', 'click', () => { chatOptionsMenu.classList.add('hidden'); window.openModal('clear-chat-modal'); });
+            on('menu-clear-chat', 'click', () => { chatOptionsMenu.classList.add('hidden'); openModal('clear-chat-modal'); });
 
-            on('clear-chat-me-btn', 'click', async () => { await firestore.collection('userChats').doc(currentUser.uid).collection('chats').doc(currentChatId).set({ clearedAt: Date.now() }, { merge: true }); window.closeModal('clear-chat-modal'); el('close-info-drawer').click(); });
+            on('clear-chat-me-btn', 'click', async () => {
+                await firestore.collection('userChats').doc(currentUser.uid).collection('chats').doc(currentChatId).set({ clearedAt: Date.now() }, { merge: true });
+                closeModal('clear-chat-modal'); el('close-info-drawer').click();
+            });
+
             on('clear-chat-everyone-btn', 'click', async () => {
                 const snap = await firestore.collection('messages').doc(currentChatId).collection('history').get();
-                const batch = firestore.batch(); snap.forEach(doc => batch.delete(doc.ref)); await batch.commit();
-                window.closeModal('clear-chat-modal'); el('close-info-drawer').click();
+                const batch = firestore.batch();
+                snap.forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+                closeModal('clear-chat-modal'); el('close-info-drawer').click();
             });
-            on('clear-chat-cancel-btn', 'click', () => window.closeModal('clear-chat-modal'));
+
+            on('clear-chat-cancel-btn', 'click', () => closeModal('clear-chat-modal'));
 
             on('menu-delete-chat', 'click', () => {
                 chatOptionsMenu.classList.add('hidden');
                 showConfirmModal('Delete Chat?', 'This will remove the chat from your list and clear the history for everyone.', async () => { 
-                    const snap = await firestore.collection('messages').doc(currentChatId).collection('history').get(); const batch = firestore.batch(); snap.forEach(doc => batch.delete(doc.ref)); await batch.commit();
+                    const snap = await firestore.collection('messages').doc(currentChatId).collection('history').get();
+                    const batch = firestore.batch();
+                    snap.forEach(doc => batch.delete(doc.ref));
+                    await batch.commit();
                     await firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).set({ chatVisible: false }, { merge: true });
                     el('close-info-drawer').click(); el('back-to-home-btn').click();
                 });
             });
 
             on('menu-media', 'click', () => { chatOptionsMenu.classList.add('hidden'); showInfoModal('Media, Links & Docs', 'No media shared in this chat yet.'); });
+
             on('menu-select-msg', 'click', () => {
-                chatOptionsMenu.classList.add('hidden'); isSelectionMode = true; selectedMessages.clear(); el('selection-count').textContent = '0 Selected';
-                el('chat-messages').classList.add('selection-mode'); el('selection-action-container').classList.remove('hidden'); el('chat-input-container').classList.add('hidden');
-                const delBtn = el('delete-selection-btn'); delBtn.disabled = true; delBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                chatOptionsMenu.classList.add('hidden');
+                isSelectionMode = true; selectedMessages.clear();
+                el('selection-count').textContent = '0 Selected';
+                el('chat-messages').classList.add('selection-mode');
+                el('selection-action-container').classList.remove('hidden');
+                el('chat-input-container').classList.add('hidden');
+                
+                const delBtn = el('delete-selection-btn');
+                delBtn.disabled = true; delBtn.classList.add('opacity-50', 'cursor-not-allowed');
             });
 
             on('menu-unfriend', 'click', () => {
@@ -1445,22 +1690,35 @@
                 });
             });
 
-            on('menu-report-user', 'click', () => { el('chat-options-menu').classList.add('hidden'); el('report-user-input').value = ''; window.openModal('report-user-modal'); });
+            on('menu-report-user', 'click', () => {
+                el('chat-options-menu').classList.add('hidden');
+                el('report-user-input').value = '';
+                openModal('report-user-modal');
+            });
+
             on('submit-user-report-btn', 'click', async () => {
-                const txt = el('report-user-input').value.trim(); if(!txt) return;
-                const btn = el('submit-user-report-btn'); const origText = btn.textContent; btn.disabled = true; btn.textContent = 'Submitting...';
+                const txt = el('report-user-input').value.trim();
+                if(!txt) return;
+                const btn = el('submit-user-report-btn'); const origText = btn.textContent;
+                btn.disabled = true; btn.textContent = 'Submitting...';
                 try {
                     await firestore.collection('reports').add({ reportedBy: currentUser.uid, targetId: currentChatPartner.uid, reason: txt, timestamp: Date.now() });
-                    window.closeModal('report-user-modal'); showInfoModal('Reported', 'Thank you for keeping the community safe.');
+                    closeModal('report-user-modal');
+                    showInfoModal('Reported', 'Thank you for keeping the community safe. Our admin team will review this report.');
                 } catch (e) { alert('Failed to send report.'); }
                 btn.disabled = false; btn.textContent = origText;
             });
 
             function populateInfoDrawer(profile) {
-                el('drawer-pfp').innerHTML = createProfileDisplay(profile); el('drawer-name').innerHTML = `${profile.name} ${profile.verified ? '<span class="material-symbols-outlined text-blue-500 text-[18px]" title="Verified">verified</span>' : ''}`;
-                el('drawer-id').textContent = profile.userId; el('drawer-bio').textContent = profile.bio || "Available for secure connection";
+                el('drawer-pfp').innerHTML = createProfileDisplay(profile);
+                el('drawer-name').innerHTML = `${profile.name} ${profile.verified ? '<span class="material-symbols-outlined text-blue-500 text-[18px]" title="Verified">verified</span>' : ''}`;
+                el('drawer-id').textContent = profile.userId;
+                el('drawer-bio').textContent = profile.bio || "Available for secure connection";
+                
                 const genBox = el('drawer-gender-box');
-                if(profile.showGender !== false && profile.gender && profile.gender !== "Prefer not to say" && !profile.isSystem) { el('drawer-gender').textContent = profile.gender; genBox.classList.remove('hidden'); } else { genBox.classList.add('hidden'); }
+                if(profile.showGender !== false && profile.gender && profile.gender !== "Prefer not to say" && !profile.isSystem) {
+                    el('drawer-gender').textContent = profile.gender; genBox.classList.remove('hidden');
+                } else { genBox.classList.add('hidden'); }
             }
 
             function listenForContacts() {
@@ -1468,20 +1726,35 @@
                     const list = el('contact-list-container');
                     snap.docChanges().forEach(change => {
                         const uid = change.doc.id; const profile = change.doc.data();
+                        
+                        if(change.type === 'added' || change.type === 'modified') {
+                            window.myContacts.add(uid);
+                        } else if(change.type === 'removed') {
+                            window.myContacts.delete(uid);
+                        }
+
                         if (change.type === 'added' || change.type === 'modified') {
                             if (!list.querySelector(`#contact-${uid}`)) {
-                                const a = document.createElement('div'); a.className = 'contact-item flex items-center gap-3 px-3 py-3 cursor-pointer rounded-xl transition-colors relative'; a.id = `contact-${uid}`; a.dataset.uid = uid;
+                                const a = document.createElement('div'); a.className = 'contact-item flex items-center gap-3 px-3 py-3 cursor-pointer rounded-xl transition-colors relative';
+                                a.id = `contact-${uid}`; a.dataset.uid = uid;
                                 a.innerHTML = `
                                     <div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0 text-xl shadow-sm z-10">${createProfileDisplay(profile)}</div>
                                     <div class="flex-1 min-w-0 z-10">
-                                        <div class="flex justify-between items-baseline mb-1"><h2 class="contact-name text-[15px] font-bold truncate text-slate-900 dark:text-slate-100 flex items-center gap-1">${profile.name} ${profile.verified ? '<span class="material-symbols-outlined text-blue-500 text-[14px]" title="Verified">verified</span>' : ''}</h2><span class="contact-time text-[10px] font-bold text-slate-400 uppercase tracking-widest" id="time-${uid}"></span></div>
+                                        <div class="flex justify-between items-baseline mb-1">
+                                            <h2 class="contact-name text-[15px] font-bold truncate text-slate-900 dark:text-slate-100 flex items-center gap-1">
+                                                ${profile.name} ${profile.verified ? '<span class="material-symbols-outlined text-blue-500 text-[14px]" title="Verified">verified</span>' : ''}
+                                            </h2>
+                                            <span class="contact-time text-[10px] font-bold text-slate-400 uppercase tracking-widest" id="time-${uid}"></span>
+                                        </div>
                                         <div class="flex justify-between items-center"><p class="contact-status text-xs text-slate-500 truncate font-medium" id="status-${uid}">Offline</p><div class="unread-badge hidden w-5 h-5 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-sm" id="unread-${uid}"></div></div>
                                     </div>`;
                                 list.appendChild(a);
-                                if(!profile.isSystem) listenForUserStatus(uid, a.querySelector(`#status-${uid}`), false); else { a.querySelector(`#status-${uid}`).textContent = 'Official Account'; a.querySelector(`#status-${uid}`).classList.replace('text-slate-500', 'text-blue-500'); }
+                                if(!profile.isSystem) listenForUserStatus(uid, a.querySelector(`#status-${uid}`), false);
+                                else { a.querySelector(`#status-${uid}`).textContent = 'Official Account'; a.querySelector(`#status-${uid}`).classList.replace('text-slate-500', 'text-blue-500'); }
 
                                 const chatId = profile.isSystem ? `SYSTEM_${currentUser.uid}` : getChatId(currentUser.uid, uid);
                                 const uRef = firestore.collection('userChats').doc(currentUser.uid).collection('chats').doc(chatId);
+                                
                                 if (unreadListeners[chatId]) unreadListeners[chatId]();
                                 unreadListeners[chatId] = uRef.onSnapshot(doc => {
                                     const data = doc.data() || {}; const count = data.unread || 0;
@@ -1503,7 +1776,8 @@
                             if(a) {
                                 if (profile.chatVisible === false) { a.classList.add('hidden-chat'); a.style.display = 'none'; } 
                                 else {
-                                    a.classList.remove('hidden-chat'); const term = el('contact-search-input').value.toLowerCase();
+                                    a.classList.remove('hidden-chat');
+                                    const term = el('contact-search-input').value.toLowerCase();
                                     if(term && !profile.name.toLowerCase().includes(term)) { a.style.display = 'none'; } else { a.style.display = 'flex'; }
                                 }
                             }
@@ -1523,7 +1797,9 @@
                 const item = e.target.closest('.contact-item');
                 if (item) {
                     document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('active-chat')); 
-                    item.classList.add('active-chat'); const uid = item.dataset.uid;
+                    item.classList.add('active-chat');
+                    const uid = item.dataset.uid;
+                    
                     if (uid === 'SYSTEM') {
                         const sysProfile = { name: 'AR CHATS', photoURL: 'https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png', userId: 'SYSTEM-OFFICIAL', bio: 'Official Announcements', isSystem: true, verified: true };
                         await openChat(sysProfile, uid);
@@ -1537,40 +1813,87 @@
             function getChatId(uid1, uid2) { return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`; }
 
             async function openChat(profile, uid) {
-                cancelSelectionMode(); currentChatPartner = { ...profile, uid }; 
+                cancelSelectionMode();
+                currentChatPartner = { ...profile, uid }; 
                 currentChatId = profile.isSystem ? `SYSTEM_${currentUser.uid}` : getChatId(currentUser.uid, uid);
                 
-                el('welcome-screen').classList.add('hidden'); el('active-chat-header').classList.remove('hidden'); el('chat-messages').classList.remove('hidden');
+                el('welcome-screen').classList.add('hidden'); 
+                el('active-chat-header').classList.remove('hidden');
+                el('chat-messages').classList.remove('hidden');
                 
                 if (profile.isSystem) {
-                    el('chat-input-container').classList.remove('hidden'); const inputField = el('chat-input');
-                    inputField.disabled = true; inputField.placeholder = "You cannot send messages to this official account."; inputField.value = "";
-                    el('chat-image-input').disabled = true; el('chat-action-button').disabled = true;
+                    el('chat-input-container').classList.remove('hidden');
+                    
+                    // Securely disable the input area for the system chat
+                    const inputField = el('chat-input');
+                    inputField.disabled = true;
+                    inputField.placeholder = "You cannot send messages to this official account.";
+                    inputField.value = "";
+                    
+                    el('chat-image-input').disabled = true;
+                    el('chat-action-button').disabled = true;
+                    
                     const imgLabel = document.querySelector('label[for="chat-image-input"]');
-                    if (imgLabel) { imgLabel.style.opacity = '0.5'; imgLabel.style.cursor = 'not-allowed'; imgLabel.style.pointerEvents = 'none'; }
-                    el('start-audio-call').classList.add('hidden'); el('start-video-call').classList.add('hidden'); el('chat-header-divider').classList.add('hidden');
-                    el('menu-report-user').classList.add('hidden'); el('menu-unfriend').classList.add('hidden'); el('menu-block').classList.add('hidden'); el('menu-divider-2').classList.add('hidden');
+                    if (imgLabel) {
+                        imgLabel.style.opacity = '0.5';
+                        imgLabel.style.cursor = 'not-allowed';
+                        imgLabel.style.pointerEvents = 'none';
+                    }
+
+                    // Hide Call and Action Options that don't apply to SYSTEM
+                    el('start-audio-call').classList.add('hidden');
+                    el('start-video-call').classList.add('hidden');
+                    el('chat-header-divider').classList.add('hidden');
+                    
+                    el('menu-report-user').classList.add('hidden');
+                    el('menu-unfriend').classList.add('hidden');
+                    el('menu-block').classList.add('hidden');
+                    el('menu-divider-2').classList.add('hidden');
+                    
                 } else {
-                    el('chat-input-container').classList.remove('hidden'); const inputField = el('chat-input');
-                    inputField.disabled = false; inputField.placeholder = "Type your message...";
-                    el('chat-image-input').disabled = false; el('chat-action-button').disabled = false;
+                    el('chat-input-container').classList.remove('hidden');
+                    
+                    // Restore Input Functionality
+                    const inputField = el('chat-input');
+                    inputField.disabled = false;
+                    inputField.placeholder = "Type your message...";
+                    
+                    el('chat-image-input').disabled = false;
+                    el('chat-action-button').disabled = false; // Enabled/Disabled dynamically on input
+                    
                     const imgLabel = document.querySelector('label[for="chat-image-input"]');
-                    if (imgLabel) { imgLabel.style.opacity = '1'; imgLabel.style.cursor = 'pointer'; imgLabel.style.pointerEvents = 'auto'; }
-                    el('start-audio-call').classList.remove('hidden'); el('start-video-call').classList.remove('hidden'); el('chat-header-divider').classList.remove('hidden');
-                    el('menu-report-user').classList.remove('hidden'); el('menu-unfriend').classList.remove('hidden'); el('menu-block').classList.remove('hidden'); el('menu-divider-2').classList.remove('hidden');
+                    if (imgLabel) {
+                        imgLabel.style.opacity = '1';
+                        imgLabel.style.cursor = 'pointer';
+                        imgLabel.style.pointerEvents = 'auto';
+                    }
+
+                    // Restore Call and Action Options
+                    el('start-audio-call').classList.remove('hidden');
+                    el('start-video-call').classList.remove('hidden');
+                    el('chat-header-divider').classList.remove('hidden');
+                    
+                    el('menu-report-user').classList.remove('hidden');
+                    el('menu-unfriend').classList.remove('hidden');
+                    el('menu-block').classList.remove('hidden');
+                    el('menu-divider-2').classList.remove('hidden');
                 }
                 
                 el('main-chat-area').classList.add('active'); 
+
                 el('chat-header-pfp').innerHTML = createProfileDisplay(profile); 
                 el('chat-header-name').innerHTML = `${profile.name} ${profile.verified ? '<span class="material-symbols-outlined text-blue-500 text-[16px] align-middle" title="Verified">verified</span>' : ''}`;
                 
                 if (profile.isSystem) {
-                    populateInfoDrawer(profile); el('chat-header-status').textContent = 'Official Account'; el('chat-header-status').classList.replace('text-slate-500', 'text-blue-500');
+                    populateInfoDrawer(profile);
+                    el('chat-header-status').textContent = 'Official Account';
+                    el('chat-header-status').classList.replace('text-slate-500', 'text-blue-500');
                 } else {
                     const liveProfile = await firestore.collection('users').doc(uid).get();
                     if(liveProfile.exists) populateInfoDrawer(liveProfile.data()); else populateInfoDrawer(profile);
                     listenForUserStatus(uid, el('chat-header-status'), true);
                 }
+
                 await listenForMessages();
             }
 
@@ -1588,7 +1911,7 @@
                     const isPending = msg.isPending;
                     
                     const wrapper = document.createElement('div'); 
-                    wrapper.className = `flex items-end w-full mb-5 msg-wrapper ${isMe ? 'justify-end' : 'justify-start'}`;
+                    wrapper.className = `flex items-center w-full mb-5 msg-wrapper ${isMe ? 'justify-end' : 'justify-start'}`;
                     
                     let pfpStr = '';
                     if (msg.sender === 'SYSTEM') { pfpStr = `<img src="https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png" class="w-full h-full object-cover">`; }
@@ -1597,7 +1920,7 @@
                     const isChecked = selectedMessages.has(msg.id) ? 'checked' : '';
                     
                     let inner = `
-                        <div class="message-checkbox hidden shrink-0 mr-3 mb-1">
+                        <div class="message-checkbox hidden shrink-0 mr-3">
                             <input type="checkbox" value="${msg.id}" class="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer msg-select-cb" ${isChecked}>
                         </div>
                         <div class="flex items-end gap-3 max-w-[85%] md:max-w-[70%] fade-in ${isMe ? 'flex-row-reverse' : ''}">
@@ -1615,24 +1938,12 @@
                             </div>
                             <div class="flex items-center gap-1 ${isMe?'':'ml-1'} mt-0.5"><span class="text-[10px] text-slate-400 font-medium">${isPending ? 'Sending...' : time}</span></div>
                         `;
-                    } else if (msg.type === 'story_reply') {
-                        inner += `
-                            <div class="${isMe ? 'bg-primary text-white rounded-br-sm shadow-primary/20 shadow-md' : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-bl-sm shadow-sm'} p-3.5 rounded-2xl text-[14.5px] leading-relaxed break-words w-fit max-w-full flex flex-col">
-                                <div class="bg-black/10 dark:bg-black/20 rounded-xl p-2 mb-2 flex items-center gap-3 w-full border border-black/5 dark:border-white/5">
-                                    <img src="${msg.storyImage}" class="h-12 w-9 rounded-md object-cover">
-                                    <div class="flex flex-col"><span class="text-[10px] font-bold uppercase tracking-wider opacity-70 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">auto_stories</span> Story Reply</span></div>
-                                </div>
-                                ${msg.text}
-                            </div>
-                            <div class="flex items-center gap-1 ${isMe?'':'ml-1'} mt-0.5">
-                                <span class="text-[10px] text-slate-400 font-medium">${time}</span>
-                                ${isMe ? '<span class="material-symbols-outlined text-[14px] text-primary">done_all</span>' : ''}
-                            </div>
-                        `;
                     } else {
+                        // Render standard text OR structured replies (Story Reply)
+                        let textContent = msg.text.replace(/\n/g, '<br>');
                         inner += `
                             <div class="${msg.sender === 'SYSTEM' ? 'bg-blue-600 text-white border-blue-500 rounded-bl-sm shadow-md' : (isMe ? 'bg-primary text-white rounded-br-sm shadow-primary/20 shadow-md' : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-bl-sm shadow-sm')} p-3.5 rounded-2xl text-[14.5px] leading-relaxed break-words w-fit max-w-full">
-                                ${msg.text}
+                                ${textContent}
                             </div>
                             <div class="flex items-center gap-1 ${isMe?'':'ml-1'} mt-0.5">
                                 <span class="text-[10px] text-slate-400 font-medium">${time}</span>
@@ -1640,7 +1951,9 @@
                             </div>
                         `;
                     }
-                    inner += `</div></div>`; wrapper.innerHTML = inner; msgArea.appendChild(wrapper);
+                    inner += `</div></div>`;
+                    wrapper.innerHTML = inner; 
+                    msgArea.appendChild(wrapper);
                 });
                 msgArea.scrollTo({ top: msgArea.scrollHeight, behavior: 'smooth' });
             }
@@ -1673,9 +1986,9 @@
             chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if(!sendBtn.disabled) sendMsg(); } });
             sendBtn.addEventListener('click', () => { if (chatInput.value.trim() !== '') sendMsg(); });
 
-            function sendMsg(imageUrl = null) {
+            function sendMsg(imageUrl = null, customText = null) {
                 if (!currentChatPartner || !currentChatId) return;
-                const txt = chatInput.value.trim(); 
+                const txt = customText || chatInput.value.trim(); 
                 if (!txt && !imageUrl) return;
                 
                 const msgData = { sender: currentUser.uid, timestamp: Date.now(), type: imageUrl ? 'image' : 'text', [imageUrl ? 'content' : 'text']: imageUrl || txt };
@@ -1687,8 +2000,9 @@
                 firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(currentChatPartner.uid).set({ chatVisible: true }, { merge: true });
                 firestore.collection('contacts').doc(currentChatPartner.uid).collection('list').doc(currentUser.uid).set({ chatVisible: true }, { merge: true });
                 
-                chatInput.value = ''; chatInput.style.height='auto'; 
-                rtdb.ref(`typing/${currentChatId}/${currentUser.uid}`).set(false); sendBtn.disabled = true;
+                if(!customText) { chatInput.value = ''; chatInput.style.height='auto'; }
+                rtdb.ref(`typing/${currentChatId}/${currentUser.uid}`).set(false);
+                sendBtn.disabled = true;
             }
 
             el('chat-image-input').addEventListener('change', async (e) => {
@@ -1698,12 +2012,381 @@
                 renderCurrentMessages(); e.target.value = '';
 
                 try { 
-                    const compressedFile = await compressImage(file, 800, 800, 0.6); const url = await uploadImageToImgBB(compressedFile);
-                    pendingUploads = pendingUploads.filter(p => p.id !== tempId); sendMsg(url); 
+                    const compressedFile = await compressImage(file, 800, 800, 0.6);
+                    const url = await uploadImageToImgBB(compressedFile);
+                    pendingUploads = pendingUploads.filter(p => p.id !== tempId);
+                    sendMsg(url); 
                 } catch(err) { 
-                    pendingUploads = pendingUploads.filter(p => p.id !== tempId); renderCurrentMessages(); showInfoModal('Upload Failed', 'Transfer interrupted.'); 
+                    pendingUploads = pendingUploads.filter(p => p.id !== tempId);
+                    renderCurrentMessages(); showInfoModal('Upload Failed', 'Transfer interrupted.'); 
                 }
             });
+
+
+            // ==========================================
+            // STORY FEATURE LOGIC
+            // ==========================================
+
+            // Upload a story
+            on('story-image-upload', 'change', async (e) => {
+                const file = e.target.files[0]; 
+                if(!file) return;
+                
+                el('loader').classList.remove('hidden'); 
+                
+                try {
+                    const compressed = await compressImage(file, 1080, 1920, 0.7);
+                    // Pass 86400 (24 hrs) for auto-deletion on ImgBB
+                    const url = await uploadImageToImgBB(compressed, 86400); 
+                    
+                    await firestore.collection('stories').add({
+                        userId: currentUser.uid,
+                        authorName: currentUserProfile.name,
+                        authorPhoto: currentUserProfile.photoURL || null,
+                        authorEmoji: currentUserProfile.emoji || '👤',
+                        imageUrl: url,
+                        timestamp: Date.now(),
+                        likes: []
+                    });
+                    
+                    showInfoModal('Story Published', 'Your story is now live for 24 hours.');
+                } catch(err) {
+                    showInfoModal('Story Error', 'Failed to publish story.');
+                } finally {
+                    el('loader').classList.add('hidden');
+                    e.target.value = '';
+                }
+            });
+
+            // Listen for stories
+            window.storiesUnsub = null;
+            function listenForStories() {
+                if(window.storiesUnsub) window.storiesUnsub();
+                
+                window.storiesUnsub = firestore.collection('stories').onSnapshot(snap => {
+                    allStories = [];
+                    snap.forEach(doc => {
+                        allStories.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderStoryTray();
+                });
+            }
+
+            function renderStoryTray() {
+                const list = el('friends-stories-list');
+                list.innerHTML = '';
+                
+                const ONE_DAY = 24 * 60 * 60 * 1000;
+                const validStories = allStories.filter(s => (Date.now() - s.timestamp) < ONE_DAY);
+                
+                storyGroups = {};
+                
+                validStories.forEach(s => {
+                    // Only group my own stories or friends' stories
+                    if(s.userId === currentUser.uid || window.myContacts.has(s.userId)) {
+                        if(!storyGroups[s.userId]) storyGroups[s.userId] = [];
+                        storyGroups[s.userId].push(s);
+                    }
+                });
+
+                // Sort each group by timestamp ascending
+                for(let uid in storyGroups) {
+                    storyGroups[uid].sort((a, b) => a.timestamp - b.timestamp);
+                }
+
+                currentStoryUserIds = Object.keys(storyGroups);
+                
+                // Ensure current user is always first if they have a story
+                if(currentStoryUserIds.includes(currentUser.uid)) {
+                    currentStoryUserIds = [currentUser.uid, ...currentStoryUserIds.filter(id => id !== currentUser.uid)];
+                }
+
+                currentStoryUserIds.forEach(uid => {
+                    const group = storyGroups[uid];
+                    const latest = group[group.length - 1]; // Use latest story data for the thumbnail
+                    
+                    const isMe = uid === currentUser.uid;
+                    const pfpHTML = latest.authorPhoto ? `<img src="${latest.authorPhoto}" class="w-full h-full object-cover">` : `<span>${latest.authorEmoji}</span>`;
+                    
+                    const div = document.createElement('div');
+                    div.className = 'flex flex-col items-center gap-1.5 cursor-pointer shrink-0 story-circle-trigger';
+                    div.dataset.uid = uid;
+                    
+                    div.innerHTML = `
+                        <div class="story-ring transition-transform hover:scale-105 shadow-sm">
+                            <div class="w-12 h-12 rounded-full border-[2.5px] border-white dark:border-slate-900 bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden text-xl">${pfpHTML}</div>
+                        </div>
+                        <span class="text-[10px] font-semibold text-slate-700 dark:text-slate-300 w-16 truncate text-center">${isMe ? 'You' : latest.authorName.split(' ')[0]}</span>
+                    `;
+                    list.appendChild(div);
+                });
+            }
+
+            // Delegated click for Story Tray
+            el('friends-stories-list').addEventListener('click', (e) => {
+                const trigger = e.target.closest('.story-circle-trigger');
+                if(trigger) {
+                    const uid = trigger.dataset.uid;
+                    viewingStoryUserIndex = currentStoryUserIds.indexOf(uid);
+                    viewingStoryItemIndex = 0;
+                    openStoryViewer();
+                }
+            });
+
+            function openStoryViewer() {
+                el('story-viewer').classList.remove('hidden');
+                showCurrentStory();
+            }
+
+            function closeStoryViewer() {
+                el('story-viewer').classList.add('hidden');
+                cancelAnimationFrame(storyTimer);
+                isStoryPaused = false;
+            }
+            on('story-close-btn', 'click', closeStoryViewer);
+
+            function showCurrentStory() {
+                if(viewingStoryUserIndex >= currentStoryUserIds.length || viewingStoryUserIndex < 0) {
+                    closeStoryViewer();
+                    return;
+                }
+
+                const uid = currentStoryUserIds[viewingStoryUserIndex];
+                const group = storyGroups[uid];
+                
+                if(!group || viewingStoryItemIndex >= group.length) {
+                    viewingStoryUserIndex++;
+                    viewingStoryItemIndex = 0;
+                    showCurrentStory();
+                    return;
+                }
+
+                const story = group[viewingStoryItemIndex];
+                const isMe = story.userId === currentUser.uid;
+
+                // Set Header
+                el('story-viewer-pfp').innerHTML = story.authorPhoto ? `<img src="${story.authorPhoto}" class="w-full h-full object-cover">` : story.authorEmoji;
+                el('story-viewer-name').textContent = story.authorName;
+                el('story-viewer-time').textContent = timeAgo(story.timestamp);
+
+                // Setup Progress bars
+                const progressContainer = el('story-progress-container');
+                progressContainer.innerHTML = '';
+                group.forEach((_, idx) => {
+                    const seg = document.createElement('div');
+                    seg.className = 'story-progress-segment';
+                    
+                    const fill = document.createElement('div');
+                    fill.className = 'story-progress-fill';
+                    fill.id = `story-prog-fill-${idx}`;
+                    
+                    if(idx < viewingStoryItemIndex) fill.style.width = '100%';
+                    else if(idx > viewingStoryItemIndex) fill.style.width = '0%';
+                    
+                    seg.appendChild(fill);
+                    progressContainer.appendChild(seg);
+                });
+
+                // Set Image
+                const img = el('story-image-display');
+                img.style.opacity = '0';
+                img.src = story.imageUrl;
+                img.onload = () => { img.style.opacity = '1'; };
+
+                // Handle Footer and Actions
+                const deleteBtn = el('story-delete-btn');
+                const replyContainer = el('story-reply-container');
+                const replySend = el('story-reply-send');
+                const replyInput = el('story-reply-input');
+                const likeIcon = el('story-like-icon');
+                const likeCount = el('story-likes-count');
+
+                replyInput.value = '';
+
+                if(isMe) {
+                    deleteBtn.classList.remove('hidden');
+                    replyContainer.classList.add('hidden');
+                    replySend.classList.add('hidden');
+                } else {
+                    deleteBtn.classList.add('hidden');
+                    replyContainer.classList.remove('hidden');
+                    replySend.classList.add('hidden');
+                }
+
+                // Likes logic
+                const hasLiked = story.likes && story.likes.includes(currentUser.uid);
+                likeIcon.textContent = hasLiked ? 'favorite' : 'favorite_border';
+                if(hasLiked) likeIcon.classList.add('story-liked'); else likeIcon.classList.remove('story-liked');
+                
+                likeCount.textContent = story.likes ? story.likes.length : 0;
+
+                // Dataset for actions
+                el('story-like-btn').dataset.storyId = story.id;
+                deleteBtn.dataset.storyId = story.id;
+                likeCount.dataset.storyId = story.id;
+                
+                startStoryTimer();
+            }
+
+            function startStoryTimer() {
+                cancelAnimationFrame(storyTimer);
+                storyProgress = 0;
+                storyStartTime = Date.now();
+                
+                const animate = () => {
+                    if(isStoryPaused) {
+                        storyStartTime = Date.now() - (storyProgress * STORY_DURATION);
+                        storyTimer = requestAnimationFrame(animate);
+                        return;
+                    }
+                    
+                    const elapsed = Date.now() - storyStartTime;
+                    storyProgress = elapsed / STORY_DURATION;
+                    
+                    const currentFill = el(`story-prog-fill-${viewingStoryItemIndex}`);
+                    if(currentFill) currentFill.style.width = `${Math.min(storyProgress * 100, 100)}%`;
+
+                    if(storyProgress >= 1) {
+                        nextStory();
+                    } else {
+                        storyTimer = requestAnimationFrame(animate);
+                    }
+                };
+                storyTimer = requestAnimationFrame(animate);
+            }
+
+            function nextStory() {
+                viewingStoryItemIndex++;
+                showCurrentStory();
+            }
+
+            function prevStory() {
+                if(viewingStoryItemIndex > 0) {
+                    viewingStoryItemIndex--;
+                    showCurrentStory();
+                } else if (viewingStoryUserIndex > 0) {
+                    viewingStoryUserIndex--;
+                    const prevGroup = storyGroups[currentStoryUserIds[viewingStoryUserIndex]];
+                    viewingStoryItemIndex = prevGroup.length - 1;
+                    showCurrentStory();
+                }
+            }
+
+            // Tap navigation
+            on('story-tap-prev', 'click', () => {
+                cancelAnimationFrame(storyTimer);
+                prevStory();
+            });
+            on('story-tap-next', 'click', () => {
+                cancelAnimationFrame(storyTimer);
+                nextStory();
+            });
+
+            // Pause on hold
+            const viewerEl = el('story-viewer');
+            viewerEl.addEventListener('mousedown', () => isStoryPaused = true);
+            viewerEl.addEventListener('mouseup', () => isStoryPaused = false);
+            viewerEl.addEventListener('touchstart', () => isStoryPaused = true);
+            viewerEl.addEventListener('touchend', () => isStoryPaused = false);
+
+            // Story Like
+            on('story-like-btn', 'click', async (e) => {
+                const btn = e.currentTarget;
+                const storyId = btn.dataset.storyId;
+                if(!storyId) return;
+
+                const storyRef = firestore.collection('stories').doc(storyId);
+                const storyDoc = await storyRef.get();
+                if(!storyDoc.exists) return;
+
+                const likes = storyDoc.data().likes || [];
+                const hasLiked = likes.includes(currentUser.uid);
+
+                if(hasLiked) {
+                    await storyRef.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
+                    el('story-like-icon').textContent = 'favorite_border';
+                    el('story-like-icon').classList.remove('story-liked');
+                    el('story-likes-count').textContent = Math.max(0, likes.length - 1);
+                } else {
+                    await storyRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
+                    el('story-like-icon').textContent = 'favorite';
+                    el('story-like-icon').classList.add('story-liked');
+                    el('story-likes-count').textContent = likes.length + 1;
+                }
+            });
+
+            // View Story Likes
+            on('story-likes-count', 'click', async (e) => {
+                isStoryPaused = true;
+                const storyId = e.currentTarget.dataset.storyId;
+                const list = el('story-likes-list');
+                openModal('story-likes-modal');
+                list.innerHTML = '<div class="flex justify-center p-6"><div class="spinner"></div></div>';
+
+                const storyDoc = await firestore.collection('stories').doc(storyId).get();
+                if(!storyDoc.exists || !storyDoc.data().likes || storyDoc.data().likes.length === 0) {
+                    list.innerHTML = '<div class="text-center p-6 text-slate-500 font-medium text-sm">No likes yet.</div>';
+                    return;
+                }
+
+                list.innerHTML = '';
+                const uids = storyDoc.data().likes;
+                for(let uid of uids) {
+                    const uDoc = await firestore.collection('users').doc(uid).get();
+                    if(uDoc.exists) {
+                        const profile = uDoc.data();
+                        const div = document.createElement('div');
+                        div.className = 'flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl';
+                        div.innerHTML = `
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-200 dark:bg-slate-700 overflow-hidden text-lg">${createProfileDisplay(profile)}</div>
+                            <div class="font-bold text-sm text-slate-900 dark:text-white flex-1">${profile.name}</div>
+                            <span class="material-symbols-outlined text-red-500 text-[18px]">favorite</span>
+                        `;
+                        list.appendChild(div);
+                    }
+                }
+            });
+
+            // Story Reply
+            el('story-reply-input').addEventListener('input', (e) => {
+                const btn = el('story-reply-send');
+                if(e.target.value.trim().length > 0) btn.classList.remove('hidden');
+                else btn.classList.add('hidden');
+            });
+
+            on('story-reply-send', 'click', async () => {
+                const input = el('story-reply-input');
+                const txt = input.value.trim();
+                if(!txt) return;
+
+                const uid = currentStoryUserIds[viewingStoryUserIndex];
+                const story = storyGroups[uid][viewingStoryItemIndex];
+                
+                // Formulate a beautiful reply string that points to the story
+                const replyMessage = `Replying to your story (${story.imageUrl}):\n\n${txt}`;
+                
+                // Set the currentChatPartner and Id as if we opened the chat
+                const cDoc = await firestore.collection('users').doc(uid).get();
+                if(cDoc.exists) {
+                    currentChatPartner = { ...cDoc.data(), uid };
+                    currentChatId = getChatId(currentUser.uid, uid);
+                    sendMsg(null, replyMessage);
+                    input.value = '';
+                    el('story-reply-send').classList.add('hidden');
+                    showInfoModal('Reply Sent', 'Your response has been sent securely.');
+                }
+            });
+
+            // Delete Story
+            on('story-delete-btn', 'click', async (e) => {
+                isStoryPaused = true;
+                const storyId = e.currentTarget.dataset.storyId;
+                showConfirmModal('Delete Story?', 'This story will be permanently removed for everyone.', async () => {
+                    await firestore.collection('stories').doc(storyId).delete();
+                    nextStory(); // move to next if exists, or closes if last
+                }, () => isStoryPaused = false);
+            });
+
 
             window.blockedUnsub = null;
             function listenAndDisplayBlockedUsers() {
@@ -1731,7 +2414,8 @@
                     const list = el('settings-friends-list'); if(!list) return; list.innerHTML = '';
                     if (!snap.empty) {
                         snap.forEach(s => {
-                            const fUid = s.id; const p = s.data(); if(p.isSystem) return;
+                            const fUid = s.id; const p = s.data();
+                            if(p.isSystem) return; // Skip system broadcast from friends list
                             const div = document.createElement('div'); div.className = 'flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 mb-2 shadow-sm';
                             div.innerHTML = `
                                 <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center shrink-0 bg-slate-200 dark:bg-slate-700 text-2xl border border-slate-200 dark:border-slate-600">${createProfileDisplay(p)}</div>
@@ -1747,7 +2431,7 @@
             
             el('settings-modal').addEventListener('click', async e => {
                 if(e.target.classList.contains('btn-msg-friend')) {
-                    const uid = e.target.dataset.uid; window.closeModal('settings-modal');
+                    const uid = e.target.dataset.uid; closeModal('settings-modal');
                     const doc = await firestore.collection('users').doc(uid).get(); if(doc.exists) await openChat(doc.data(), uid);
                 }
                 if(e.target.classList.contains('btn-unfriend')) {
@@ -1778,260 +2462,6 @@
                 });
             }
 
-            // --- STORIES FEATURE ---
-            
-            // Create Story UI
-            on('story-file-input', 'change', e => {
-                if(e.target.files[0]) {
-                    newStoryFile = e.target.files[0];
-                    el('story-image-preview').src = URL.createObjectURL(newStoryFile);
-                    el('story-image-preview').classList.remove('hidden');
-                    el('post-story-btn').disabled = false;
-                }
-            });
-
-            on('post-story-btn', 'click', async () => {
-                if(!newStoryFile) return;
-                const caption = el('story-caption-input').value.trim();
-                const btn = el('post-story-btn'); btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Posting...';
-
-                try {
-                    const compressed = await compressImage(newStoryFile, 1080, 1920, 0.7);
-                    // Pass 86400 (24 hrs) for ImgBB Auto-Expiration!
-                    const photoURL = await uploadImageToImgBB(compressed, 86400); 
-
-                    await firestore.collection('stories').add({
-                        userId: currentUser.uid,
-                        photoURL: photoURL,
-                        caption: caption,
-                        timestamp: Date.now(),
-                        expiresAt: Date.now() + 86400000, // + 24 Hours internally
-                        likes: []
-                    });
-                    window.closeModal('create-story-modal');
-                    el('story-image-preview').classList.add('hidden'); el('story-image-preview').src = '';
-                    el('story-caption-input').value = ''; newStoryFile = null; btn.disabled = true;
-                } catch(e) {
-                    showInfoModal('Error', 'Failed to upload story.');
-                    btn.disabled = false;
-                }
-                btn.innerHTML = 'Post Story';
-            });
-
-            window.storyUnsub = null;
-            function listenForStories() {
-                if(window.storyUnsub) window.storyUnsub();
-                
-                // Query: only get stories that haven't expired
-                window.storyUnsub = firestore.collection('stories').where('expiresAt', '>', Date.now()).onSnapshot(async snap => {
-                    allStories = {}; 
-                    snap.forEach(doc => {
-                        const data = doc.data(); data.id = doc.id;
-                        if (!allStories[data.userId]) allStories[data.userId] = [];
-                        allStories[data.userId].push(data);
-                    });
-                    
-                    for (const uid in allStories) { allStories[uid].sort((a,b) => a.timestamp - b.timestamp); }
-                    await renderStoriesBar();
-                });
-            }
-
-            async function renderStoriesBar() {
-                const list = el('stories-list'); list.innerHTML = '';
-                
-                // Priority 1: Current User's Stories
-                if (allStories[currentUser.uid] && allStories[currentUser.uid].length > 0) {
-                    list.appendChild(createStoryRing(currentUser.uid, currentUserProfile, allStories[currentUser.uid]));
-                }
-                
-                // Fetch friends to see whose stories to display
-                const friendsSnap = await firestore.collection('contacts').doc(currentUser.uid).collection('list').get();
-                const friendsIds = []; friendsSnap.forEach(f => friendsIds.push(f.id));
-
-                for (const uid in allStories) {
-                    if (uid === currentUser.uid || !friendsIds.includes(uid)) continue;
-                    const fProfileDoc = await firestore.collection('users').doc(uid).get();
-                    if(fProfileDoc.exists) {
-                        list.appendChild(createStoryRing(uid, fProfileDoc.data(), allStories[uid]));
-                    }
-                }
-            }
-
-            function createStoryRing(uid, profile, stories) {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'flex flex-col items-center gap-1.5 cursor-pointer shrink-0';
-                wrapper.onclick = () => openStoryViewer(uid, profile);
-                
-                // check if all viewed
-                const hasUnseen = true; // Ideally we track viewed stories in localstorage or DB, assuming unseen for now
-                const ringClass = hasUnseen ? 'story-ring-active' : 'story-ring-viewed';
-
-                wrapper.innerHTML = `
-                    <div class="${ringClass} transition-transform hover:scale-105">
-                        <div class="w-14 h-14 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden border-2 border-white dark:border-slate-900 text-xl object-cover shrink-0">
-                            ${createProfileDisplay(profile)}
-                        </div>
-                    </div>
-                    <span class="text-[10px] font-bold text-slate-800 dark:text-slate-200 truncate w-16 text-center">${uid === currentUser.uid ? 'Your Story' : profile.name}</span>
-                `;
-                return wrapper;
-            }
-
-            // --- Story Viewer Logic ---
-            window.openStoryViewer = function(uid, profile) {
-                if(!allStories[uid] || allStories[uid].length === 0) return;
-                activeStoryUser = { uid, profile, stories: allStories[uid] };
-                currentStoryIndex = 0;
-                
-                el('story-viewer-modal').classList.remove('hidden'); el('story-viewer-modal').classList.add('flex');
-                el('story-reply-input').value = '';
-                renderStoryFrame();
-            }
-
-            window.closeStoryViewer = function() {
-                el('story-viewer-modal').classList.add('hidden'); el('story-viewer-modal').classList.remove('flex');
-                el('story-likes-overlay').classList.add('hidden');
-                clearTimeout(storyTimer); activeStoryUser = null;
-            }
-
-            function renderStoryFrame() {
-                if(!activeStoryUser) return;
-                clearTimeout(storyTimer); storyProgressTime = 0;
-                
-                const story = activeStoryUser.stories[currentStoryIndex];
-                const isMine = activeStoryUser.uid === currentUser.uid;
-                
-                // Header
-                el('story-viewer-pfp').innerHTML = createProfileDisplay(activeStoryUser.profile);
-                el('story-viewer-name').textContent = isMine ? 'Your Story' : activeStoryUser.profile.name;
-                el('story-viewer-time').textContent = timeAgo(story.timestamp);
-                
-                // Image & Caption
-                el('story-viewer-img').src = story.photoURL;
-                const captionEl = el('story-viewer-caption');
-                if (story.caption) { captionEl.textContent = story.caption; captionEl.classList.remove('hidden'); }
-                else { captionEl.classList.add('hidden'); }
-                
-                // Bottom Actions
-                if (isMine) {
-                    el('my-story-actions').classList.remove('hidden'); el('other-story-actions').classList.add('hidden');
-                    el('story-views-count').textContent = story.likes ? story.likes.length : 0;
-                } else {
-                    el('my-story-actions').classList.add('hidden'); el('other-story-actions').classList.remove('hidden');
-                    const isLiked = story.likes && story.likes.includes(currentUser.uid);
-                    const likeIcon = el('like-story-icon');
-                    if (isLiked) { likeIcon.classList.add('filled', 'text-red-500'); } 
-                    else { likeIcon.classList.remove('filled', 'text-red-500'); }
-                }
-
-                // Progress Bars
-                const pCont = el('story-progress-container'); pCont.innerHTML = '';
-                activeStoryUser.stories.forEach((s, idx) => {
-                    const bg = document.createElement('div'); bg.className = 'flex-1 h-1 rounded-full bg-white/30 overflow-hidden relative';
-                    const fill = document.createElement('div');
-                    if (idx < currentStoryIndex) fill.className = 'absolute top-0 left-0 h-full bg-white w-full';
-                    else if (idx === currentStoryIndex) { fill.className = 'absolute top-0 left-0 h-full bg-white w-0'; fill.id = 'current-story-progress'; }
-                    else fill.className = 'absolute top-0 left-0 h-full bg-white w-0';
-                    bg.appendChild(fill); pCont.appendChild(bg);
-                });
-
-                startStoryTimer();
-            }
-
-            function startStoryTimer() {
-                const dur = 5000; const intMs = 50; const pBar = el('current-story-progress');
-                storyTimer = setInterval(() => {
-                    storyProgressTime += intMs;
-                    if (pBar) pBar.style.width = `${(storyProgressTime / dur) * 100}%`;
-                    if (storyProgressTime >= dur) {
-                        clearInterval(storyTimer);
-                        if (currentStoryIndex < activeStoryUser.stories.length - 1) { currentStoryIndex++; renderStoryFrame(); } 
-                        else { closeStoryViewer(); }
-                    }
-                }, intMs);
-            }
-
-            on('story-nav-left', 'click', () => {
-                if (currentStoryIndex > 0) { currentStoryIndex--; renderStoryFrame(); }
-                else { clearInterval(storyTimer); storyProgressTime = 0; startStoryTimer(); }
-            });
-            on('story-nav-right', 'click', () => {
-                if (currentStoryIndex < activeStoryUser.stories.length - 1) { currentStoryIndex++; renderStoryFrame(); } 
-                else { closeStoryViewer(); }
-            });
-
-            // Like Action
-            on('like-story-btn', 'click', async () => {
-                if(!activeStoryUser) return;
-                const story = activeStoryUser.stories[currentStoryIndex];
-                const sRef = firestore.collection('stories').doc(story.id);
-                const isLiked = story.likes && story.likes.includes(currentUser.uid);
-                
-                if (isLiked) {
-                    await sRef.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
-                    el('like-story-icon').classList.remove('filled', 'text-red-500');
-                    story.likes = story.likes.filter(id => id !== currentUser.uid);
-                } else {
-                    await sRef.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
-                    el('like-story-icon').classList.add('filled', 'text-red-500');
-                    if(!story.likes) story.likes = []; story.likes.push(currentUser.uid);
-                }
-            });
-
-            // Reply Action
-            el('story-reply-input').addEventListener('keydown', e => {
-                if (e.key === 'Enter' && e.target.value.trim() !== '') {
-                    if(!activeStoryUser) return;
-                    const story = activeStoryUser.stories[currentStoryIndex];
-                    const txt = e.target.value.trim();
-                    const targetId = activeStoryUser.uid;
-                    const cId = getChatId(currentUser.uid, targetId);
-                    
-                    firestore.collection('messages').doc(cId).collection('history').add({
-                        sender: currentUser.uid, timestamp: Date.now(), type: 'story_reply', text: txt, storyImage: story.photoURL
-                    });
-                    
-                    const pChatRef = firestore.collection('userChats').doc(targetId).collection('chats').doc(cId);
-                    pChatRef.get().then(doc => { let unread = 1; if(doc.exists && doc.data().unread) unread = doc.data().unread + 1; pChatRef.set({unread}, {merge:true}); });
-                    
-                    firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(targetId).set({ chatVisible: true }, { merge: true });
-                    firestore.collection('contacts').doc(targetId).collection('list').doc(currentUser.uid).set({ chatVisible: true }, { merge: true });
-
-                    e.target.value = ''; showInfoModal('Sent', 'Reply sent successfully.'); closeStoryViewer();
-                }
-            });
-
-            // My Story Actions
-            on('delete-story-btn', 'click', async () => {
-                if(!activeStoryUser) return;
-                const story = activeStoryUser.stories[currentStoryIndex];
-                await firestore.collection('stories').doc(story.id).delete();
-                activeStoryUser.stories.splice(currentStoryIndex, 1);
-                if(activeStoryUser.stories.length > 0) { if(currentStoryIndex >= activeStoryUser.stories.length) currentStoryIndex--; renderStoryFrame(); }
-                else { closeStoryViewer(); }
-            });
-
-            on('story-views-btn', 'click', async () => {
-                clearTimeout(storyTimer); // Pause while viewing
-                el('story-likes-overlay').classList.remove('hidden');
-                const listEl = el('story-likes-list'); listEl.innerHTML = '<div class="flex justify-center mt-10"><div class="spinner"></div></div>';
-                
-                const story = activeStoryUser.stories[currentStoryIndex];
-                if(!story.likes || story.likes.length === 0) { listEl.innerHTML = '<p class="text-center text-slate-500 mt-10 font-medium">No likes yet.</p>'; return; }
-                
-                listEl.innerHTML = '';
-                for(let uid of story.likes) {
-                    const doc = await firestore.collection('users').doc(uid).get();
-                    if(doc.exists) {
-                        const prof = doc.data();
-                        const div = document.createElement('div'); div.className = 'flex items-center gap-3 bg-slate-50 dark:bg-slate-800 p-3 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700';
-                        div.innerHTML = `<div class="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden bg-slate-200 dark:bg-slate-700 text-lg border border-slate-200 dark:border-slate-600">${createProfileDisplay(prof)}</div><span class="font-bold">${prof.name}</span><span class="material-symbols-outlined ml-auto text-red-500 filled">favorite</span>`;
-                        listEl.appendChild(div);
-                    }
-                }
-            });
-            on('close-likes-overlay', 'click', () => { el('story-likes-overlay').classList.add('hidden'); startStoryTimer(); });
-
             // --- WEBRTC CALLING ---
             const inCallScreen = el('incoming-call-screen'); const actCallScreen = el('active-call-screen');
             const locVid = el('localVideo'); const remVid = el('remoteVideo'); const cTimer = el('call-timer');
@@ -2046,7 +2476,7 @@
             on('start-video-call', 'click', () => { if(currentChatPartner && !currentChatPartner.isSystem) startCall(currentChatPartner.uid, true); });
 
             async function startCall(fUid, isVideo) {
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { showInfoModal('Calling Unavailable 🚫', 'Audio and video calls require a secure connection or browser support.'); return; }
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { showInfoModal('Calling Unavailable 🚫', 'Audio and video calls require a secure connection or browser support. Try using a standard browser.'); return; }
                 try {
                     const fProfDoc = await firestore.collection('users').doc(fUid).get();
                     const fProf = fProfDoc.data(); currentCallInfo = { partner: { ...fProf, uid: fUid }, isVideo, isCaller: true };
