@@ -155,9 +155,8 @@
         }
         .story-liked { color: #ef4444 !important; font-variation-settings: 'FILL' 1 !important; }
         
-        .color-option { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.2s; }
+        .color-option { transition: transform 0.2s; }
         .color-option:hover { transform: scale(1.1); }
-        .color-option.active { border-color: white; box-shadow: 0 0 0 2px rgba(0,0,0,0.2); }
 
         /* Mobile Adjustments */
         @media (max-width: 768px) {
@@ -487,10 +486,10 @@
     <!-- Story Viewer Overlay -->
     <div id="story-viewer" class="fixed inset-0 z-[9999] bg-black hidden flex-col select-none">
         <!-- Progress Bars -->
-        <div id="story-progress-container" class="absolute top-2 left-2 right-2 flex gap-1.5 z-20 px-2 py-1"></div>
+        <div id="story-progress-container" class="absolute top-2 left-2 right-2 flex gap-1.5 z-[60] px-2 py-1"></div>
         
         <!-- Header -->
-        <div class="absolute top-6 left-0 right-0 px-4 py-2 flex items-center justify-between z-20 bg-gradient-to-b from-black/60 to-transparent">
+        <div class="absolute top-6 left-0 right-0 px-4 py-2 flex items-center justify-between z-[60] bg-gradient-to-b from-black/60 to-transparent">
             <div class="flex items-center gap-3">
                 <div id="story-viewer-pfp" class="w-10 h-10 rounded-full overflow-hidden bg-slate-800 flex items-center justify-center border border-white/20 shadow-sm text-xl text-white"></div>
                 <div class="text-white">
@@ -515,7 +514,7 @@
             <div id="story-caption-display" class="absolute bottom-28 left-0 right-0 text-center text-white px-6 py-4 bg-gradient-to-t from-black/80 to-transparent z-10 hidden font-medium drop-shadow-md break-words"></div>
             
             <!-- Text Story Elements -->
-            <div id="story-text-display" class="absolute inset-0 flex items-center justify-center p-8 text-center text-white text-3xl font-bold z-0 hidden leading-snug drop-shadow-lg" style="background-color: #2b4bee; word-break: break-word; white-space: pre-wrap;"></div>
+            <div id="story-text-display" class="absolute inset-0 flex items-center justify-center p-8 text-center text-white text-3xl md:text-4xl font-bold z-0 hidden leading-snug drop-shadow-lg" style="background: linear-gradient(to bottom right, #3b82f6, #4f46e5); word-break: break-word; white-space: pre-wrap;"></div>
 
             <!-- Navigation Tap Zones -->
             <div id="story-tap-prev" class="absolute left-0 top-0 bottom-0 w-1/3 z-20 cursor-pointer"></div>
@@ -523,40 +522,37 @@
         </div>
 
         <!-- Footer -->
-        <div id="story-viewer-footer" class="absolute bottom-0 left-0 right-0 p-4 md:p-6 flex items-center gap-4 z-20 bg-gradient-to-t from-black/80 to-transparent">
+        <div id="story-viewer-footer" class="absolute bottom-0 left-0 right-0 p-4 md:p-6 flex items-center gap-4 z-[60] bg-gradient-to-t from-black/80 to-transparent pointer-events-none">
             
             <!-- Other User's Story View -->
-            <div class="flex-1 flex" id="story-reply-container">
+            <div class="flex-1 flex pointer-events-auto" id="story-reply-container">
                 <input type="text" id="story-reply-input" class="w-full bg-black/40 backdrop-blur-md text-white border border-white/20 rounded-full px-5 py-3 text-[15px] placeholder-white/60 outline-none focus:bg-black/60 focus:border-white/40 transition-colors shadow-lg" placeholder="Reply to story...">
             </div>
-            <button id="story-reply-send" class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shrink-0 hidden">
+            <button id="story-reply-send" class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shrink-0 hidden pointer-events-auto">
                 <span class="material-symbols-outlined text-[20px] ml-1">send</span>
             </button>
-            <div id="story-like-wrapper" class="flex items-center gap-2 shrink-0 bg-black/40 backdrop-blur-md rounded-full px-4 py-2 border border-white/10 hidden">
+            <div id="story-like-wrapper" class="flex items-center gap-2 shrink-0 bg-black/40 backdrop-blur-md rounded-full px-4 py-2 border border-white/10 hidden pointer-events-auto">
                 <button id="story-like-btn" class="flex items-center justify-center text-white hover:scale-110 transition-transform">
                     <span class="material-symbols-outlined text-[26px]" id="story-like-icon">favorite_border</span>
                 </button>
             </div>
 
             <!-- My Story View Stats -->
-            <div id="story-stats-wrapper" class="flex-1 flex justify-center items-center gap-8 hidden">
-                <div class="flex flex-col items-center cursor-pointer text-white/80 hover:text-white transition-colors" id="story-view-stats-btn" title="Views">
-                    <span class="material-symbols-outlined text-[28px]">visibility</span>
-                    <span id="story-views-count" class="text-[13px] font-bold mt-1 tracking-widest">0</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer text-white/80 hover:text-white transition-colors" id="story-like-stats-btn" title="Likes">
-                    <span class="material-symbols-outlined text-[28px] text-red-500 font-variation-settings-'FILL'-1">favorite</span>
-                    <span id="story-likes-count-me" class="text-[13px] font-bold mt-1 tracking-widest">0</span>
-                </div>
+            <div id="story-stats-wrapper" class="flex-1 flex justify-center items-center hidden pointer-events-auto">
+                <button class="flex items-center gap-3 cursor-pointer bg-black/50 backdrop-blur-xl px-6 py-3 rounded-full border border-white/20 hover:bg-black/70 transition-all shadow-xl hover:-translate-y-1" id="story-view-stats-btn" title="View Insights">
+                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[22px] text-white">visibility</span> <span id="story-views-count" class="text-white font-bold text-[15px]">0</span></span>
+                    <div class="w-px h-5 bg-white/30 mx-1"></div>
+                    <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[20px] text-red-500 font-variation-settings-'FILL'-1">favorite</span> <span id="story-likes-count-me" class="text-white font-bold text-[15px]">0</span></span>
+                </button>
             </div>
         </div>
     </div>
 
     <!-- Central Settings & Modals Overlay System -->
-    <div id="modal-container" class="fixed inset-0 z-[10000] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-opacity">
+    <div id="modal-container" class="fixed inset-0 z-[10050] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-opacity">
         
         <!-- Story Selection Modal -->
-        <div id="story-type-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in text-center p-8">
+        <div id="story-type-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in text-center p-8 relative z-[10060]">
             <h3 class="text-xl font-bold tracking-tight mb-2">Create Story</h3>
             <p class="text-sm text-slate-500 font-medium mb-6">Choose how you want to express yourself.</p>
             <div class="flex flex-col gap-3">
@@ -571,7 +567,7 @@
         </div>
 
         <!-- Story Image Preview & Caption Modal -->
-        <div id="story-image-preview-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col">
+        <div id="story-image-preview-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col relative z-[10060]">
             <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0">
                 <h3 class="text-lg font-bold tracking-tight">Add Caption</h3>
                 <button class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-slate-500 transition-colors" onclick="closeModal('story-image-preview-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
@@ -586,21 +582,21 @@
         </div>
 
         <!-- Story Text Create Modal -->
-        <div id="story-text-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col">
-            <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center shrink-0" style="background-color: #2b4bee;" id="story-text-header-bg">
+        <div id="story-text-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col relative z-[10060]">
+            <div class="p-5 border-b border-white/20 flex justify-between items-center shrink-0 transition-all" id="story-text-header-bg" style="background: linear-gradient(to bottom right, #3b82f6, #4f46e5);">
                 <h3 class="text-lg font-bold tracking-tight text-white">Text Story</h3>
                 <button class="p-2 hover:bg-white/20 rounded-xl text-white transition-colors" onclick="closeModal('story-text-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
             </div>
             <div class="p-5 flex flex-col gap-4">
-                <textarea id="story-text-input" class="w-full h-40 p-4 rounded-2xl text-white text-xl font-bold outline-none resize-none placeholder-white/60 transition-colors shadow-inner" style="background-color: #2b4bee;" placeholder="Type something..."></textarea>
+                <textarea id="story-text-input" class="w-full h-56 p-6 rounded-3xl text-white text-2xl font-black outline-none resize-none placeholder-white/60 transition-all shadow-inner text-center" style="background: linear-gradient(to bottom right, #3b82f6, #4f46e5);" placeholder="Type something amazing..."></textarea>
                 
-                <div class="flex gap-2 justify-center py-2" id="story-color-picker">
-                    <div class="color-option active" style="background-color: #2b4bee;" data-color="#2b4bee"></div>
-                    <div class="color-option" style="background-color: #ef4444;" data-color="#ef4444"></div>
-                    <div class="color-option" style="background-color: #10b981;" data-color="#10b981"></div>
-                    <div class="color-option" style="background-color: #f59e0b;" data-color="#f59e0b"></div>
-                    <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
-                    <div class="color-option" style="background-color: #111827;" data-color="#111827"></div>
+                <div class="flex gap-3 justify-center py-3" id="story-color-picker">
+                    <div class="color-option active w-10 h-10 rounded-full cursor-pointer border-[3px] border-white shadow-md" style="background: linear-gradient(to bottom right, #3b82f6, #4f46e5);" data-bg="linear-gradient(to bottom right, #3b82f6, #4f46e5)"></div>
+                    <div class="color-option w-10 h-10 rounded-full cursor-pointer border-[3px] border-transparent hover:border-white/50 shadow-md" style="background: linear-gradient(to bottom right, #ec4899, #f43f5e);" data-bg="linear-gradient(to bottom right, #ec4899, #f43f5e)"></div>
+                    <div class="color-option w-10 h-10 rounded-full cursor-pointer border-[3px] border-transparent hover:border-white/50 shadow-md" style="background: linear-gradient(to bottom right, #f59e0b, #ef4444);" data-bg="linear-gradient(to bottom right, #f59e0b, #ef4444)"></div>
+                    <div class="color-option w-10 h-10 rounded-full cursor-pointer border-[3px] border-transparent hover:border-white/50 shadow-md" style="background: linear-gradient(to bottom right, #10b981, #059669);" data-bg="linear-gradient(to bottom right, #10b981, #059669)"></div>
+                    <div class="color-option w-10 h-10 rounded-full cursor-pointer border-[3px] border-transparent hover:border-white/50 shadow-md" style="background: linear-gradient(to bottom right, #8b5cf6, #6d28d9);" data-bg="linear-gradient(to bottom right, #8b5cf6, #6d28d9)"></div>
+                    <div class="color-option w-10 h-10 rounded-full cursor-pointer border-[3px] border-transparent hover:border-white/50 shadow-md" style="background: linear-gradient(to bottom right, #1f2937, #000000);" data-bg="linear-gradient(to bottom right, #1f2937, #000000)"></div>
                 </div>
 
                 <button id="publish-text-story-btn" class="btn-primary w-full py-3.5 shadow-lg shadow-primary/20">Publish Story</button>
@@ -608,7 +604,7 @@
         </div>
 
         <!-- Story Stats (Views/Likes) Modal -->
-        <div id="story-stats-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col h-[60vh] md:h-[400px]">
+        <div id="story-stats-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col h-[60vh] md:h-[400px] relative z-[10060]">
             <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50 shrink-0">
                 <h3 class="text-lg font-bold tracking-tight flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[20px]">analytics</span> Story Insights</h3>
                 <button class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-slate-500 transition-colors" onclick="closeModal('story-stats-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
@@ -844,7 +840,7 @@
         </div>
 
         <!-- Clear Chat Modal (Me or Everyone) -->
-        <div id="clear-chat-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 text-center hidden fade-in relative">
+        <div id="clear-chat-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 text-center hidden fade-in relative z-[10060]">
             <div class="w-16 h-16 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
                 <span class="material-symbols-outlined text-[32px]">cleaning_services</span>
             </div>
@@ -858,7 +854,7 @@
         </div>
 
         <!-- Report User Modal (From 3-Dot Menu) -->
-        <div id="report-user-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 hidden fade-in text-center">
+        <div id="report-user-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 hidden fade-in text-center relative z-[10060]">
             <div class="w-16 h-16 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
                 <span class="material-symbols-outlined text-[32px]">flag</span>
             </div>
@@ -872,7 +868,7 @@
         </div>
 
         <!-- Add Friend Modal -->
-        <div id="add-friend-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in">
+        <div id="add-friend-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in relative z-[10060]">
             <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
                 <h3 class="text-xl font-bold tracking-tight">Add Friend</h3>
                 <button class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-slate-500 transition-colors" onclick="closeModal('add-friend-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
@@ -892,7 +888,7 @@
         </div>
 
         <!-- Forgot Password Modal -->
-        <div id="forgot-password-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden p-8 hidden fade-in text-center">
+        <div id="forgot-password-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden p-8 hidden fade-in text-center relative z-[10060]">
             <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
                 <span class="material-symbols-outlined text-[32px]">lock_reset</span>
             </div>
@@ -909,7 +905,7 @@
         </div>
 
         <!-- Generic Modals (Info/Confirm) -->
-        <div id="info-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 text-center hidden fade-in">
+        <div id="info-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 text-center hidden fade-in relative z-[10060]">
             <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
                 <span class="material-symbols-outlined text-[32px]">info</span>
             </div>
@@ -918,7 +914,7 @@
             <button id="info-modal-close-button" class="btn-primary w-full py-3.5 shadow-md shadow-primary/20">Okay</button>
         </div>
 
-        <div id="confirm-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border-t-[6px] border-t-red-500 p-8 text-center hidden fade-in relative">
+        <div id="confirm-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border-t-[6px] border-t-red-500 p-8 text-center hidden fade-in relative z-[10060]">
             <div class="w-16 h-16 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
                 <span class="material-symbols-outlined text-[32px]">warning</span>
             </div>
@@ -2161,10 +2157,17 @@
             // Text Story Setup
             on('btn-create-text-story', 'click', () => {
                 el('story-text-input').value = '';
-                el('story-text-input').style.backgroundColor = '#2b4bee';
-                el('story-text-header-bg').style.backgroundColor = '#2b4bee';
-                document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
-                document.querySelector('.color-option[data-color="#2b4bee"]').classList.add('active');
+                el('story-text-input').style.background = 'linear-gradient(to bottom right, #3b82f6, #4f46e5)';
+                el('story-text-header-bg').style.background = 'linear-gradient(to bottom right, #3b82f6, #4f46e5)';
+                document.querySelectorAll('.color-option').forEach(c => {
+                    c.classList.remove('active', 'border-white');
+                    c.classList.add('border-transparent');
+                });
+                const firstOpt = document.querySelector('.color-option');
+                if(firstOpt) {
+                    firstOpt.classList.add('active', 'border-white');
+                    firstOpt.classList.remove('border-transparent');
+                }
                 
                 closeModal('story-type-modal');
                 openModal('story-text-modal');
@@ -2172,12 +2175,17 @@
             });
 
             el('story-color-picker').addEventListener('click', (e) => {
-                if (e.target.classList.contains('color-option')) {
-                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
-                    e.target.classList.add('active');
-                    const color = e.target.dataset.color;
-                    el('story-text-input').style.backgroundColor = color;
-                    el('story-text-header-bg').style.backgroundColor = color;
+                const option = e.target.closest('.color-option');
+                if (option) {
+                    document.querySelectorAll('.color-option').forEach(c => {
+                        c.classList.remove('active', 'border-white');
+                        c.classList.add('border-transparent');
+                    });
+                    option.classList.add('active', 'border-white');
+                    option.classList.remove('border-transparent');
+                    const bg = option.dataset.bg;
+                    el('story-text-input').style.background = bg;
+                    el('story-text-header-bg').style.background = bg;
                 }
             });
 
@@ -2186,7 +2194,7 @@
                 if (!txt) return;
 
                 const btn = el('publish-text-story-btn');
-                const bgColor = el('story-text-input').style.backgroundColor;
+                const bgColor = el('story-text-input').style.background;
 
                 btn.disabled = true;
                 btn.innerHTML = '<div class="btn-spinner"></div> Publishing...';
@@ -2354,7 +2362,7 @@
                 textDisplay.classList.add('hidden');
 
                 if (story.type === 'text') {
-                    textDisplay.style.backgroundColor = story.bgColor || '#2b4bee';
+                    textDisplay.style.background = story.bgColor || 'linear-gradient(to bottom right, #3b82f6, #4f46e5)';
                     textDisplay.textContent = story.textContent || '';
                     textDisplay.classList.remove('hidden');
                 } else {
@@ -2420,7 +2428,6 @@
                 el('story-like-btn').dataset.storyId = story.id;
                 deleteBtn.dataset.storyId = story.id;
                 el('story-view-stats-btn').dataset.storyId = story.id;
-                el('story-like-stats-btn').dataset.storyId = story.id;
                 
                 startStoryTimer();
             }
@@ -2542,16 +2549,18 @@
                         const div = document.createElement('div');
                         div.className = 'flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl';
                         div.innerHTML = `
-                            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-200 dark:bg-slate-700 overflow-hidden text-lg border border-slate-200 dark:border-slate-600">${createProfileDisplay(profile)}</div>
-                            <div class="font-bold text-sm text-slate-900 dark:text-white flex-1">${profile.name}</div>
-                            ${didLike ? '<span class="material-symbols-outlined text-red-500 text-[18px] font-variation-settings-\'FILL\'-1">favorite</span>' : '<span class="material-symbols-outlined text-slate-300 dark:text-slate-600 text-[18px]">visibility</span>'}
+                            <div class="relative shrink-0">
+                                <div class="w-12 h-12 rounded-full flex items-center justify-center bg-slate-200 dark:bg-slate-700 overflow-hidden text-xl border border-slate-200 dark:border-slate-600">${createProfileDisplay(profile)}</div>
+                                ${didLike ? '<div class="absolute -bottom-1 -right-1 w-5 h-5 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center text-[10px] shadow-sm border border-slate-100 dark:border-slate-700">❤️</div>' : ''}
+                            </div>
+                            <div class="font-bold text-[15px] text-slate-900 dark:text-white flex-1 min-w-0 truncate">${profile.name}</div>
+                            ${didLike ? '<span class="material-symbols-outlined text-red-500 text-[24px] font-variation-settings-\'FILL\'-1 shrink-0">favorite</span>' : '<span class="text-xs font-semibold text-slate-400 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700 shrink-0">Viewed</span>'}
                         `;
                         list.appendChild(div);
                     }
                 }
             };
             on('story-view-stats-btn', 'click', openStatsModal);
-            on('story-like-stats-btn', 'click', openStatsModal);
 
             // Close Stats Modal and resume
             on('story-stats-modal', 'click', (e) => {
@@ -2603,7 +2612,7 @@
                 const storyId = e.currentTarget.dataset.storyId;
                 showConfirmModal('Delete Story?', 'This story will be permanently removed for everyone.', async () => {
                     await firestore.collection('stories').doc(storyId).delete();
-                    nextStory(); // move to next if exists, or closes if last
+                    closeStoryViewer(); // Close immediately to avoid sync bugs
                 }, () => { isStoryPaused = false; });
             });
 
