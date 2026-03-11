@@ -94,9 +94,6 @@
 
         .slide-up-mobile { animation: slideUpMobile 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes slideUpMobile { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        
-        .slide-left { animation: slideLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes slideLeft { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
         .typing-dots span { width: 5px; height: 5px; background: #2b4bee; border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; margin: 0 1px;}
         .dark .typing-dots span { background: #5c7cfa; }
@@ -166,21 +163,12 @@
             .native-modal-bottom { position: relative; bottom: auto; width: 100%; max-width: 28rem; max-height: 85vh; border-radius: 32px; margin: auto; }
             .slide-up-mobile { animation: fadeIn 0.2s ease-out forwards; }
         }
-        
-        /* Floating Action Button */
-        .fab {
-            position: absolute; bottom: 85px; right: 20px; width: 60px; height: 60px;
-            background-color: #2b4bee; color: white; border-radius: 30px;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 10px 25px rgba(43, 75, 238, 0.4); z-index: 30;
-            transition: transform 0.2s;
-        }
-        .fab:active { transform: scale(0.9); }
     </style>
 </head>
 <body class="bg-white dark:bg-slate-900 md:bg-background-light md:dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300 min-h-[100dvh]">
 
     <script>
+        // Standard Modal Functions
         window.openModal = function(id) {
             const container = document.getElementById('modal-container');
             if(container) {
@@ -194,10 +182,20 @@
             document.getElementById(id).classList.add('hidden');
             document.getElementById('modal-container').classList.add('hidden');
         };
+
+        // Native Navigation Pages Logic
+        window.openNativePage = function(id) {
+            const page = document.getElementById(id);
+            if(page) page.classList.remove('translate-x-full');
+        };
+        window.closeNativePage = function(id) {
+            const page = document.getElementById(id);
+            if(page) page.classList.add('translate-x-full');
+        };
     </script>
 
     <!-- Full Screen Logout Overlay -->
-    <div id="logout-overlay" class="fixed inset-0 z-[10005] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl hidden flex-col items-center justify-center text-slate-900 dark:text-white transition-opacity duration-500">
+    <div id="logout-overlay" class="fixed inset-0 z-[12000] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl hidden flex-col items-center justify-center text-slate-900 dark:text-white transition-opacity duration-500">
         <div class="w-20 h-20 relative flex items-center justify-center mb-6">
             <div class="absolute inset-0 border-4 border-slate-200 dark:border-slate-800 rounded-full"></div>
             <div class="absolute inset-0 border-4 border-primary rounded-full border-t-transparent animate-spin"></div>
@@ -207,23 +205,24 @@
         <p class="text-slate-500 dark:text-slate-400 font-medium animate-pulse">Closing secure session...</p>
     </div>
 
-    <div id="loader" class="loader bg-white dark:bg-slate-900 md:bg-background-light md:dark:bg-background-dark transition-opacity duration-300 z-[10005]">
+    <div id="loader" class="loader bg-white dark:bg-slate-900 md:bg-background-light md:dark:bg-background-dark transition-opacity duration-300 z-[12000]">
         <div class="spinner"></div>
     </div>
 
     <!-- Native Auth Screen -->
     <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-slate-900 md:bg-background-light md:dark:bg-background-dark p-0 md:p-4 hidden">
-        <div class="w-full h-[100dvh] md:h-auto md:max-w-md bg-white dark:bg-slate-900 px-6 py-12 md:p-10 md:rounded-[36px] md:shadow-2xl md:border border-slate-200 dark:border-slate-800 text-center fade-in flex flex-col justify-center relative pt-safe pb-safe">
+        <!-- Replaced outer borders on mobile, keeping them on desktop -->
+        <div class="w-full h-[100dvh] md:h-auto md:max-w-md bg-white dark:bg-slate-900 px-6 py-8 md:p-10 md:rounded-[36px] md:shadow-2xl md:border border-slate-200 dark:border-slate-800 text-center fade-in flex flex-col justify-center relative pt-safe pb-safe">
             
             <div class="w-full max-w-sm mx-auto flex flex-col justify-center flex-1">
-                <div class="w-28 h-28 bg-white rounded-[32px] flex items-center justify-center mx-auto mb-8 text-primary overflow-hidden shadow-xl border border-slate-100 dark:border-slate-700 shrink-0">
+                <div class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mx-auto mb-8 text-primary overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 shrink-0">
                     <img src="https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png" alt="AR CHATS Logo" class="w-full h-full object-cover">
                 </div>
-                <h1 class="text-4xl font-black text-slate-900 dark:text-white mb-3 tracking-tight">Welcome</h1>
-                <p class="text-slate-500 dark:text-slate-400 text-[16px] mb-10 font-medium px-4">Sign in to securely connect with friends and family.</p>
+                <h1 class="text-4xl font-black text-slate-900 dark:text-white mb-3 tracking-tight">AR CHATS</h1>
+                <p class="text-slate-500 dark:text-slate-400 text-[16px] mb-10 font-medium px-4">Sign in to securely connect with friends.</p>
 
                 <!-- Login Form -->
-                <form id="login-form" class="flex flex-col gap-5 text-left w-full">
+                <form id="login-form" class="flex flex-col gap-4 text-left w-full">
                     <input type="email" id="login-email" class="ar-input" placeholder="Email Address" required>
                     <div class="relative">
                         <input type="password" id="login-password" class="ar-input pr-14" placeholder="Password" required>
@@ -231,15 +230,15 @@
                             <span class="material-symbols-outlined text-[24px]">visibility_off</span>
                         </button>
                     </div>
-                    <div class="text-right -mt-2">
+                    <div class="text-right mt-1 mb-2">
                         <a id="show-forgot-password" class="text-[15px] text-primary font-bold hover:underline cursor-pointer">Forgot Password?</a>
                     </div>
-                    <button type="submit" class="btn-primary w-full mt-2 shadow-xl shadow-primary/20">Sign In</button>
+                    <button type="submit" class="btn-primary w-full shadow-xl shadow-primary/20">Sign In</button>
                     <p id="login-error" class="text-red-500 text-[15px] text-center min-h-[20px] font-bold"></p>
                 </form>
 
                 <!-- Signup Form -->
-                <form id="signup-form" class="flex flex-col gap-5 text-left w-full hidden fade-in">
+                <form id="signup-form" class="flex flex-col gap-4 text-left w-full hidden fade-in">
                     <input type="email" id="signup-email" class="ar-input" placeholder="Email Address" required>
                     <div class="relative">
                         <input type="password" id="signup-password" class="ar-input pr-14" placeholder="Create Password" required>
@@ -247,13 +246,13 @@
                             <span class="material-symbols-outlined text-[24px]">visibility_off</span>
                         </button>
                     </div>
-                    <div class="relative">
+                    <div class="relative mb-2">
                         <input type="password" id="signup-confirm-password" class="ar-input pr-14" placeholder="Confirm Password" required>
                         <button type="button" id="toggle-signup-confirm-password" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-2">
                             <span class="material-symbols-outlined text-[24px]">visibility_off</span>
                         </button>
                     </div>
-                    <button type="submit" class="btn-primary w-full mt-2 shadow-xl shadow-primary/20">Create Account</button>
+                    <button type="submit" class="btn-primary w-full shadow-xl shadow-primary/20">Create Account</button>
                     <p id="signup-error" class="text-red-500 text-[15px] text-center min-h-[20px] font-bold"></p>
                 </form>
                 
@@ -271,14 +270,14 @@
             </div>
 
             <!-- Auth Toggle Footer -->
-            <div class="mt-auto pt-6" id="auth-footer-toggle">
+            <div class="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800" id="auth-footer-toggle">
                 <div class="text-[16px] text-center text-slate-500 font-medium">
                     <span id="auth-toggle-text">New to AR Chats?</span> 
                     <a id="auth-toggle-btn" class="text-primary hover:underline cursor-pointer font-bold ml-1">Create an account</a>
                 </div>
             </div>
             
-            <div class="mt-auto pt-6 hidden text-center" id="otp-footer-toggle">
+            <div class="mt-auto pt-6 border-t border-slate-100 dark:border-slate-800 hidden text-center" id="otp-footer-toggle">
                  <a id="back-to-signup-from-otp" class="text-primary hover:underline cursor-pointer font-bold text-[16px]">Cancel & Go Back</a>
             </div>
 
@@ -294,22 +293,22 @@
         <!-- Left Sidebar / Mobile Home -->
         <aside class="w-full md:w-80 lg:w-[400px] flex flex-col md:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 z-20 relative" id="sidebar">
             
-            <!-- Mobile App Header -->
-            <div class="px-5 py-4 flex items-center justify-between bg-white dark:bg-slate-900 z-10 pt-safe shrink-0">
-                <h1 class="text-[28px] font-black text-primary tracking-tight">Chats</h1>
-                <div class="flex items-center gap-2">
-                    <button id="theme-toggle-btn" class="p-2.5 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <!-- Native Mobile Header -->
+            <div class="px-5 py-3 flex items-center justify-between bg-white dark:bg-slate-900 z-10 pt-safe shrink-0">
+                <h1 class="text-[26px] font-black text-slate-900 dark:text-white tracking-tight">AR CHATS</h1>
+                <div class="flex items-center gap-1">
+                    <button id="theme-toggle-btn" class="p-2.5 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                         <span class="material-symbols-outlined text-[26px]">light_mode</span>
                     </button>
                     
-                    <!-- Kebab Menu (Mobile/Desktop) -->
+                    <!-- 3 Dots Menu (Mobile/Desktop) -->
                     <div class="relative">
-                        <button id="main-menu-trigger" class="p-2.5 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <button id="main-menu-trigger" class="p-2.5 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                             <span class="material-symbols-outlined text-[26px]">more_vert</span>
                         </button>
-                        <!-- Kebab Dropdown -->
-                        <div id="main-menu-dropdown" class="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 hidden flex-col py-2 z-[60] origin-top-right transform scale-95 transition-transform">
-                            <button class="w-full text-left px-5 py-3.5 text-[16px] font-bold text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3 md:hidden" onclick="openModal('settings-modal')"><span class="material-symbols-outlined text-[22px] text-slate-400">settings</span> Settings</button>
+                        <!-- Dropdown -->
+                        <div id="main-menu-dropdown" class="absolute right-0 top-full mt-1 w-56 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 hidden flex-col py-2 z-[60] origin-top-right transform scale-95 transition-transform">
+                            <button class="w-full text-left px-5 py-3.5 text-[16px] font-bold text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" onclick="openNativePage('page-settings')"><span class="material-symbols-outlined text-[22px] text-slate-400">settings</span> Settings</button>
                             <button class="w-full text-left px-5 py-3.5 text-[16px] font-bold text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-3" onclick="openModal('add-friend-modal')"><span class="material-symbols-outlined text-[22px] text-slate-400">person_add</span> Add Contact</button>
                         </div>
                     </div>
@@ -360,13 +359,8 @@
                 </div>
             </div>
 
-            <!-- Mobile Add Friend FAB -->
-            <button class="fab md:hidden" id="fab-add-friend" onclick="openModal('add-friend-modal')">
-                <span class="material-symbols-outlined text-[28px]">person_add</span>
-            </button>
-
             <!-- Native Mobile Bottom Navigation -->
-            <div class="md:hidden flex justify-around items-center bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pb-safe pt-2 px-1 shrink-0 z-40">
+            <div class="md:hidden flex justify-around items-center bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 pb-safe pt-2 px-1 shrink-0 z-40">
                 <button class="nav-mobile-btn active flex flex-col items-center p-2 w-16 text-slate-400 transition-colors" data-tab="home">
                     <span class="material-symbols-outlined text-[26px]">chat</span>
                     <span class="text-[11px] font-semibold mt-1">Chats</span>
@@ -380,14 +374,10 @@
                     <span class="text-[11px] font-semibold mt-1">Requests</span>
                     <span id="mobile-requests-badge" class="absolute top-1.5 right-3 w-2.5 h-2.5 bg-red-500 rounded-full hidden border-2 border-white dark:border-slate-900"></span>
                 </button>
-                <button class="flex flex-col items-center p-2 w-16 text-slate-400 transition-colors" onclick="openModal('settings-modal')">
-                    <span class="material-symbols-outlined text-[26px]">settings</span>
-                    <span class="text-[11px] font-semibold mt-1">Settings</span>
-                </button>
             </div>
 
             <!-- Desktop Bottom Profile Bar -->
-            <div class="hidden md:flex p-5 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group pb-safe shrink-0" id="open-settings-btn-desktop" onclick="openModal('settings-modal')">
+            <div class="hidden md:flex p-5 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group pb-safe shrink-0" id="open-settings-btn-desktop" onclick="openNativePage('page-settings')">
                 <div class="flex items-center gap-3 w-full">
                     <div id="desktop-my-profile-pic" class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden shrink-0 border-2 border-slate-100 dark:border-slate-700 text-2xl shadow-sm group-hover:border-primary transition-colors"></div>
                     <div class="flex-1 min-w-0">
@@ -518,6 +508,195 @@
         </main>
     </div>
 
+    <!-- ==========================================
+         NATIVE SETTINGS SCREENS (SLIDE-OVER UI)
+    ========================================== -->
+    <div id="page-settings" class="fixed inset-0 z-[8000] bg-slate-50 dark:bg-slate-900 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="flex items-center gap-4 px-4 py-3 bg-white dark:bg-slate-800 pt-safe border-b border-slate-200 dark:border-slate-700 shrink-0 shadow-sm">
+            <button onclick="closeNativePage('page-settings')" class="p-2 -ml-2 text-slate-600 dark:text-slate-300 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                <span class="material-symbols-outlined text-[26px]">arrow_back</span>
+            </button>
+            <h2 class="text-xl font-black tracking-tight">Settings</h2>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto pb-safe">
+            <!-- Profile Banner -->
+            <div class="bg-white dark:bg-slate-800 p-5 flex items-center gap-4 cursor-pointer active:bg-slate-50 dark:active:bg-slate-700 transition-colors mb-4 border-b border-slate-200 dark:border-slate-700 shadow-sm" onclick="openNativePage('page-profile')">
+                <div id="settings-main-pfp" class="w-16 h-16 rounded-full bg-slate-200 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 flex items-center justify-center text-3xl overflow-hidden"></div>
+                <div class="flex-1 min-w-0">
+                    <h3 id="settings-main-name" class="text-xl font-black truncate">Name</h3>
+                    <p id="settings-main-bio" class="text-sm text-slate-500 font-medium truncate mt-0.5">Bio</p>
+                </div>
+                <span class="material-symbols-outlined text-primary text-[24px]">qr_code_2</span>
+            </div>
+
+            <!-- Features List -->
+            <div class="bg-white dark:bg-slate-800 border-y border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex items-center gap-4 p-4 pl-5 border-b border-slate-100 dark:border-slate-700 active:bg-slate-50 dark:active:bg-slate-700 cursor-pointer transition-colors" onclick="openNativePage('page-friends')">
+                    <div class="w-8 h-8 rounded-xl bg-green-100 dark:bg-green-500/20 text-green-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px] icon-filled">group</span></div>
+                    <span class="flex-1 font-bold text-[16px]">Friends</span>
+                    <span class="material-symbols-outlined text-slate-400">chevron_right</span>
+                </div>
+                <div class="flex items-center gap-4 p-4 pl-5 border-b border-slate-100 dark:border-slate-700 active:bg-slate-50 dark:active:bg-slate-700 cursor-pointer transition-colors" onclick="openNativePage('page-wallpaper')">
+                    <div class="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-500/20 text-purple-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px] icon-filled">wallpaper</span></div>
+                    <span class="flex-1 font-bold text-[16px]">Chat Wallpaper</span>
+                    <span class="material-symbols-outlined text-slate-400">chevron_right</span>
+                </div>
+                <div class="flex items-center gap-4 p-4 pl-5 border-b border-slate-100 dark:border-slate-700 active:bg-slate-50 dark:active:bg-slate-700 cursor-pointer transition-colors" onclick="openNativePage('page-blocked')">
+                    <div class="w-8 h-8 rounded-xl bg-red-100 dark:bg-red-500/20 text-red-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px] icon-filled">block</span></div>
+                    <span class="flex-1 font-bold text-[16px]">Blocked Users</span>
+                    <span class="material-symbols-outlined text-slate-400">chevron_right</span>
+                </div>
+                <div class="flex items-center gap-4 p-4 pl-5 border-b border-slate-100 dark:border-slate-700 active:bg-slate-50 dark:active:bg-slate-700 cursor-pointer transition-colors" onclick="openNativePage('page-report')">
+                    <div class="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-500/20 text-orange-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px] icon-filled">flag</span></div>
+                    <span class="flex-1 font-bold text-[16px]">Report Issue</span>
+                    <span class="material-symbols-outlined text-slate-400">chevron_right</span>
+                </div>
+                <div class="flex items-center gap-4 p-4 pl-5 active:bg-slate-50 dark:active:bg-slate-700 cursor-pointer transition-colors" onclick="openNativePage('page-about')">
+                    <div class="w-8 h-8 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center"><span class="material-symbols-outlined text-[20px] icon-filled">info</span></div>
+                    <span class="flex-1 font-bold text-[16px]">About App</span>
+                    <span class="material-symbols-outlined text-slate-400">chevron_right</span>
+                </div>
+            </div>
+            
+            <div class="mt-8 px-4">
+                <button class="w-full text-center py-4 rounded-2xl bg-white dark:bg-slate-800 text-red-600 font-bold text-[16px] transition-all border border-slate-200 dark:border-slate-700 shadow-sm logout-btn active:bg-slate-50 dark:active:bg-slate-700">
+                    Log Out
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Setting Sub-Pages -->
+    <div id="page-profile" class="fixed inset-0 z-[8010] bg-slate-50 dark:bg-slate-900 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="flex items-center gap-4 px-4 py-3 bg-white dark:bg-slate-800 pt-safe border-b border-slate-200 dark:border-slate-700 shrink-0">
+            <button onclick="closeNativePage('page-profile')" class="p-2 -ml-2 text-slate-600 dark:text-slate-300 rounded-full hover:bg-slate-100 transition-colors"><span class="material-symbols-outlined text-[26px]">arrow_back</span></button>
+            <h2 class="text-xl font-black">Profile</h2>
+        </div>
+        <div class="flex-1 overflow-y-auto p-6 pb-safe">
+            <div class="flex justify-center mb-8 relative">
+                <div class="w-36 h-36 rounded-full border-[4px] border-white dark:border-slate-800 bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-6xl overflow-hidden relative shadow-xl">
+                    <img id="edit-pfp-preview" class="w-full h-full object-cover hidden">
+                    <input id="edit-emoji-input" type="text" class="w-full h-full bg-transparent text-center border-none outline-none focus:ring-0 p-0 m-0 cursor-text" placeholder="👤" maxlength="2">
+                    <input type="file" id="edit-pic-input" class="hidden" accept="image/*">
+                    <label for="edit-pic-input" class="absolute inset-0 bg-black/50 text-white opacity-0 hover:opacity-100 cursor-pointer flex flex-col items-center justify-center transition-all text-sm font-bold backdrop-blur-sm">
+                        <span class="material-symbols-outlined mb-1 text-[28px]">add_a_photo</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="bg-primary/5 border border-primary/20 rounded-2xl p-5 mb-8 text-center shadow-sm">
+                <p class="text-[11px] font-bold text-primary uppercase tracking-widest mb-1.5">Your AR-ID</p>
+                <p id="profile-ar-id-display" class="font-mono text-2xl font-black text-slate-900 dark:text-white select-all tracking-widest mb-3">Loading...</p>
+                <button id="copy-my-id-btn-profile" class="bg-white dark:bg-slate-800 text-[13px] font-bold px-4 py-2 rounded-full shadow-sm border border-slate-200 dark:border-slate-700 active:scale-95 transition-transform"><i class="fa-solid fa-copy"></i> Copy ID</button>
+            </div>
+
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Full Name</label>
+                    <input id="edit-name-input" type="text" class="ar-input border-2 bg-white dark:bg-slate-800" maxlength="25">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Bio</label>
+                    <textarea id="edit-bio-input" class="ar-input border-2 bg-white dark:bg-slate-800 resize-none" rows="2" maxlength="100"></textarea>
+                </div>
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Gender</label>
+                        <select id="edit-gender-input" class="ar-input border-2 bg-white dark:bg-slate-800 appearance-none cursor-pointer">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col items-center justify-center pt-6 px-2">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Public</label>
+                        <input type="checkbox" id="edit-show-gender" class="w-6 h-6 rounded border-2 border-slate-300 text-primary focus:ring-primary cursor-pointer">
+                    </div>
+                </div>
+            </div>
+            <p id="profile-edit-error" class="text-red-500 text-sm mt-4 min-h-[20px] font-bold text-center"></p>
+            <button id="save-profile-changes-btn" class="btn-primary w-full py-4 mt-6 shadow-xl shadow-primary/20 text-[16px]">Save Profile</button>
+        </div>
+    </div>
+
+    <div id="page-friends" class="fixed inset-0 z-[8010] bg-slate-50 dark:bg-slate-900 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="flex items-center gap-4 px-4 py-3 bg-white dark:bg-slate-800 pt-safe border-b border-slate-200 dark:border-slate-700 shrink-0">
+            <button onclick="closeNativePage('page-friends')" class="p-2 -ml-2 text-slate-600 dark:text-slate-300 rounded-full hover:bg-slate-100 transition-colors"><span class="material-symbols-outlined text-[26px]">arrow_back</span></button>
+            <h2 class="text-xl font-black">Friends</h2>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 pb-safe" id="settings-friends-list"></div>
+    </div>
+
+    <div id="page-wallpaper" class="fixed inset-0 z-[8010] bg-slate-50 dark:bg-slate-900 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="flex items-center gap-4 px-4 py-3 bg-white dark:bg-slate-800 pt-safe border-b border-slate-200 dark:border-slate-700 shrink-0">
+            <button onclick="closeNativePage('page-wallpaper')" class="p-2 -ml-2 text-slate-600 dark:text-slate-300 rounded-full hover:bg-slate-100 transition-colors"><span class="material-symbols-outlined text-[26px]">arrow_back</span></button>
+            <h2 class="text-xl font-black">Chat Wallpaper</h2>
+        </div>
+        <div class="flex-1 overflow-y-auto p-6 pb-safe flex flex-col">
+            <div class="w-full aspect-[9/16] max-h-[60vh] rounded-[32px] border-[3px] border-dashed border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 flex flex-col items-center justify-center relative overflow-hidden mb-8 group shadow-sm mx-auto max-w-sm">
+                <img id="wallpaper-preview" class="w-full h-full object-cover hidden absolute inset-0 z-10">
+                <span class="material-symbols-outlined text-[64px] text-slate-400 relative z-20 mb-4">image</span>
+                <span class="text-[16px] font-bold text-slate-600 bg-white/80 dark:bg-slate-900/80 px-6 py-2 rounded-full backdrop-blur-sm relative z-20 shadow-sm">Tap to change</span>
+                <input type="file" id="wallpaper-input" class="absolute inset-0 opacity-0 cursor-pointer z-30" accept="image/*">
+            </div>
+            
+            <div class="flex gap-4 mt-auto">
+                <button id="remove-wallpaper-btn" class="btn-secondary flex-1 py-4 border-2">Reset</button>
+                <button id="save-wallpaper-btn" class="btn-primary flex-1 py-4 shadow-xl shadow-primary/20">Apply</button>
+            </div>
+            <p id="wallpaper-error" class="text-red-500 text-sm mt-4 min-h-[20px] font-bold text-center"></p>
+        </div>
+    </div>
+
+    <div id="page-blocked" class="fixed inset-0 z-[8010] bg-slate-50 dark:bg-slate-900 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="flex items-center gap-4 px-4 py-3 bg-white dark:bg-slate-800 pt-safe border-b border-slate-200 dark:border-slate-700 shrink-0">
+            <button onclick="closeNativePage('page-blocked')" class="p-2 -ml-2 text-slate-600 dark:text-slate-300 rounded-full hover:bg-slate-100 transition-colors"><span class="material-symbols-outlined text-[26px]">arrow_back</span></button>
+            <h2 class="text-xl font-black">Blocked Users</h2>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 pb-safe" id="settings-blocked-list"></div>
+    </div>
+
+    <div id="page-report" class="fixed inset-0 z-[8010] bg-slate-50 dark:bg-slate-900 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="flex items-center gap-4 px-4 py-3 bg-white dark:bg-slate-800 pt-safe border-b border-slate-200 dark:border-slate-700 shrink-0">
+            <button onclick="closeNativePage('page-report')" class="p-2 -ml-2 text-slate-600 dark:text-slate-300 rounded-full hover:bg-slate-100 transition-colors"><span class="material-symbols-outlined text-[26px]">arrow_back</span></button>
+            <h2 class="text-xl font-black">Report Issue</h2>
+        </div>
+        <div class="flex-1 overflow-y-auto p-6 pb-safe">
+            <p class="text-[15px] text-slate-500 mb-6 font-medium">Describe the issue or bug you encountered.</p>
+            <textarea id="settings-report-input" class="ar-input bg-white dark:bg-slate-800 resize-none mb-6 border-2 p-5 text-[16px] rounded-[24px]" rows="8" placeholder="Please provide details..."></textarea>
+            <button id="submit-settings-report-btn" class="btn-primary w-full py-4 shadow-xl shadow-primary/20 text-[16px]">Submit Report</button>
+            <p id="settings-report-status" class="text-green-500 text-sm mt-4 min-h-[20px] font-bold text-center"></p>
+        </div>
+    </div>
+
+    <div id="page-about" class="fixed inset-0 z-[8010] bg-slate-50 dark:bg-slate-900 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="flex items-center gap-4 px-4 py-3 bg-white dark:bg-slate-800 pt-safe border-b border-slate-200 dark:border-slate-700 shrink-0">
+            <button onclick="closeNativePage('page-about')" class="p-2 -ml-2 text-slate-600 dark:text-slate-300 rounded-full hover:bg-slate-100 transition-colors"><span class="material-symbols-outlined text-[26px]">arrow_back</span></button>
+            <h2 class="text-xl font-black">About</h2>
+        </div>
+        <div class="flex-1 overflow-y-auto p-6 pb-safe text-center flex flex-col items-center pt-10">
+            <div class="w-32 h-32 bg-gradient-to-tr from-primary to-sky-400 text-white rounded-[36px] flex items-center justify-center mb-6 shadow-2xl shadow-primary/40">
+                <img src="https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png" alt="AR CHATS" class="w-full h-full object-cover rounded-[36px]">
+            </div>
+            <h3 class="text-4xl font-black mb-2 text-slate-900 dark:text-white tracking-tight">AR CHATS</h3>
+            <p class="text-xs font-mono text-slate-500 mb-10 uppercase tracking-[0.2em] font-bold">Version 10.0 (Native Core)</p>
+            
+            <div class="w-full text-left bg-white dark:bg-slate-800 p-8 rounded-[32px] border border-slate-200 dark:border-slate-700 shadow-sm max-w-sm">
+                <ul class="text-[15px] text-slate-600 dark:text-slate-300 space-y-6 font-bold">
+                    <li class="flex items-center gap-4"><div class="w-12 h-12 rounded-full bg-green-50 dark:bg-green-500/10 text-green-500 flex items-center justify-center"><span class="material-symbols-outlined text-[24px]">lock</span></div> Secure P2P</li>
+                    <li class="flex items-center gap-4"><div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-500 flex items-center justify-center"><span class="material-symbols-outlined text-[24px]">video_call</span></div> HD Calls</li>
+                    <li class="flex items-center gap-4"><div class="w-12 h-12 rounded-full bg-orange-50 dark:bg-orange-500/10 text-orange-500 flex items-center justify-center"><span class="material-symbols-outlined text-[24px]">history_toggle_off</span></div> 24h Stories</li>
+                </ul>
+                <div class="pt-8 mt-8 border-t border-slate-100 dark:border-slate-700 text-center">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2">Engineered By</p>
+                    <p class="font-black text-2xl text-primary tracking-widest">ARINFOTECH</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Story Viewer Overlay -->
     <div id="story-viewer" class="fixed inset-0 z-[9999] bg-black hidden flex-col select-none">
         <div id="story-progress-container" class="absolute top-safe left-2 right-2 flex gap-1.5 z-[60] px-2 py-2 pt-4"></div>
@@ -600,7 +779,7 @@
                 <div class="w-16"></div> <!-- spacer -->
             </div>
             <div class="p-6 flex flex-col gap-6 overflow-y-auto flex-1 bg-slate-50 dark:bg-slate-900/50">
-                <div class="w-full flex-1 bg-black rounded-[32px] overflow-hidden flex items-center justify-center border-4 border-slate-200 dark:border-slate-700 min-h-[300px] shadow-lg">
+                <div class="w-full flex-1 bg-black rounded-[32px] overflow-hidden flex items-center justify-center border-[4px] border-slate-200 dark:border-slate-700 min-h-[300px] shadow-xl">
                     <img id="story-image-preview-img" class="max-w-full max-h-full object-contain">
                 </div>
                 <div class="shrink-0 pb-safe">
@@ -629,7 +808,7 @@
                         <div class="color-option w-12 h-12 rounded-full cursor-pointer border-[3px] border-transparent hover:border-white/50 shadow-xl shrink-0" style="background: linear-gradient(to bottom right, #8b5cf6, #6d28d9);" data-bg="linear-gradient(to bottom right, #8b5cf6, #6d28d9)"></div>
                         <div class="color-option w-12 h-12 rounded-full cursor-pointer border-[3px] border-transparent hover:border-white/50 shadow-xl shrink-0" style="background: linear-gradient(to bottom right, #1f2937, #000000);" data-bg="linear-gradient(to bottom right, #1f2937, #000000)"></div>
                     </div>
-                    <button id="publish-text-story-btn" class="w-full bg-white text-slate-900 rounded-2xl py-4 font-black text-[16px] shadow-2xl active:scale-95 transition-transform flex justify-center items-center gap-2"><span class="material-symbols-outlined text-[20px] icon-filled">send</span> Share to Story</button>
+                    <button id="publish-text-story-btn" class="w-full bg-white text-slate-900 rounded-2xl py-4 font-black text-[16px] shadow-2xl active:scale-95 transition-transform flex justify-center items-center gap-2"><span class="material-symbols-outlined text-[24px] icon-filled">send</span> Share to Story</button>
                 </div>
             </div>
         </div>
@@ -646,196 +825,6 @@
             </div>
         </div>
 
-        <!-- Native Drill-Down Settings Modal -->
-        <div id="settings-modal" class="modal-content native-modal-fs bg-white dark:bg-slate-900 flex flex-col overflow-hidden shadow-2xl relative hidden slide-up-mobile z-[10060]">
-            
-            <!-- Dynamic Native Header -->
-            <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 pt-safe z-20 relative shadow-sm">
-                <button id="settings-back-btn" class="hidden text-primary font-bold text-[16px] flex items-center transition-colors px-2 py-1"><span class="material-symbols-outlined text-[24px]">arrow_back_ios_new</span></button>
-                <div id="settings-close-spacer" class="w-10 hidden"></div>
-                <h2 class="text-lg font-black tracking-tight flex-1 text-center" id="mobile-settings-title">Settings</h2>
-                <button id="settings-close-btn" class="p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-500 transition-colors" onclick="closeModal('settings-modal')"><span class="material-symbols-outlined text-[22px]">close</span></button>
-            </div>
-
-            <!-- Settings Content Container -->
-            <div class="flex-1 overflow-x-hidden relative bg-slate-50 dark:bg-slate-900 pb-safe">
-                
-                <!-- Main Menu List -->
-                <div id="settings-main-menu" class="absolute inset-0 w-full h-full overflow-y-auto bg-slate-50 dark:bg-slate-900/50 transition-transform duration-300">
-                    <div class="p-6 pb-2 hidden md:block">
-                        <h2 class="text-3xl font-black tracking-tight">Settings</h2>
-                    </div>
-                    
-                    <div class="mt-4 md:mt-2 bg-white dark:bg-slate-800 border-y border-slate-200 dark:border-slate-700 md:border-x md:rounded-2xl md:mx-4">
-                        <div class="settings-list-item flex items-center justify-between p-4 pl-5 border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors" data-target="set-profile">
-                            <div class="flex items-center gap-4">
-                                <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 text-blue-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">manage_accounts</span></div>
-                                <span class="font-bold text-[16px] text-slate-800 dark:text-slate-100">Profile & Account</span>
-                            </div>
-                            <span class="material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
-                        </div>
-                        <div class="settings-list-item flex items-center justify-between p-4 pl-5 border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors" data-target="set-friends">
-                            <div class="flex items-center gap-4">
-                                <div class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-500/20 text-green-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">group</span></div>
-                                <span class="font-bold text-[16px] text-slate-800 dark:text-slate-100">Friends Management</span>
-                            </div>
-                            <span class="material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
-                        </div>
-                        <div class="settings-list-item flex items-center justify-between p-4 pl-5 border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors" data-target="set-wallpaper">
-                            <div class="flex items-center gap-4">
-                                <div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-500/20 text-purple-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">wallpaper</span></div>
-                                <span class="font-bold text-[16px] text-slate-800 dark:text-slate-100">Chat Wallpaper</span>
-                            </div>
-                            <span class="material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
-                        </div>
-                        <div class="settings-list-item flex items-center justify-between p-4 pl-5 border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors" data-target="set-blocked">
-                            <div class="flex items-center gap-4">
-                                <div class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-500/20 text-red-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">block</span></div>
-                                <span class="font-bold text-[16px] text-slate-800 dark:text-slate-100">Blocked Users</span>
-                            </div>
-                            <span class="material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
-                        </div>
-                        <div class="settings-list-item flex items-center justify-between p-4 pl-5 border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors" data-target="set-report">
-                            <div class="flex items-center gap-4">
-                                <div class="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-500/20 text-orange-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">flag</span></div>
-                                <span class="font-bold text-[16px] text-slate-800 dark:text-slate-100">Report an Issue</span>
-                            </div>
-                            <span class="material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
-                        </div>
-                        <div class="settings-list-item flex items-center justify-between p-4 pl-5 hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors" data-target="set-about">
-                            <div class="flex items-center gap-4">
-                                <div class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">info</span></div>
-                                <span class="font-bold text-[16px] text-slate-800 dark:text-slate-100">About App</span>
-                            </div>
-                            <span class="material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-8 px-4">
-                        <button class="w-full text-left px-5 py-4 rounded-2xl bg-white dark:bg-slate-800 text-red-600 font-bold text-[16px] flex items-center justify-center gap-2 transition-all border border-slate-200 dark:border-slate-700 shadow-sm logout-btn active:bg-slate-50">
-                            Log Out Session
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Sub Views Container (Slides in from right) -->
-                <div id="settings-sub-view" class="absolute inset-0 w-full h-full overflow-y-auto bg-white dark:bg-slate-900 transform translate-x-full transition-transform duration-300">
-                    
-                    <!-- Profile Edit View -->
-                    <div id="set-profile" class="settings-view p-6 md:p-10 hidden">
-                        <div class="flex flex-col items-center gap-6 mb-10">
-                            <div class="w-32 h-32 rounded-full border-[4px] border-slate-100 dark:border-slate-800 bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-5xl overflow-hidden relative group shadow-lg">
-                                <img id="edit-pfp-preview" class="w-full h-full object-cover hidden">
-                                <input id="edit-emoji-input" type="text" class="w-full h-full bg-transparent text-center border-none outline-none focus:ring-0 p-0 m-0 cursor-text" placeholder="👤" maxlength="2">
-                                <input type="file" id="edit-pic-input" class="hidden" accept="image/*">
-                                <label for="edit-pic-input" class="absolute inset-0 bg-black/60 text-white opacity-0 group-hover:opacity-100 cursor-pointer flex flex-col items-center justify-center transition-all text-xs font-bold backdrop-blur-sm">
-                                    <span class="material-symbols-outlined mb-1 text-[28px]">add_a_photo</span>
-                                </label>
-                            </div>
-                            <div class="w-full bg-primary/5 dark:bg-primary/10 p-5 rounded-[20px] border border-primary/20 text-center shadow-sm">
-                                <p class="text-xs font-bold text-primary uppercase tracking-widest mb-2">Your Unique AR ID</p>
-                                <p id="profile-ar-id-display" class="font-mono text-2xl font-black text-slate-900 dark:text-white select-all tracking-wider mb-1">Loading...</p>
-                                <p class="text-[12px] text-slate-500 font-medium">Share this ID to connect.</p>
-                            </div>
-                        </div>
-
-                        <div class="space-y-5">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Full Name</label>
-                                <input id="edit-name-input" type="text" class="ar-input border-2 bg-slate-50 dark:bg-slate-800" maxlength="25">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Bio</label>
-                                <textarea id="edit-bio-input" class="ar-input border-2 bg-slate-50 dark:bg-slate-800 resize-none" rows="2" maxlength="100"></textarea>
-                            </div>
-                            <div class="flex gap-4">
-                                <div class="flex-1">
-                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Gender</label>
-                                    <select id="edit-gender-input" class="ar-input border-2 bg-slate-50 dark:bg-slate-800 appearance-none cursor-pointer">
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                                <div class="flex flex-col items-center justify-center pt-6 px-2">
-                                    <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Public</label>
-                                    <input type="checkbox" id="edit-show-gender" class="w-6 h-6 rounded border-2 border-slate-300 text-primary focus:ring-primary cursor-pointer">
-                                </div>
-                            </div>
-                        </div>
-                        <p id="profile-edit-error" class="text-red-500 text-sm mt-4 min-h-[20px] font-bold text-center"></p>
-                        <button id="save-profile-changes-btn" class="btn-primary w-full py-4 mt-4 shadow-xl shadow-primary/20 text-[16px]">Save Configuration</button>
-                    </div>
-
-                    <!-- Friend List View -->
-                    <div id="set-friends" class="settings-view p-4 md:p-8 hidden bg-slate-50 dark:bg-slate-900 min-h-full">
-                        <p class="text-[15px] text-slate-500 mb-6 font-medium px-2">Manage your connected friends.</p>
-                        <div id="settings-friends-list" class="space-y-3">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
-
-                    <!-- Chat Wallpaper View -->
-                    <div id="set-wallpaper" class="settings-view p-6 md:p-10 hidden">
-                        <p class="text-[15px] text-slate-500 mb-8 font-medium">Customize the background image for all your chat conversations.</p>
-                        
-                        <div class="w-full h-72 rounded-[32px] border-[3px] border-dashed border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 flex flex-col items-center justify-center relative overflow-hidden mb-8 group cursor-pointer transition-colors hover:border-primary/50 hover:bg-primary/5">
-                            <img id="wallpaper-preview" class="w-full h-full object-cover hidden absolute inset-0 z-10">
-                            <span class="material-symbols-outlined text-[56px] text-slate-400 group-hover:text-primary transition-colors relative z-20 mb-3">image</span>
-                            <span class="text-[15px] font-bold text-slate-500 group-hover:text-primary relative z-20 bg-white/80 dark:bg-slate-900/80 px-4 py-1.5 rounded-full backdrop-blur-sm">Tap to upload</span>
-                            <input type="file" id="wallpaper-input" class="absolute inset-0 opacity-0 cursor-pointer z-30" accept="image/*">
-                        </div>
-                        
-                        <div class="flex flex-col md:flex-row gap-4">
-                            <button id="remove-wallpaper-btn" class="btn-secondary w-full py-4 border-2">Reset Default</button>
-                            <button id="save-wallpaper-btn" class="btn-primary w-full py-4 shadow-xl shadow-primary/20">Apply Design</button>
-                        </div>
-                        <p id="wallpaper-error" class="text-red-500 text-sm mt-4 min-h-[20px] font-bold text-center"></p>
-                    </div>
-
-                    <!-- Blocked View -->
-                    <div id="set-blocked" class="settings-view p-4 md:p-8 hidden bg-slate-50 dark:bg-slate-900 min-h-full">
-                        <p class="text-[15px] text-slate-500 mb-6 font-medium px-2">Users listed here are blocked and cannot send you messages or call you.</p>
-                        <div id="settings-blocked-list" class="space-y-3">
-                            <!-- Blocked dynamically populated -->
-                        </div>
-                    </div>
-
-                    <!-- Report App Issue View -->
-                    <div id="set-report" class="settings-view p-6 md:p-10 hidden">
-                        <p class="text-[15px] text-slate-500 mb-6 font-medium">Help us keep AR CHATS amazing. Describe the issue or bug you encountered.</p>
-                        <textarea id="settings-report-input" class="ar-input bg-slate-50 dark:bg-slate-800 resize-none mb-6 border-2 p-5 text-[16px] rounded-[24px]" rows="6" placeholder="Please provide details..."></textarea>
-                        <button id="submit-settings-report-btn" class="btn-primary w-full py-4 shadow-xl shadow-primary/20 text-[16px]">Submit Report</button>
-                        <p id="settings-report-status" class="text-green-500 text-sm mt-4 min-h-[20px] font-bold text-center"></p>
-                    </div>
-
-                    <!-- About View -->
-                    <div id="set-about" class="settings-view p-6 md:p-10 hidden text-center flex flex-col items-center pt-8">
-                        <div class="w-28 h-28 bg-gradient-to-tr from-primary to-sky-400 text-white rounded-[32px] flex items-center justify-center mb-6 shadow-2xl shadow-primary/40">
-                            <span class="material-symbols-outlined text-[56px]">code</span>
-                        </div>
-                        <h3 class="text-4xl font-black mb-2 text-slate-900 dark:text-white tracking-tight">AR CHATS</h3>
-                        <p class="text-xs font-mono text-slate-500 mb-12 uppercase tracking-[0.2em] font-bold">Version 9.0.0 (Native UI)</p>
-                        
-                        <div class="w-full text-left bg-slate-50 dark:bg-slate-800/50 p-8 rounded-[32px] border border-slate-200 dark:border-slate-700 shadow-sm">
-                            <p class="text-[16px] text-slate-700 dark:text-slate-300 leading-relaxed mb-8 font-medium">A premium, fast, and secure messaging application designed to keep you connected with friends and family seamlessly.</p>
-                            <ul class="text-[15px] text-slate-600 dark:text-slate-400 space-y-5 mb-10 font-bold">
-                                <li class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-500/20 text-green-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">lock</span></div> Private & Secure</li>
-                                <li class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">video_call</span></div> High-Quality Calls</li>
-                                <li class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-500/20 text-purple-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">image</span></div> Instant Media</li>
-                                <li class="flex items-center gap-4"><div class="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-500/20 text-orange-600 flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">history_toggle_off</span></div> 24-Hour Stories</li>
-                            </ul>
-                            <div class="pt-8 border-t border-slate-200 dark:border-slate-700 text-center">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-2">Engineered By</p>
-                                <p class="font-black text-2xl text-primary tracking-widest">ARINFOTECH</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
         <!-- Add Friend Modal -->
         <div id="add-friend-modal" class="modal-content native-modal-bottom bg-white dark:bg-slate-900 overflow-hidden hidden slide-up-mobile relative z-[10060] shadow-[0_-10px_40px_rgba(0,0,0,0.2)]">
             <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mt-4 mb-2 md:hidden"></div>
@@ -846,7 +835,7 @@
             <div class="p-6 md:p-8 pb-safe">
                 <div class="bg-primary/5 border border-primary/20 rounded-2xl p-5 mb-6 text-center">
                     <span class="material-symbols-outlined text-[32px] text-primary mb-2">group_add</span>
-                    <p class="text-[14px] text-slate-700 dark:text-slate-300 font-medium">Ask your friend for their unique AR-ID (found in Settings) and enter it below to connect securely.</p>
+                    <p class="text-[14px] text-slate-700 dark:text-slate-300 font-medium">Ask your friend for their unique AR-ID (found in Profile) and enter it below to connect.</p>
                 </div>
                 
                 <div class="relative mb-3">
@@ -861,7 +850,7 @@
 
                 <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 text-center">
                     <p class="text-xs text-slate-500 dark:text-slate-400 mb-3 font-bold uppercase tracking-widest">Or Share Your ID</p>
-                    <button id="copy-my-id-btn" class="btn-secondary w-full py-4 text-[15px] flex justify-center items-center gap-2 border-2 border-slate-200 dark:border-slate-700">
+                    <button id="copy-my-id-btn-add" class="btn-secondary w-full py-4 text-[15px] flex justify-center items-center gap-2 border-2 border-slate-200 dark:border-slate-700">
                         <span class="material-symbols-outlined text-[20px]">content_copy</span> Copy My AR-ID
                     </button>
                 </div>
@@ -991,50 +980,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // Initialize EmailJS
             emailjs.init("-D0_VDaUBM06zq4cF");
 
-            // DOM Utilities
             const el = id => document.getElementById(id);
             const on = (id, event, cb) => { const e = el(id); if(e) e.addEventListener(event, cb); };
-
-            // Modals
-            const openModal = id => {
-                const c = el('modal-container');
-                if(!c && id.includes('modal')) { el(id).classList.remove('hidden'); return;}
-                if(c) {
-                    c.classList.remove('hidden');
-                    const modals = c.querySelectorAll('.modal-content');
-                    modals.forEach(m => m.classList.add('hidden')); 
-                    el(id).classList.remove('hidden');
-                }
-            };
-            const closeModal = id => {
-                el(id).classList.add('hidden');
-                const c = el('modal-container');
-                if(c) {
-                    const anyOpen = Array.from(c.children).some(child => !child.classList.contains('hidden'));
-                    if(!anyOpen) c.classList.add('hidden');
-                }
-            };
-
-            // Alerts
-            const showInfoModal = (title, text) => {
-                el('info-modal-title').textContent = title;
-                el('info-modal-text').textContent = text;
-                openModal('info-modal');
-            };
-            on('info-modal-close-button', 'click', () => closeModal('info-modal'));
-
-            let confirmCallbacks = {};
-            const showConfirmModal = (title, text, onConfirm, onCancel) => {
-                el('confirm-modal-title').textContent = title;
-                el('confirm-modal-text').textContent = text;
-                confirmCallbacks = { onConfirm, onCancel };
-                openModal('confirm-modal');
-            };
-            on('confirm-cancel-btn', 'click', () => { if(confirmCallbacks.onCancel) confirmCallbacks.onCancel(); closeModal('confirm-modal'); confirmCallbacks={}; });
-            on('confirm-execute-btn', 'click', () => { if(confirmCallbacks.onConfirm) confirmCallbacks.onConfirm(); closeModal('confirm-modal'); confirmCallbacks={}; });
 
             // Theme Logic
             const savedTheme = localStorage.getItem('ar-theme') || 'light';
@@ -1066,7 +1015,6 @@
             const rtdb = firebase.database(); 
             const firestore = firebase.firestore();
             
-            // Fast Image Compressor
             function compressImage(file, maxWidth = 1280, maxHeight = 1280, quality = 0.7) {
                 return new Promise((resolve) => {
                     const reader = new FileReader();
@@ -1094,7 +1042,6 @@
                 });
             }
 
-            // ImgBB Init
             const IMGBB_API_KEY = '9af51fec603af3f00f99d29b10fbea30';
             async function uploadImageToImgBB(file, expiration = null) {
                 const fd = new FormData(); fd.append('image', file);
@@ -1107,7 +1054,6 @@
                 } catch (e) { throw e; }
             }
 
-            // State
             let currentUser = null, currentUserProfile = null, currentChatPartner = null, currentChatId = null;
             let messageListeners = {}, statusListeners = {}, typingListeners = {}, unreadListeners = {};
             let firestoreUnsubs = []; 
@@ -1136,7 +1082,6 @@
             const STORY_DURATION = 5000;
             let pendingStoryImageFile = null;
 
-            // Native Kebab menu logic
             const mainMenuBtn = el('main-menu-trigger');
             const mainMenuDropdown = el('main-menu-dropdown');
             if(mainMenuBtn) {
@@ -1158,7 +1103,6 @@
                 }
             });
 
-            // Drill-Down Settings Logic
             const settingsSubView = el('settings-sub-view');
             const settingsMainMenu = el('settings-main-menu');
             const settingsBackBtn = el('settings-back-btn');
@@ -1198,7 +1142,6 @@
                 });
             }
 
-            // Auth Setup
             auth.onAuthStateChanged(user => {
                 setTimeout(() => { if(el('loader')) el('loader').classList.add('hidden'); }, 800);
                 if (user) {
@@ -1349,11 +1292,13 @@
             function checkUserProfile() {
                 const unsub = firestore.collection('users').doc(currentUser.uid).onSnapshot(doc => { 
                     if (!doc.exists && !currentUserProfile) { 
-                        openModal('profile-setup-modal');
+                        openNativePage('profile-setup-modal');
                     } else if (doc.exists) {
                         currentUserProfile = { uid: currentUser.uid, ...doc.data() };
-                        el('my-profile-pic').innerHTML = createProfileDisplay(currentUserProfile);
-                        el('my-profile-name').textContent = currentUserProfile.name;
+                        if(el('settings-main-pfp')) el('settings-main-pfp').innerHTML = createProfileDisplay(currentUserProfile);
+                        if(el('settings-main-name')) el('settings-main-name').textContent = currentUserProfile.name;
+                        if(el('settings-main-bio')) el('settings-main-bio').textContent = currentUserProfile.bio || 'Available';
+                        
                         if(el('desktop-my-profile-pic')) el('desktop-my-profile-pic').innerHTML = createProfileDisplay(currentUserProfile);
                         if(el('desktop-my-profile-name')) el('desktop-my-profile-name').textContent = currentUserProfile.name;
                         
@@ -1393,7 +1338,7 @@
                         profileData.emoji = null; 
                     }
                     await firestore.collection('users').doc(currentUser.uid).set(profileData, {merge: true});
-                    closeModal('profile-setup-modal'); newProfilePicFile = null; 
+                    closeNativePage('profile-setup-modal'); newProfilePicFile = null; 
                 } catch (error) { err.textContent = error.message; } 
                 finally { btn.disabled = false; btn.textContent = 'Complete Profile'; }
             });
@@ -1517,7 +1462,6 @@
                     }
                 });
 
-                // Update Mobile Bottom Nav Active States
                 document.querySelectorAll('.nav-mobile-btn').forEach(btn => {
                     if(btn.dataset.tab === tabName) {
                         btn.classList.add('active', 'text-primary'); btn.classList.remove('text-slate-400');
@@ -1559,22 +1503,6 @@
                 },300);
             });
 
-            const setupSettingsTabs = () => {
-                document.querySelectorAll('.settings-tab').forEach(tab => {
-                    tab.addEventListener('click', (e) => {
-                        document.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('bg-primary/10', 'text-primary', 'active-link'));
-                        e.currentTarget.classList.add('bg-primary/10', 'text-primary', 'active-link');
-                        document.querySelectorAll('.settings-view').forEach(v => v.classList.add('hidden'));
-                        el(e.currentTarget.dataset.target).classList.remove('hidden');
-                        
-                        if(window.innerWidth < 768) {
-                            el('mobile-settings-title').textContent = e.currentTarget.textContent.trim().replace(/.*(?=[A-Z])/g, '');
-                        }
-                    });
-                });
-            };
-            setupSettingsTabs();
-
             on('open-settings-btn', 'click', () => {
                 el('edit-name-input').value = currentUserProfile.name || '';
                 el('edit-bio-input').value = currentUserProfile.bio || '';
@@ -1590,26 +1518,14 @@
                 if(currentUserProfile.wallpaper) { el('wallpaper-preview').src = currentUserProfile.wallpaper; el('wallpaper-preview').classList.remove('hidden'); } 
                 else { el('wallpaper-preview').src = ''; el('wallpaper-preview').classList.add('hidden'); }
 
-                openModal('settings-modal'); 
-                
-                if(window.innerWidth >= 768) {
-                    el('tab-profile').click();
-                } else {
-                    // Mobile: reset to list view
-                    settingsSubView.classList.add('translate-x-full');
-                    settingsMainMenu.classList.remove('-translate-x-1/2', 'opacity-0', 'pointer-events-none');
-                    mobileSettingsTitle.textContent = 'Settings';
-                    settingsBackBtn.classList.add('hidden');
-                    settingsCloseBtn.classList.remove('hidden');
-                    settingsCloseSpacer.classList.add('hidden');
-                }
+                openNativePage('page-settings');
             });
 
             on('save-profile-changes-btn', 'click', async () => {
                 const btn = el('save-profile-changes-btn'); const newName = el('edit-name-input').value.trim();
                 const errEl = el('profile-edit-error'); errEl.textContent = '';
                 if (!newName) { errEl.textContent = 'Name cannot be empty.'; return; }
-                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Saving Changes...';
+                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Saving...';
 
                 try {
                     if (newName !== currentUserProfile.name && !(await isUsernameUnique(newName, currentUser.uid))) throw new Error('Name taken.');
@@ -1621,12 +1537,11 @@
                     } 
                     else if (el('edit-pfp-preview').classList.contains('hidden')) { updates.emoji = el('edit-emoji-input').value.trim() || '👤'; updates.photoURL = null; }
                     await firestore.collection('users').doc(currentUser.uid).set(updates, {merge: true});
-                    showInfoModal('Success', 'Preferences updated.'); closeModal('settings-modal'); editProfilePicFile = null; 
+                    showInfoModal('Success', 'Preferences updated.'); closeNativePage('page-profile'); editProfilePicFile = null; 
                 } catch (error) { errEl.textContent = error.message; } 
-                finally { btn.disabled = false; btn.textContent = 'Save Configuration'; }
+                finally { btn.disabled = false; btn.textContent = 'Save Profile'; }
             });
 
-            // Report logic from Settings
             on('submit-settings-report-btn', 'click', async () => {
                 const txt = el('settings-report-input').value.trim();
                 if(!txt) return;
@@ -1644,10 +1559,22 @@
                 btn.disabled = false; btn.textContent = 'Submit Report';
             });
             
-            on('copy-my-id-btn', 'click', () => {
+            on('copy-my-id-btn-profile', 'click', () => {
                 if(currentUserProfile && currentUserProfile.userId) {
                     navigator.clipboard.writeText(currentUserProfile.userId).then(() => {
-                        const btn = el('copy-my-id-btn');
+                        const btn = el('copy-my-id-btn-profile');
+                        const orig = btn.innerHTML;
+                        btn.innerHTML = `<span class="material-symbols-outlined text-[16px]">check</span> Copied`;
+                        btn.classList.add('bg-green-500', 'text-white', 'border-green-600');
+                        setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('bg-green-500', 'text-white', 'border-green-600'); }, 2000);
+                    });
+                }
+            });
+
+            on('copy-my-id-btn-add', 'click', () => {
+                if(currentUserProfile && currentUserProfile.userId) {
+                    navigator.clipboard.writeText(currentUserProfile.userId).then(() => {
+                        const btn = el('copy-my-id-btn-add');
                         const orig = btn.innerHTML;
                         btn.innerHTML = `<span class="material-symbols-outlined text-[20px]">check</span> Copied!`;
                         btn.classList.add('bg-green-50', 'text-green-600', 'border-green-200', 'dark:bg-green-500/10', 'dark:border-green-500/20');
@@ -1871,25 +1798,6 @@
                     firestore.collection('contacts').doc(currentChatPartner.uid).collection('list').doc(currentUser.uid).delete(); 
                     el('close-info-drawer').click(); el('back-to-home-btn').click();
                 });
-            });
-
-            on('menu-report-user', 'click', () => {
-                el('chat-options-menu').classList.add('hidden');
-                el('report-user-input').value = '';
-                openModal('report-user-modal');
-            });
-
-            on('submit-user-report-btn', 'click', async () => {
-                const txt = el('report-user-input').value.trim();
-                if(!txt) return;
-                const btn = el('submit-user-report-btn'); const origText = btn.textContent;
-                btn.disabled = true; btn.textContent = 'Submitting...';
-                try {
-                    await firestore.collection('reports').add({ reportedBy: currentUser.uid, targetId: currentChatPartner.uid, reason: txt, timestamp: Date.now() });
-                    closeModal('report-user-modal');
-                    showInfoModal('Reported', 'Thank you for keeping the community safe. Our admin team will review this report.');
-                } catch (e) { alert('Failed to send report.'); }
-                btn.disabled = false; btn.textContent = origText;
             });
 
             function populateInfoDrawer(profile) {
@@ -2745,13 +2653,34 @@
             }
             on('tab-friends', 'click', () => listenAndDisplayFriendList());
             
-            el('settings-modal').addEventListener('click', async e => {
-                if(e.target.classList.contains('btn-msg-friend')) {
-                    const uid = e.target.dataset.uid; closeModal('settings-modal');
+            el('settings-main-menu').addEventListener('click', async e => {
+                if(e.target.classList.contains('btn-msg-friend') || e.target.closest('.btn-msg-friend')) {
+                    const btn = e.target.classList.contains('btn-msg-friend') ? e.target : e.target.closest('.btn-msg-friend');
+                    const uid = btn.dataset.uid; 
+                    closeNativePage('page-settings');
                     const doc = await firestore.collection('users').doc(uid).get(); if(doc.exists) await openChat(doc.data(), uid);
                 }
-                if(e.target.classList.contains('btn-unfriend')) {
-                    const uid = e.target.dataset.uid;
+                if(e.target.classList.contains('btn-unfriend') || e.target.closest('.btn-unfriend')) {
+                    const btn = e.target.classList.contains('btn-unfriend') ? e.target : e.target.closest('.btn-unfriend');
+                    const uid = btn.dataset.uid;
+                    showConfirmModal('Unfriend?', 'Are you sure you want to remove this friend?', () => {
+                        firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(uid).delete(); 
+                        firestore.collection('contacts').doc(uid).collection('list').doc(currentUser.uid).delete(); 
+                    });
+                }
+            });
+            // Also need to attach to document for dynamically added friends list inside sliding panel
+            document.addEventListener('click', async e => {
+                 if(e.target.classList.contains('btn-msg-friend') || e.target.closest('.btn-msg-friend')) {
+                    const btn = e.target.classList.contains('btn-msg-friend') ? e.target : e.target.closest('.btn-msg-friend');
+                    const uid = btn.dataset.uid; 
+                    closeNativePage('page-settings');
+                    closeNativePage('page-friends');
+                    const doc = await firestore.collection('users').doc(uid).get(); if(doc.exists) await openChat(doc.data(), uid);
+                }
+                if(e.target.classList.contains('btn-unfriend') || e.target.closest('.btn-unfriend')) {
+                    const btn = e.target.classList.contains('btn-unfriend') ? e.target : e.target.closest('.btn-unfriend');
+                    const uid = btn.dataset.uid;
                     showConfirmModal('Unfriend?', 'Are you sure you want to remove this friend?', () => {
                         firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(uid).delete(); 
                         firestore.collection('contacts').doc(uid).collection('list').doc(currentUser.uid).delete(); 
