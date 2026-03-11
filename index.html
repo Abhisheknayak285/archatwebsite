@@ -45,22 +45,14 @@
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
         
-        .active-link {
-            background-color: rgba(43, 75, 238, 0.1) !important;
-        }
+        .active-link { background-color: rgba(43, 75, 238, 0.1) !important; }
         .active-link h2 { color: #2b4bee; }
         .dark .active-link h2 { color: #5c7cfa; }
         
-        .active-chat {
-            background-color: rgba(43, 75, 238, 0.08) !important;
-        }
-        .dark .active-chat {
-            background-color: rgba(43, 75, 238, 0.15) !important;
-        }
+        .active-chat { background-color: rgba(43, 75, 238, 0.08) !important; }
+        .dark .active-chat { background-color: rgba(43, 75, 238, 0.15) !important; }
         
-        .selection-mode .message-checkbox {
-            display: block !important;
-        }
+        .selection-mode .message-checkbox { display: block !important; }
         
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -69,39 +61,23 @@
         .dark ::-webkit-scrollbar-thumb { background: #334155; }
         .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         /* Loader & Spinners */
         .loader { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .spinner { border: 4px solid rgba(43, 75, 238, 0.2); width: 48px; height: 48px; border-radius: 50%; border-top-color: #2b4bee; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .btn-spinner {
-            width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;
-        }
+        .btn-spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; }
 
         /* Chat Pattern */
         .chat-bg {
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            background-color: transparent; /* Allow underlying colors/wallpapers to show */
+            background-color: transparent;
         }
-
-        /* Toggles */
-        .toggle-checkbox {
-            appearance: none; width: 44px; height: 24px; background: #cbd5e1; border-radius: 12px;
-            position: relative; cursor: pointer; outline: none; transition: 0.3s;
-        }
-        .dark .toggle-checkbox { background: #475569; }
-        .toggle-checkbox::after {
-            content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
-            background: white; border-radius: 50%; transition: 0.3s;
-        }
-        .toggle-checkbox:checked { background: #2b4bee; }
-        .toggle-checkbox:checked::after { transform: translateX(20px); }
 
         /* Call Rings */
-        .call-ring {
-            position: absolute; inset: -15px; border: 2px solid rgba(43, 75, 238, 0.5); border-radius: 50%;
-            animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-        }
+        .call-ring { position: absolute; inset: -15px; border: 2px solid rgba(43, 75, 238, 0.5); border-radius: 50%; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
         @keyframes ping { 75%, 100% { transform: scale(1.5); opacity: 0; } }
 
         /* Animations */
@@ -114,6 +90,13 @@
         .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
         .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+        /* Story Rings */
+        .story-ring-unseen { background: linear-gradient(45deg, #f59e0b, #d946ef); padding: 2px; border-radius: 50%; }
+        .story-ring-seen { background: #cbd5e1; padding: 2px; border-radius: 50%; }
+        .dark .story-ring-seen { background: #475569; }
+        .story-progress-bar { height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px; flex: 1; overflow: hidden; }
+        .story-progress-fill { height: 100%; background: white; width: 0%; transition: width 0.1s linear; }
 
         /* General UI Elements */
         .ar-input {
@@ -130,14 +113,11 @@
         .btn-primary:hover:not(:disabled) { background-color: #203ac0; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(43, 75, 238, 0.2); }
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .btn-secondary {
-            background-color: white; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 24px; font-weight: 500; font-size: 14px; transition: 0.2s;
-        }
+        .btn-secondary { background-color: white; color: #0f172a; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 24px; font-weight: 500; font-size: 14px; transition: 0.2s; }
         .dark .btn-secondary { background-color: #1e293b; color: #f8fafc; border-color: #334155; }
         .btn-secondary:hover { background-color: #f8fafc; }
         .dark .btn-secondary:hover { background-color: #0f172a; }
 
-        /* Mobile Adjustments */
         @media (max-width: 768px) {
             #main-chat-area { position: absolute; inset: 0; z-index: 30; transform: translateX(100%); transition: transform 0.3s ease; }
             #main-chat-area.active { transform: translateX(0); }
@@ -147,7 +127,6 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300 min-h-[100dvh]">
 
-    <!-- Global Modal Exposer Script -->
     <script>
         window.openModal = function(id) {
             const container = document.getElementById('modal-container');
@@ -189,7 +168,6 @@
             <h1 class="text-3xl font-bold text-primary mb-2 tracking-tight">AR CHATS</h1>
             <p class="text-slate-500 dark:text-slate-400 text-sm mb-8 font-medium">Sign in to start chat with friends</p>
 
-            <!-- Login Form -->
             <form id="login-form" class="flex flex-col gap-4 text-left">
                 <input type="email" id="login-email" class="ar-input" placeholder="Email Address" required>
                 <div class="relative">
@@ -208,7 +186,6 @@
                 </div>
             </form>
 
-            <!-- Signup Form -->
             <form id="signup-form" class="flex flex-col gap-4 text-left hidden">
                 <input type="email" id="signup-email" class="ar-input" placeholder="Email Address" required>
                 <div class="relative">
@@ -230,7 +207,6 @@
                 </div>
             </form>
             
-            <!-- OTP Verification Form -->
             <form id="otp-form" class="flex flex-col gap-4 text-left hidden fade-in">
                 <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2 text-primary">
                     <span class="material-symbols-outlined text-[24px]">mark_email_read</span>
@@ -284,17 +260,30 @@
             </div>
 
             <!-- List Containers -->
-            <div class="flex-1 overflow-y-auto p-3" id="sidebar-scroll-area">
+            <div class="flex-1 overflow-y-auto" id="sidebar-scroll-area">
                 <div id="home-content" class="fade-in">
-                    <div id="contact-list-container" class="space-y-1"></div>
+                    <!-- Stories Bar -->
+                    <div id="story-bar-container" class="w-full overflow-x-auto py-4 px-4 flex gap-4 border-b border-slate-200 dark:border-slate-800 shrink-0 hide-scrollbar bg-slate-50/50 dark:bg-slate-800/10">
+                        <!-- Add Story Button -->
+                        <div class="flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group" id="add-story-btn">
+                            <div class="w-[56px] h-[56px] rounded-full bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-primary flex items-center justify-center relative group-hover:bg-primary/10 transition-colors">
+                                <span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">add</span>
+                            </div>
+                            <span class="text-[10px] font-bold text-slate-500 group-hover:text-primary transition-colors">Add Story</span>
+                        </div>
+                        <!-- Friends' Stories will go here dynamically -->
+                        <div id="friends-stories-list" class="flex gap-4"></div>
+                    </div>
+
+                    <div id="contact-list-container" class="space-y-1 p-3"></div>
                 </div>
-                <div id="calls-content" class="hidden fade-in">
+                <div id="calls-content" class="hidden fade-in p-3">
                     <div id="calls-list-container" class="space-y-1"></div>
                 </div>
-                <div id="notifications-content" class="hidden fade-in">
+                <div id="notifications-content" class="hidden fade-in p-3">
                     <div id="requests-list-container" class="space-y-2 mt-1"></div>
                 </div>
-                <div id="blocked-users-content" class="hidden fade-in">
+                <div id="blocked-users-content" class="hidden fade-in p-3">
                     <div class="px-2 py-2 mb-2 text-xs font-bold text-red-500 uppercase tracking-wider">Blocked Users</div>
                     <div id="blocked-list-container" class="space-y-2"></div>
                 </div>
@@ -444,6 +433,62 @@
 
         </main>
     </div>
+
+    <!-- FULL SCREEN STORY VIEWER -->
+    <div id="story-viewer-screen" class="fixed inset-0 z-[8000] bg-black hidden flex-col">
+        <!-- Progress Bars -->
+        <div id="story-progress-container" class="flex gap-1.5 p-3 w-full absolute top-0 z-20"></div>
+        
+        <!-- Header -->
+        <div class="absolute top-6 w-full z-20 px-4 flex justify-between items-center bg-gradient-to-b from-black/60 to-transparent pb-6 pt-2">
+            <div class="flex items-center gap-3">
+                <div id="story-viewer-pfp" class="w-10 h-10 rounded-full bg-slate-700 overflow-hidden flex items-center justify-center text-sm border border-white/20"></div>
+                <div>
+                    <span id="story-viewer-name" class="text-white font-bold text-[15px] block drop-shadow-md"></span>
+                    <span id="story-viewer-time" class="text-white/80 font-medium text-[11px] block drop-shadow-md"></span>
+                </div>
+            </div>
+            <button id="story-viewer-close" class="text-white p-2 hover:bg-white/10 rounded-full transition"><span class="material-symbols-outlined text-[28px]">close</span></button>
+        </div>
+        
+        <!-- Image Area -->
+        <div class="flex-1 relative flex items-center justify-center bg-black overflow-hidden group">
+            <div id="story-viewer-img-container" class="relative w-full h-full flex items-center justify-center">
+                <img id="story-viewer-img" class="w-full h-full object-contain pointer-events-none transition-transform duration-300">
+            </div>
+            
+            <!-- Navigation Tap Areas -->
+            <div id="story-tap-left" class="absolute left-0 top-20 bottom-24 w-1/3 z-10 cursor-pointer"></div>
+            <div id="story-tap-right" class="absolute right-0 top-20 bottom-24 w-2/3 z-10 cursor-pointer"></div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="absolute bottom-0 w-full p-4 z-20 bg-gradient-to-t from-black/80 via-black/50 to-transparent pt-12 pb-6">
+            <p id="story-viewer-caption" class="text-white text-center mb-5 text-[15px] font-medium drop-shadow-md px-4"></p>
+            
+            <!-- Reply/Like Bar (For friends' stories) -->
+            <div id="story-reply-bar" class="flex gap-3 items-center max-w-xl mx-auto hidden">
+                <div class="flex-1 relative">
+                    <input type="text" id="story-reply-input" placeholder="Reply to story..." autocomplete="off" class="w-full bg-white/10 focus:bg-white/20 rounded-full px-5 py-3.5 text-white placeholder-white/60 outline-none border border-white/20 backdrop-blur-md transition-all text-sm font-medium">
+                </div>
+                <button id="story-like-btn" class="w-12 h-12 text-white rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md transition-all flex items-center justify-center shrink-0">
+                    <span id="story-like-icon" class="material-symbols-outlined text-[24px]">favorite</span>
+                </button>
+            </div>
+            
+            <!-- Own Story Info Bar -->
+            <div id="story-own-bar" class="hidden flex justify-between items-center bg-white/10 rounded-2xl p-3.5 backdrop-blur-md border border-white/20 max-w-xl mx-auto shadow-xl">
+                <button id="story-view-likes-btn" class="text-white flex items-center gap-2 font-medium text-sm hover:text-primary-light transition-colors px-2">
+                    <span class="material-symbols-outlined text-[20px]">visibility</span> 
+                    <span><span id="story-likes-count" class="font-bold">0</span> Likes</span>
+                </button>
+                <button id="story-delete-btn" class="text-red-400 flex items-center gap-1.5 font-bold text-sm hover:text-red-300 transition-colors bg-red-500/10 hover:bg-red-500/20 px-4 py-2 rounded-xl">
+                    <span class="material-symbols-outlined text-[18px]">delete</span> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Central Settings & Modals Overlay System -->
     <div id="modal-container" class="fixed inset-0 z-[3000] bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-opacity">
@@ -653,14 +698,14 @@
                         <span class="material-symbols-outlined text-[48px]">code</span>
                     </div>
                     <h3 class="text-3xl font-bold mb-2 text-slate-900 dark:text-white tracking-tight">AR CHATS</h3>
-                    <p class="text-[11px] font-mono text-slate-500 mb-10 uppercase tracking-widest font-bold">Version 5.0.0 (Web Core)</p>
+                    <p class="text-[11px] font-mono text-slate-500 mb-10 uppercase tracking-widest font-bold">Version 5.1.0 (Web Core)</p>
                     
                     <div class="w-full text-left bg-slate-50 dark:bg-slate-800/50 p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
                         <p class="text-[15px] text-slate-700 dark:text-slate-300 leading-relaxed mb-6 font-medium">A fast and secure messaging application designed to keep you connected with friends and family seamlessly.</p>
                         <ul class="text-sm text-slate-600 dark:text-slate-400 space-y-4 mb-8 font-semibold">
                             <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">lock</span> Private & Secure Messaging</li>
                             <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">video_call</span> High-Quality Voice & Video Calls</li>
-                            <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">image</span> Instant Media Sharing</li>
+                            <li class="flex items-center gap-3"><span class="material-symbols-outlined text-[20px] text-green-500">auto_stories</span> 24-Hour Disappearing Stories</li>
                         </ul>
                         <div class="pt-6 border-t border-slate-200 dark:border-slate-700 text-center">
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Engineered By</p>
@@ -669,6 +714,42 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+
+        <!-- Story Creator Modal -->
+        <div id="story-creator-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-md rounded-[32px] shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in">
+            <div class="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+                <h3 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Create Story</h3>
+                <button class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl text-slate-500 transition-colors" onclick="closeModal('story-creator-modal')"><span class="material-symbols-outlined text-[20px]">close</span></button>
+            </div>
+            <div class="p-6">
+                <div id="story-creator-preview-container" class="w-full h-72 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800/50 flex flex-col items-center justify-center relative overflow-hidden mb-5 group">
+                    <img id="story-creator-preview" class="w-full h-full object-cover hidden absolute inset-0 z-10">
+                    <div class="text-center relative z-20" id="story-creator-placeholder">
+                        <span class="material-symbols-outlined text-[48px] text-primary mb-2">add_photo_alternate</span>
+                        <p class="text-sm font-bold text-slate-500 group-hover:text-primary transition-colors">Select an image</p>
+                    </div>
+                    <input type="file" id="story-creator-file" class="absolute inset-0 opacity-0 cursor-pointer z-30" accept="image/*">
+                </div>
+                
+                <textarea id="story-creator-caption" class="ar-input resize-none mb-5" rows="2" placeholder="Add a caption... (optional)" maxlength="120"></textarea>
+                
+                <p class="text-[11px] text-slate-500 font-medium mb-4 flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[14px]">timer</span> Disappears automatically after 24 hours.</p>
+                <p id="story-creator-error" class="text-red-500 text-xs text-center min-h-[16px] font-bold mb-3"></p>
+                
+                <button id="story-creator-submit-btn" class="btn-primary w-full py-4 text-[15px] shadow-lg shadow-primary/20"><span class="material-symbols-outlined text-[20px]">send</span> Share Story</button>
+            </div>
+        </div>
+
+        <!-- Story Likes Modal -->
+        <div id="story-likes-modal" class="modal-content bg-white dark:bg-slate-900 w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden hidden fade-in flex flex-col max-h-[70vh]">
+            <div class="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 shrink-0">
+                <h3 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[20px]">favorite</span> Story Likes</h3>
+                <button class="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-500 transition-colors" onclick="closeModal('story-likes-modal')"><span class="material-symbols-outlined text-[18px]">close</span></button>
+            </div>
+            <div id="story-likes-list-container" class="flex-1 overflow-y-auto p-4 space-y-2 bg-white dark:bg-slate-900">
+                <!-- Likers populated here -->
             </div>
         </div>
 
@@ -945,12 +1026,13 @@
                 });
             }
 
-            // ImgBB Init
+            // ImgBB Init (Now with expiration support for Stories)
             const IMGBB_API_KEY = '9af51fec603af3f00f99d29b10fbea30';
-            async function uploadImageToImgBB(file) {
+            async function uploadImageToImgBB(file, expireInSeconds = null) {
                 const fd = new FormData(); fd.append('image', file);
                 try {
-                    const r = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: fd });
+                    const urlStr = expireInSeconds ? `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}&expiration=${expireInSeconds}` : `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`;
+                    const r = await fetch(urlStr, { method: 'POST', body: fd });
                     const d = await r.json();
                     if (d.success) return d.data.url;
                     throw new Error('Upload failed');
@@ -972,6 +1054,14 @@
             // Selection Mode State
             let isSelectionMode = false;
             let selectedMessages = new Set();
+
+            // ---- STORY STATE ----
+            let allUserStories = {}; // Format: { uid: [story1, story2], ... }
+            let storyUnsubs = {};
+            let currentViewingStoryUser = null;
+            let currentViewingStoryIndex = 0;
+            let storyProgressTimer = null;
+            let newStoryFile = null;
 
             // Auth Setup
             auth.onAuthStateChanged(user => {
@@ -1116,6 +1206,12 @@
                         currentUserProfile = { uid: currentUser.uid, ...doc.data() };
                         el('my-profile-pic').innerHTML = createProfileDisplay(currentUserProfile);
                         el('my-profile-name').textContent = currentUserProfile.name;
+                        
+                        // Story indicator update
+                        const sIcon = el('my-story-preview-icon');
+                        if (currentUserProfile.photoURL) { sIcon.src = currentUserProfile.photoURL; sIcon.classList.remove('hidden'); el('my-story-add-icon').classList.add('hidden'); }
+                        else { sIcon.classList.add('hidden'); el('my-story-add-icon').classList.remove('hidden'); }
+
                         applyWallpaper(currentUserProfile.wallpaper || null);
                         if (!el('main-app').dataset.initialized) { initializeApp(); el('main-app').dataset.initialized = "true"; }
                     }
@@ -1127,7 +1223,8 @@
                 if (input.files[0]) {
                     fileVarUpdater(input.files[0]);
                     el(preview).src = URL.createObjectURL(input.files[0]);
-                    el(preview).classList.remove('hidden'); el(emojiInput).classList.add('hidden');
+                    el(preview).classList.remove('hidden'); 
+                    if(emojiInput) el(emojiInput).classList.add('hidden');
                 }
             };
             on('setup-pic-input', 'change', e => handleImagePick(e.target, 'setup-pfp-preview', 'setup-emoji-input', f=>newProfilePicFile=f));
@@ -1187,20 +1284,29 @@
             });
 
             // App Initialization
-            function initializeApp() { setupPresenceSystem(); showSidebarTab('home'); listenForContacts(); listenForFriendRequests(); listenForCalls(); }
+            function initializeApp() { 
+                setupPresenceSystem(); 
+                showSidebarTab('home'); 
+                listenForContacts(); 
+                listenForFriendRequests(); 
+                listenForCalls(); 
+                listenForStories(currentUser.uid); // Listen to own stories
+            }
             
             function cleanupListeners() {
                 if (!currentUser) return;
                 firestoreUnsubs.forEach(unsub => unsub()); firestoreUnsubs = [];
                 Object.values(messageListeners).forEach(unsub => { if(typeof unsub === 'function') unsub(); });
                 Object.values(unreadListeners).forEach(unsub => { if(typeof unsub === 'function') unsub(); });
+                Object.values(storyUnsubs).forEach(unsub => { if(typeof unsub === 'function') unsub(); });
                 if(window.blockedUnsub) window.blockedUnsub();
                 if(window.logsUnsub) window.logsUnsub();
                 if(chatMetaUnsub) chatMetaUnsub();
                 if(window.friendsUnsub) window.friendsUnsub();
                 Object.values(statusListeners).forEach(ref => ref.off()); Object.values(typingListeners).forEach(ref => ref.off());
                 rtdb.ref(`calls`).orderByChild('callee').equalTo(currentUser.uid).off();
-                messageListeners = {}; statusListeners = {}; typingListeners = {}; unreadListeners = {};
+                messageListeners = {}; statusListeners = {}; typingListeners = {}; unreadListeners = {}; storyUnsubs = {};
+                allUserStories = {};
             }
 
             function setupPresenceSystem() {
@@ -1641,6 +1747,9 @@
                                     } else { a.querySelector('.unread-badge').classList.add('hidden'); }
                                 });
                                 if(currentChatId === chatId) a.classList.add('active-chat');
+                                
+                                // Listen to this contact's stories
+                                if(!profile.isSystem) listenForStories(uid);
                             } else if (change.type === 'modified') {
                                 const a = list.querySelector(`#contact-${uid}`);
                                 if (a) a.querySelector('.contact-name').innerHTML = `${profile.name} ${profile.verified ? '<span class="material-symbols-outlined text-blue-500 text-[14px]" title="Verified">verified</span>' : ''}`;
@@ -1661,6 +1770,7 @@
                             const chatId = profile.isSystem ? `SYSTEM_${currentUser.uid}` : getChatId(currentUser.uid, uid);
                             if (unreadListeners[chatId]) { unreadListeners[chatId](); delete unreadListeners[chatId]; }
                             if (typingListeners[uid]) { typingListeners[uid].off(); delete typingListeners[uid]; }
+                            if (storyUnsubs[uid]) { storyUnsubs[uid](); delete storyUnsubs[uid]; delete allUserStories[uid]; renderStoryBar(); }
                         }
                     });
                 });
@@ -1698,7 +1808,6 @@
                 if (profile.isSystem) {
                     el('chat-input-container').classList.remove('hidden');
                     
-                    // Securely disable the input area for the system chat
                     const inputField = el('chat-input');
                     inputField.disabled = true;
                     inputField.placeholder = "You cannot send messages to this official account.";
@@ -1714,7 +1823,6 @@
                         imgLabel.style.pointerEvents = 'none';
                     }
 
-                    // Hide Call and Action Options that don't apply to SYSTEM
                     el('start-audio-call').classList.add('hidden');
                     el('start-video-call').classList.add('hidden');
                     el('chat-header-divider').classList.add('hidden');
@@ -1727,13 +1835,12 @@
                 } else {
                     el('chat-input-container').classList.remove('hidden');
                     
-                    // Restore Input Functionality
                     const inputField = el('chat-input');
                     inputField.disabled = false;
                     inputField.placeholder = "Type your message...";
                     
                     el('chat-image-input').disabled = false;
-                    el('chat-action-button').disabled = false; // Enabled/Disabled dynamically on input
+                    el('chat-action-button').disabled = false; 
                     
                     const imgLabel = document.querySelector('label[for="chat-image-input"]');
                     if (imgLabel) {
@@ -1742,7 +1849,6 @@
                         imgLabel.style.pointerEvents = 'auto';
                     }
 
-                    // Restore Call and Action Options
                     el('start-audio-call').classList.remove('hidden');
                     el('start-video-call').classList.remove('hidden');
                     el('chat-header-divider').classList.remove('hidden');
@@ -1811,6 +1917,20 @@
                                 ${isPending ? '<div class="absolute inset-0 flex items-center justify-center bg-black/20"><div class="spinner w-6 h-6 border-[2px]"></div></div>' : `<div class="absolute bottom-2 right-2 w-10 h-10 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer download-icon hover:bg-black/80 text-white" data-src="${msg.content}"><span class="material-symbols-outlined text-[20px]">download</span></div>`}
                             </div>
                             <div class="flex items-center gap-1 ${isMe?'':'ml-1'} mt-0.5"><span class="text-[10px] text-slate-400 font-medium">${isPending ? 'Sending...' : time}</span></div>
+                        `;
+                    } else if (msg.type === 'story_reply') {
+                        inner += `
+                            <div class="${isMe ? 'bg-primary text-white rounded-br-sm shadow-primary/20 shadow-md' : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-bl-sm shadow-sm'} p-3.5 rounded-2xl text-[14.5px] leading-relaxed break-words w-fit max-w-full flex flex-col gap-2">
+                                <div class="bg-black/10 dark:bg-black/20 p-2 rounded-xl border-l-4 border-white/50 flex flex-col">
+                                    <span class="text-[10px] font-bold uppercase tracking-widest mb-1 opacity-80">Replied to Story</span>
+                                    <img src="${msg.storyUrl}" class="h-24 w-auto rounded-lg object-cover cursor-pointer hover:opacity-90" onclick="window.open('${msg.storyUrl}','_blank')">
+                                </div>
+                                <span>${msg.text}</span>
+                            </div>
+                            <div class="flex items-center gap-1 ${isMe?'':'ml-1'} mt-0.5">
+                                <span class="text-[10px] text-slate-400 font-medium">${time}</span>
+                                ${isMe ? '<span class="material-symbols-outlined text-[14px] text-primary">done_all</span>' : ''}
+                            </div>
                         `;
                     } else {
                         inner += `
@@ -1921,7 +2041,7 @@
                     if (!snap.empty) {
                         snap.forEach(s => {
                             const fUid = s.id; const p = s.data();
-                            if(p.isSystem) return; // Skip system broadcast from friends list
+                            if(p.isSystem) return; 
                             const div = document.createElement('div'); div.className = 'flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 mb-2 shadow-sm';
                             div.innerHTML = `
                                 <div class="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center shrink-0 bg-slate-200 dark:bg-slate-700 text-2xl border border-slate-200 dark:border-slate-600">${createProfileDisplay(p)}</div>
@@ -2104,6 +2224,308 @@
                 pendingCandidates = []; actCallScreen.classList.add('hidden'); locVid.srcObject = null; remVid.srcObject = null; peerConnection = null; localStream = null; callStartTime = null; currentCallInfo = null; incomingCallData = null;
             }
 
+            // ==========================================
+            // STORY SYSTEM
+            // ==========================================
+            
+            on('add-story-btn', 'click', () => {
+                if(allUserStories[currentUser.uid] && allUserStories[currentUser.uid].length > 0) {
+                    openStoryViewer(currentUser.uid); // View own stories if exist
+                } else {
+                    el('story-creator-file').value = '';
+                    el('story-creator-preview').src = '';
+                    el('story-creator-preview').classList.add('hidden');
+                    el('story-creator-placeholder').classList.remove('hidden');
+                    el('story-creator-caption').value = '';
+                    newStoryFile = null;
+                    openModal('story-creator-modal');
+                }
+            });
+
+            on('story-creator-file', 'change', e => {
+                if (e.target.files[0]) {
+                    newStoryFile = e.target.files[0];
+                    el('story-creator-preview').src = URL.createObjectURL(newStoryFile);
+                    el('story-creator-preview').classList.remove('hidden');
+                    el('story-creator-placeholder').classList.add('hidden');
+                }
+            });
+
+            on('story-creator-submit-btn', 'click', async () => {
+                const err = el('story-creator-error'); err.textContent = '';
+                if (!newStoryFile) { err.textContent = 'Please select an image.'; return; }
+                const btn = el('story-creator-submit-btn');
+                btn.disabled = true; btn.innerHTML = '<div class="btn-spinner"></div> Uploading...';
+
+                try {
+                    const compressed = await compressImage(newStoryFile, 1280, 1280, 0.7);
+                    // Pass expiration=86400 (24 hours) to ImgBB so it deletes itself automatically from their server
+                    const url = await uploadImageToImgBB(compressed, 86400); 
+                    
+                    const storyData = {
+                        imageUrl: url,
+                        caption: el('story-creator-caption').value.trim(),
+                        timestamp: Date.now(),
+                        expiresAt: Date.now() + 86400000, // 24 hours locally
+                        likes: []
+                    };
+                    
+                    await firestore.collection('stories').doc(currentUser.uid).collection('active').add(storyData);
+                    closeModal('story-creator-modal');
+                    showInfoModal('Story Live', 'Your story is live for 24 hours.');
+                } catch(e) {
+                    err.textContent = 'Failed to upload story.';
+                } finally {
+                    btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined text-[20px]">send</span> Share Story';
+                }
+            });
+
+            function listenForStories(uid) {
+                if(storyUnsubs[uid]) return; // Already listening
+                storyUnsubs[uid] = firestore.collection('stories').doc(uid).collection('active').onSnapshot(snap => {
+                    let stories = [];
+                    snap.forEach(doc => {
+                        const s = { id: doc.id, ...doc.data() };
+                        if(s.expiresAt > Date.now()) stories.push(s);
+                        else { firestore.collection('stories').doc(uid).collection('active').doc(doc.id).delete(); } // Lazy delete
+                    });
+                    stories.sort((a,b) => a.timestamp - b.timestamp);
+                    if(stories.length > 0) allUserStories[uid] = stories;
+                    else delete allUserStories[uid];
+                    renderStoryBar();
+                    
+                    // If viewing these stories live, update viewer
+                    if(currentViewingStoryUser === uid && !el('story-viewer-screen').classList.contains('hidden')) {
+                        if(stories.length === 0) closeStoryViewer();
+                        else if (currentViewingStoryIndex >= stories.length) { currentViewingStoryIndex = stories.length - 1; updateStoryViewer(); }
+                        else updateStoryViewer();
+                    }
+                });
+            }
+
+            function renderStoryBar() {
+                const list = el('friends-stories-list');
+                list.innerHTML = '';
+                
+                // Own story handling
+                if(allUserStories[currentUser.uid] && allUserStories[currentUser.uid].length > 0) {
+                    el('my-story-add-icon').classList.add('hidden');
+                    el('my-story-preview-icon').src = currentUserProfile.photoURL || 'https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png'; 
+                    el('my-story-preview-icon').classList.remove('hidden');
+                    el('add-story-btn').querySelector('div').classList.add('story-ring-unseen', 'border-none');
+                    el('add-story-btn').querySelector('span.text-[10px]').textContent = 'View Story';
+                } else {
+                    el('my-story-add-icon').classList.remove('hidden');
+                    el('my-story-preview-icon').classList.add('hidden');
+                    el('add-story-btn').querySelector('div').classList.remove('story-ring-unseen', 'border-none');
+                    el('add-story-btn').querySelector('div').classList.add('border-primary');
+                    el('add-story-btn').querySelector('span.text-[10px]').textContent = 'Add Story';
+                }
+
+                // Friends stories
+                Object.keys(allUserStories).forEach(uid => {
+                    if (uid === currentUser.uid) return; // Skip own
+                    
+                    // Fetch from cache (contact list listener fetched it)
+                    firestore.collection('users').doc(uid).get().then(doc => {
+                        if(doc.exists) {
+                            const p = doc.data();
+                            const div = document.createElement('div');
+                            div.className = 'flex flex-col items-center gap-1.5 shrink-0 cursor-pointer group friend-story-btn';
+                            div.dataset.uid = uid;
+                            
+                            // Check if all seen (simplified logic: just show unseen ring always if exists)
+                            div.innerHTML = `
+                                <div class="w-[56px] h-[56px] rounded-full story-ring-unseen flex items-center justify-center p-[2px]">
+                                    <div class="w-full h-full rounded-full border-2 border-white dark:border-slate-900 overflow-hidden bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xl">
+                                        ${createProfileDisplay(p)}
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-700 dark:text-slate-300 group-hover:text-primary truncate w-16 text-center">${p.name.split(' ')[0]}</span>
+                            `;
+                            list.appendChild(div);
+                        }
+                    });
+                });
+            }
+
+            el('friends-stories-list').addEventListener('click', e => {
+                const btn = e.target.closest('.friend-story-btn');
+                if(btn) openStoryViewer(btn.dataset.uid);
+            });
+
+            function openStoryViewer(uid) {
+                if(!allUserStories[uid] || allUserStories[uid].length === 0) return;
+                currentViewingStoryUser = uid;
+                currentViewingStoryIndex = 0;
+                el('story-viewer-screen').classList.remove('hidden');
+                updateStoryViewer();
+            }
+
+            function closeStoryViewer() {
+                el('story-viewer-screen').classList.add('hidden');
+                currentViewingStoryUser = null;
+                currentViewingStoryIndex = 0;
+                clearTimeout(storyTimer);
+            }
+
+            on('story-viewer-close', 'click', closeStoryViewer);
+
+            async function updateStoryViewer() {
+                clearTimeout(storyTimer);
+                if (!allUserStories[currentViewingStoryUser]) { closeStoryViewer(); return; }
+                const stories = allUserStories[currentViewingStoryUser];
+                const story = stories[currentViewingStoryIndex];
+                if (!story) { closeStoryViewer(); return; }
+                
+                const isOwn = currentViewingStoryUser === currentUser.uid;
+
+                // User Info
+                let p = isOwn ? currentUserProfile : { name: 'Loading...' };
+                if(!isOwn) { const d = await firestore.collection('users').doc(currentViewingStoryUser).get(); if(d.exists) p = d.data(); }
+                
+                el('story-viewer-pfp').innerHTML = createProfileDisplay(p);
+                el('story-viewer-name').textContent = p.name;
+                el('story-viewer-time').textContent = timeAgo(story.timestamp);
+                
+                // Content
+                el('story-viewer-img').src = story.imageUrl;
+                el('story-viewer-caption').textContent = story.caption || '';
+                
+                // Progress Bars
+                const pContainer = el('story-progress-container');
+                pContainer.innerHTML = '';
+                stories.forEach((_, i) => {
+                    const bar = document.createElement('div'); bar.className = 'story-progress-bar';
+                    const fill = document.createElement('div'); fill.className = 'story-progress-fill';
+                    if (i < currentViewingStoryIndex) fill.style.width = '100%';
+                    else if (i === currentViewingStoryIndex) {
+                        fill.style.width = '0%';
+                        // Animate over 5 seconds
+                        setTimeout(() => { fill.style.transition = 'width 5s linear'; fill.style.width = '100%'; }, 50);
+                    }
+                    bar.appendChild(fill); pContainer.appendChild(bar);
+                });
+
+                // Footer Bars
+                if(isOwn) {
+                    el('story-reply-bar').classList.add('hidden');
+                    el('story-own-bar').classList.remove('hidden');
+                    el('story-likes-count').textContent = story.likes ? story.likes.length : 0;
+                } else {
+                    el('story-own-bar').classList.add('hidden');
+                    el('story-reply-bar').classList.remove('hidden');
+                    
+                    const hasLiked = story.likes && story.likes.includes(currentUser.uid);
+                    const likeIcon = el('story-like-icon');
+                    if (hasLiked) { likeIcon.classList.replace('material-symbols-outlined', 'material-symbols-rounded'); likeIcon.classList.add('text-red-500'); }
+                    else { likeIcon.classList.replace('material-symbols-rounded', 'material-symbols-outlined'); likeIcon.classList.remove('text-red-500'); }
+                }
+
+                // Auto advance
+                storyTimer = setTimeout(nextStory, 5000);
+            }
+
+            function nextStory() {
+                if (currentViewingStoryIndex < allUserStories[currentViewingStoryUser].length - 1) {
+                    currentViewingStoryIndex++;
+                    updateStoryViewer();
+                } else closeStoryViewer();
+            }
+
+            function prevStory() {
+                if (currentViewingStoryIndex > 0) {
+                    currentViewingStoryIndex--;
+                    updateStoryViewer();
+                } else {
+                    currentViewingStoryIndex = 0;
+                    updateStoryViewer();
+                }
+            }
+
+            on('story-tap-right', 'click', nextStory);
+            on('story-tap-left', 'click', prevStory);
+
+            // Like Story
+            on('story-like-btn', 'click', async () => {
+                if(!currentViewingStoryUser) return;
+                const story = allUserStories[currentViewingStoryUser][currentViewingStoryIndex];
+                const hasLiked = story.likes && story.likes.includes(currentUser.uid);
+                const ref = firestore.collection('stories').doc(currentViewingStoryUser).collection('active').doc(story.id);
+                
+                if (hasLiked) await ref.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
+                else await ref.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
+                
+                // The onSnapshot listener will fire and updateStoryViewer will reflect the change smoothly
+            });
+
+            // Reply to Story
+            on('story-reply-input', 'keydown', e => {
+                if(e.key === 'Enter') {
+                    const txt = e.target.value.trim();
+                    if(!txt || !currentViewingStoryUser) return;
+                    
+                    const story = allUserStories[currentViewingStoryUser][currentViewingStoryIndex];
+                    const cId = getChatId(currentUser.uid, currentViewingStoryUser);
+                    
+                    firestore.collection('messages').doc(cId).collection('history').add({
+                        text: txt, type: 'story_reply', storyUrl: story.imageUrl, sender: currentUser.uid, timestamp: Date.now()
+                    });
+                    
+                    const pChatRef = firestore.collection('userChats').doc(currentViewingStoryUser).collection('chats').doc(cId);
+                    pChatRef.get().then(doc => { let unread = 1; if(doc.exists && doc.data().unread) unread = doc.data().unread + 1; pChatRef.set({unread}, {merge:true}); });
+
+                    firestore.collection('contacts').doc(currentUser.uid).collection('list').doc(currentViewingStoryUser).set({ chatVisible: true }, { merge: true });
+                    firestore.collection('contacts').doc(currentViewingStoryUser).collection('list').doc(currentUser.uid).set({ chatVisible: true }, { merge: true });
+
+                    e.target.value = '';
+                    
+                    // Show confirmation temporarily without fully breaking flow
+                    const oldPlaceholder = e.target.placeholder;
+                    e.target.placeholder = "Sent ✓";
+                    setTimeout(() => e.target.placeholder = oldPlaceholder, 2000);
+                }
+            });
+
+            // Delete Own Story
+            on('story-delete-btn', 'click', () => {
+                const story = allUserStories[currentUser.uid][currentViewingStoryIndex];
+                showConfirmModal('Delete Story?', 'This will permanently remove the story.', () => {
+                    firestore.collection('stories').doc(currentUser.uid).collection('active').doc(story.id).delete();
+                });
+            });
+
+            // View Likes Modal
+            on('story-view-likes-btn', 'click', async () => {
+                const story = allUserStories[currentUser.uid][currentViewingStoryIndex];
+                const list = el('story-likes-list-container');
+                list.innerHTML = '<div class="flex justify-center p-4"><div class="spinner w-6 h-6 border-[2px]"></div></div>';
+                openModal('story-likes-modal');
+                
+                if(!story.likes || story.likes.length === 0) {
+                    list.innerHTML = '<p class="text-center text-sm text-slate-500 p-4">No likes yet.</p>'; return;
+                }
+                
+                let html = '';
+                for(const uid of story.likes) {
+                    const doc = await firestore.collection('users').doc(uid).get();
+                    if(doc.exists) {
+                        const p = doc.data();
+                        html += `
+                            <div class="flex items-center gap-3 p-2 bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-slate-100 dark:border-slate-800">
+                                <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex items-center justify-center text-lg">${createProfileDisplay(p)}</div>
+                                <span class="font-bold text-sm text-slate-900 dark:text-white flex-1 truncate">${p.name}</span>
+                                <span class="material-symbols-outlined text-red-500 text-[18px]">favorite</span>
+                            </div>
+                        `;
+                    }
+                }
+                list.innerHTML = html;
+            });
+
+            // Pause timer when typing reply
+            on('story-reply-input', 'focus', () => clearTimeout(storyTimer));
+            on('story-reply-input', 'blur', () => { if(!el('story-viewer-screen').classList.contains('hidden')) storyTimer = setTimeout(nextStory, 5000); });
         });
     </script>
 </body>
