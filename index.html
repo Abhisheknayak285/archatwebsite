@@ -1986,7 +1986,7 @@
                     wrapper.className = `flex items-center w-full mb-5 msg-wrapper ${isMe ? 'justify-end' : 'justify-start'}`;
                     
                     let pfpStr = '';
-                    if (msg.sender === 'SYSTEM') { pfpStr = `<img src="https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png" class="w-full h-full object-cover">`; }
+                    if (msg.sender === 'SYSTEM') { pfpStr = `<img src="https://i.ibb.co/cKM4z8HP/logo-1-removebg-preview.png" class="w-full h-full object-cover">`; }
                     else { pfpStr = isMe ? createProfileDisplay(currentUserProfile) : createProfileDisplay(currentChatPartner); }
                     
                     const isChecked = selectedMessages.has(msg.id) ? 'checked' : '';
