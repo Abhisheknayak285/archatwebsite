@@ -1873,7 +1873,7 @@
                     const uid = item.dataset.uid;
                     
                     if (uid === 'SYSTEM') {
-                        const sysProfile = { name: 'AR CHATS', photoURL: 'https://i.ibb.co/9mNkfJGp/Chat-GPT-Image-Mar-10-2026-12-44-55-PM.png', userId: 'SYSTEM-OFFICIAL', bio: 'Official Announcements', isSystem: true, verified: true };
+                        const sysProfile = { name: 'AR CHATS', photoURL: 'https://i.ibb.co/cKM4z8HP/logo-1-removebg-preview.png', userId: 'SYSTEM-OFFICIAL', bio: 'Official Announcements', isSystem: true, verified: true };
                         await openChat(sysProfile, uid);
                     } else {
                         const doc = await firestore.collection('users').doc(uid).get(); 
